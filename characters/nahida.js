@@ -1,19 +1,25 @@
-// ナヒーダ専用データ + ダメージ計算 (滅浄三業 Lv10 / 草激化)  ※既存 nahida.html と同じ式
+// ナヒーダ専用データ + ダメージ計算 (滅浄三業 Lv10 / 草激化)
+// 旧 nahida.html からの修正点: ①会心の冠のメイン(会心率31.1/会心ダメ62.2)を計算に追加 ②武器の会心サブステを追加
+//                              ③熟知80+80の熟知+160を追加 ④金メッキの夢2セットの熟知+80を追加
+//                              ⑤黄金の劇団 +70% (2セット20 + 4セット25 + 場にいない時25) ⑥深林の記憶2セット 草ダメ+15%
+//                              ⑦神楽の真意 +48% (スキルダメ12%×3層 + 全元素ダメ12%)
+//                              ⑧千夜に浮かぶ夢: 熟知+32を常時加算していたのをやめ、パーティの味方の元素で変化 (同元素→熟知+32 / 異元素→草ダメ+10%)
+// 前提: ナヒーダは場にいない状態。流浪楽章・四風原典は効果なし(会心ダメ/会心率の武器として扱う)
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'nahida', name: 'ナヒーダ', element: 'dendro', weaponType: '法器',
   parties: [
-    { key: 'dendro_2_electro_2', name: '草草雷雷 (草共鳴 熟知+100)' },
-    { key: 'dendro_2_hydro_electro', name: '草草水雷 (草共鳴 熟知+100)' },
-    { key: 'dendro_1_hydro_electro_other', name: '草水雷+草以外 (草共鳴なし)' }
+    { key: 'dendro_2_electro_2', name: '草草雷雷 (草共鳴 熟知+100)', same: 1, diff: 2 },
+    { key: 'dendro_2_hydro_electro', name: '草草水雷 (草共鳴 熟知+100)', same: 1, diff: 2 },
+    { key: 'dendro_1_hydro_electro_other', name: '草水雷+草以外 (草共鳴なし)', same: 0, diff: 3 }
   ],
   refs: [{ key: 'em', label: '熟知' }],               // 参照ステ1, 2(無ければ空欄)
   subStats: ['em', 'cr', 'cd'], subLabels: ['熟', '率', '傷'],
   weapons: {
-    thousand_dreams:       { name: '千夜に浮かぶ夢', atk: 542, em: 265 + 32 },
-    kagura:                { name: '神楽の真意',     atk: 608, em: 0 },
-    widsith:               { name: '流浪楽章 (R5)',  atk: 510, em: 0 },
-    sacrificial_fragments: { name: '祭礼の断片 (R5)', atk: 454, em: 221 },
-    lost_prayer:           { name: '四風原典',       atk: 608, em: 0 }
+    thousand_dreams:       { name: '千夜に浮かぶ夢', atk: 542, em: 265, cr: 0,    cd: 0,    buff: 0, sameEm: 32, diffBuff: 10 },  // 同元素の味方1人につき熟知+32 / 異元素の味方1人につき自元素ダメ+10% (各最大3層, R1)
+    kagura:                { name: '神楽の真意',     atk: 608, em: 0,        cr: 0,    cd: 66.2, buff: 48 },
+    widsith:               { name: '流浪楽章 (R5)',  atk: 510, em: 0,        cr: 0,    cd: 55.1, buff: 0 },
+    sacrificial_fragments: { name: '祭礼の断片 (R5)', atk: 454, em: 221,      cr: 0,    cd: 0,    buff: 0 },
+    lost_prayer:           { name: '四風原典',       atk: 608, em: 0,        cr: 33.1, cd: 0,    buff: 0 }
   },
   sets: [
     { key: 'deepwood_memories', name: '深林の記憶 4' }, { key: 'golden_troupe', name: '黄金の劇団 4' },
@@ -23,16 +29,19 @@
   cups:     [{ name: '草バフ', stat: 'dendro' }, { name: '熟知', stat: 'em' }],
   circlets: [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat: 'cd' }, { name: '熟知', stat: 'em' }],
   calc({ weapon, set, mains, rolls, party }) {
+    const pt = this.parties.find(x => x.key === party);
     const S = Engine.SUB, n = s => mains.filter(m => m === s).length;
-    let em = 115 + weapon.em + 187 * n('em') + S.em * (2 + rolls.em);
-    if (set.key === 'gilded_dreams') em += (party === 'dendro_1_hydro_electro_other' ? 150 : 100);
+    let em = 115 + weapon.em + (weapon.sameEm || 0) * Math.min(3, pt.same) + 187 * n('em') + S.em * (2 + rolls.em);
+    if (set.key === 'gilded_dreams') em += 80 + (party === 'dendro_1_hydro_electro_other' ? 150 : 100); // 2セット80 + 4セット(異元素×50)
+    if (set.key === 'em_2_2') em += 160;
     if (party.includes('dendro_2')) em += 100;
     const atk = (299 + weapon.atk) * (1 + 2 * S.atk / 100) + 311 + 33.08;
     const ex = Math.max(0, em - 200);
-    const cr = Math.min(100, 5 + (2 + rolls.cr) * S.cr + Math.min(24, ex * 0.03));
-    const cd = 50 + (2 + rolls.cd) * S.cd;
+    const cr = Math.min(100, 5 + weapon.cr + n('cr') * 31.1 + (2 + rolls.cr) * S.cr + Math.min(24, ex * 0.03));
+    const cd = 50 + weapon.cd + n('cd') * 62.2 + (2 + rolls.cd) * S.cd;
     const elemBuff = n('dendro') ? 46.6 : 0;
-    const buff = Math.min(80, ex * 0.1) + elemBuff + (set.key === 'golden_troupe' ? 20 : 0);
+    const setBuff = { golden_troupe: 70, deepwood_memories: 15 }[set.key] || 0;
+    const buff = Math.min(80, ex * 0.1) + elemBuff + setBuff + weapon.buff + (weapon.diffBuff || 0) * Math.min(3, pt.diff);
     const base = atk * 1.8576 + em * 3.7152;
     const spread = 1.25 * 1446.85 * (1 + (5 * em) / (em + 1200));
     const res = set.key === 'deepwood_memories' ? 1.10 : 0.90;
