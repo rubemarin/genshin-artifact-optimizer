@@ -31,14 +31,48 @@ th{color:var(--mu);font-size:12px;user-select:none}th[data-k]{cursor:pointer}th.
 <div class="bar"><div><label>武器で絞り込み</label><select id="fw"></select></div><div><label>聖遺物セットで絞り込み</label><select id="fs"></select></div><span class="sm" id="info"></span></div>
 <div class="tw"><table><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table></div></div>
 </div>
-<script src="common.js"></script>
-<script src="characters/nahida.js"></script>
-<script src="characters/alhaitham.js"></script>
-<script src="characters/tighnari.js"></script>
+<script>var LOADFAIL=[];function lf(e){LOADFAIL.push(e.getAttribute("src"));}</script>
+<script src="common.js" onerror="lf(this)"></script>
+<script src="characters/nahida.js" onerror="lf(this)"></script>
+<script src="characters/alhaitham.js" onerror="lf(this)"></script>
+<script src="characters/tighnari.js" onerror="lf(this)"></script>
 <script>
 const $=id=>document.getElementById(id);
 const img=p=>`<img class="ic" src="${p}" alt="" onerror="this.remove()">`;
 const ELEM={dendro:'草',electro:'雷',pyro:'炎',hydro:'水',cryo:'氷',anemo:'風',geo:'岩'};
 const COLS=[['#'],['武器'],['聖遺物セット'],['メインステ (時計/杯/冠)'],['サブステ割振 [上限]'],['Crit Value','cv'],['元素バフ','buff'],['参照ステ1','r1'],['参照ステ2','r2'],['チャージ効率','er'],['期待値ダメージ','dmg']];
 let ch=null,all=[],sk='dmg',dir=-1;
-$('grid').innerHTML=CHARACTERS.map(c=>`<a class="card" href="#${c.id}">${img('images/others/char_'+c.id+'.png')}<div><b>${c.name}</b><div class="sm">${c.weaponType} / ${ELEM[c.element]||c.element}元素</div></div></a>`).join('');
+if(typeof CHARACTERS==='undefined'||!CHARACTERS.length){$('grid').innerHTML='<div class="empty" style="grid-column:1/-1">キャラデータを読み込めませんでした。<br>読み込めなかったファイル: '+(LOADFAIL.length?LOADFAIL.join(' , '):'(読み込みは成功したがデータが空 → ファイルの中身を確認)')+'</div>';window.CHARACTERS=[];}
+$('grid').innerHTML=window.CHARACTERS.length?CHARACTERS.map(c=>`<a class="card" href="#${c.id}">${img('images/others/char_'+c.id+'.png')}<div><b>${c.name}</b><div class="sm">${c.weaponType} / ${ELEM[c.element]||c.element}元素</div></div></a>`).join(''):$('grid').innerHTML;
+function route(){
+  ch=CHARACTERS.find(c=>c.id===location.hash.slice(1))||null;
+  $('portal').hidden=!!ch;$('view').hidden=!ch;if(!ch)return;
+  $('vt').textContent=ch.name+' ― 最適サブステ割り振り';all=[];
+  $('party').innerHTML=ch.parties.map(p=>`<option value="${p.key}">${p.name}</option>`).join('');
+  $('fw').innerHTML='<option value="">すべての武器</option>'+Object.entries(ch.weapons).map(([k,w])=>`<option value="${k}">${w.name}</option>`).join('');
+  $('fs').innerHTML='<option value="">すべての聖遺物セット</option>'+ch.sets.map(s=>`<option value="${s.key}">${s.name}</option>`).join('');
+  render();
+}
+$('go').onclick=()=>{
+  const rolls=+$('rolls').value||20,er=Math.min(rolls,Math.max(0,+$('er').value||0));
+  all=Engine.optimize(ch,{rolls,erRolls:er,party:$('party').value}).map(x=>Object.assign(x,{er:100+Engine.ER_ROLL*er,cv:2*x.cr+x.cd}));
+  render();
+};
+$('fw').onchange=$('fs').onchange=()=>render();
+const val=(x,k)=>({cv:x.cv,buff:x.elemBuff,r1:x[ch.refs[0].key],r2:ch.refs[1]?x[ch.refs[1].key]:-1,er:x.er,dmg:x.damage}[k]);
+function render(){
+  $('head').innerHTML=COLS.map(([n,k])=>`<th ${k?`data-k="${k}"`:''} class="${k===sk?'on':''}">${n}${k===sk?(dir<0?' ▼':' ▲'):''}</th>`).join('');
+  document.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{const k=th.dataset.k;dir=k===sk?-dir:-1;sk=k;render();});
+  const fw=$('fw').value,fs=$('fs').value;
+  const list=all.filter(x=>(!fw||x.weaponKey===fw)&&(!fs||x.setKey===fs)).sort((a,b)=>dir*(val(a,sk)-val(b,sk)));
+  $('info').textContent=all.length?`表示 ${list.length} / 全 ${all.length} パターン`:'';
+  const f=v=>Math.round(v).toLocaleString();
+  $('body').innerHTML=all.length?list.map((x,i)=>`<tr><td>${i+1}</td><td>${img('images/weapons/'+x.weaponKey+'.png')}${x.weaponName}</td>
+   <td>${img('images/artifacts/'+x.setKey+'.png')}${x.setName}</td><td>${x.mainNames}</td>
+   <td>${ch.subStats.map((s,q)=>ch.subLabels[q]+' <b>'+x.rolls[s]+'</b><span class="sm">['+x.caps[s]+']</span>').join(' / ')}</td>
+   <td><span class="sm">${x.cr.toFixed(1)} : ${x.cd.toFixed(1)}</span> <span class="cv">${x.cv.toFixed(1)} cv</span></td><td>${x.elemBuff.toFixed(1)}%</td>
+   <td>${ch.refs[0].label} ${f(x[ch.refs[0].key])}</td><td>${ch.refs[1]?ch.refs[1].label+' '+f(x[ch.refs[1].key]):''}</td>
+   <td>${x.er.toFixed(1)}%</td><td><b>${x.damage.toLocaleString()}</b></td></tr>`).join(''):`<tr><td colspan="11" class="empty">条件を決めて「計算開始」を押してください</td></tr>`;
+}
+addEventListener('hashchange',route);route();
+</script></body></html>
