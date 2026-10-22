@@ -4,13 +4,23 @@
   const ER_ROLL = 5.51;                                      // チャージ効率1ロール
   const BASE_SUB = 2;                                        // 各サブステ初期ロール(固定)
 
+  // そのパーティで使える候補 (パーティ側に weaponKeys / setKeys / clocks / cups / circlets があれば上書き)
+  function avail(ch, partyKey) {
+    const pt = (ch.parties || []).find(p => p.key === partyKey) || {};
+    return {
+      weapons: Object.entries(ch.weapons).filter(([k]) => !pt.weaponKeys || pt.weaponKeys.includes(k)),
+      sets: ch.sets.filter(s => !pt.setKeys || pt.setKeys.includes(s.key)),
+      clocks: pt.clocks || ch.clocks, cups: pt.cups || ch.cups, circlets: pt.circlets || ch.circlets
+    };
+  }
+
   function optimize(ch, o) {
     const budget = Math.max(0, o.rolls - o.erRolls);         // チャージロールは必ず消費
     const stats = ch.subStats;                               // 例 ['em','cr','cd'] (最後のステが残りを受け取る)
-    const out = [];
-    for (const [wk, w] of Object.entries(ch.weapons))
-      for (const set of ch.sets)
-        for (const clock of ch.clocks) for (const cup of ch.cups) for (const circlet of ch.circlets) {
+    const out = [], A = avail(ch, o.party);
+    for (const [wk, w] of A.weapons)
+      for (const set of A.sets)
+        for (const clock of A.clocks) for (const cup of A.cups) for (const circlet of A.circlets) {
           const mains = [clock.stat, cup.stat, circlet.stat];
           const caps = {};
           for (const s of stats) caps[s] = Math.max(0, budget - mains.filter(m => m === s).length * 4 - BASE_SUB);
@@ -32,6 +42,6 @@
         }
     return out.sort((a, b) => b.damage - a.damage);
   }
-  g.Engine = { optimize, SUB, ER_ROLL, BASE_SUB };
+  g.Engine = { optimize, avail, SUB, ER_ROLL, BASE_SUB };
   if (typeof module !== 'undefined') module.exports = g.Engine;
 })(globalThis);

@@ -6,7 +6,7 @@
 公開ページ: https://rubemarin.github.io/genshin-artifact-optimizer/
 
 ## 対応キャラ
-- ナヒーダ(順次追加予定)
+- ナヒーダ / アルハイゼン / ティナリ / 八重神子(順次追加予定)
 
 ## 使い方
 1. キャラを選ぶ
