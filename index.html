@@ -47,7 +47,9 @@ th{color:var(--mu);font-size:12px;user-select:none}th[data-k]{cursor:pointer}th.
 <script src="characters/yaemiko.js" onerror="lf(this)"></script>
 <script>
 const $=id=>document.getElementById(id);
-const img=p=>`<img class="ic" src="${p}" alt="" onerror="this.remove()">`;
+// 画像の有無を記憶 (IMGS[パス]=true/false)。無い画像は2回目以降は出さない → 絞り込みのたびに空欄が出て詰まるチラつきを防ぐ
+const IMGS={};
+const img=p=>IMGS[p]===false?'':`<img class="ic" src="${p}" alt=""${IMGS[p]?'':' style="display:none"'} onload="IMGS['${p}']=true;this.style.display=''" onerror="IMGS['${p}']=false;this.remove()">`;
 const ELEM={dendro:'草',electro:'雷',pyro:'炎',hydro:'水',cryo:'氷',anemo:'風',geo:'岩'};
 const COLS=[['#'],['武器'],['聖遺物セット'],['メインステ (時計/杯/冠)'],['サブステ割振 [上限]'],['Crit Value','cv'],['元素バフ','buff'],['参照ステ1','r1'],['参照ステ2','r2'],['チャージ効率','er'],['期待値ダメージ','dmg']];
 let ch=null,all=[],sk='dmg',dir=-1;
@@ -70,7 +72,7 @@ function renderGrid(){
   const L=window.CHARACTERS.filter(c=>(!F.r||String(c.rarity)===F.r)&&(!F.e||c.element===F.e)&&(!F.w||c.weaponType===F.w))
     .sort((a,b)=>order*(a.release||'').localeCompare(b.release||''));
   $('cnt').textContent=L.length+' / '+window.CHARACTERS.length+' キャラ';
-  $('grid').innerHTML=L.length?L.map(c=>`<a class="card" href="#${c.id}">${img('images/others/char_'+c.id+'.png')}<div><b>${c.name}</b> <span class="star">${'★'.repeat(c.rarity||0)}</span><div class="sm">${c.weaponType} / ${ELEM[c.element]||c.element}元素</div><div class="sm">${c.release?'v'+c.version+' ('+c.release+')':''}</div></div></a>`).join(''):'<div class="empty" style="grid-column:1/-1">条件に合うキャラがいません</div>';
+  $('grid').innerHTML=L.length?L.map(c=>`<a class="card" href="#${c.id}">${img('images/characters/'+c.id+'.png')}<div><b>${c.name}</b> <span class="star">${'★'.repeat(c.rarity||0)}</span><div class="sm">${c.weaponType} / ${ELEM[c.element]||c.element}元素</div><div class="sm">${c.release?'v'+c.version+' ('+c.release+')':''}</div></div></a>`).join(''):'<div class="empty" style="grid-column:1/-1">条件に合うキャラがいません</div>';
 }
 $('sort').onclick=()=>{order=-order;buildFilters();renderGrid();};
 if(window.CHARACTERS.length){buildFilters();renderGrid();}else{$('flt').hidden=true;}

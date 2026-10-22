@@ -1,0 +1,151 @@
+{
+  "_note": "画像は images/weapons/<id>.png , images/artifacts/<id>.png , images/characters/<キャラid>.png , images/others/<id>.png に置く。無い場合は表示しない。",
+  "weapons": {
+    "thousand_dreams": {
+      "name": "千夜に浮かぶ夢",
+      "file": "images/weapons/thousand_dreams.png"
+    },
+    "kagura": {
+      "name": "神楽の真意",
+      "file": "images/weapons/kagura.png"
+    },
+    "widsith": {
+      "name": "流浪楽章",
+      "file": "images/weapons/widsith.png"
+    },
+    "sacrificial_fragments": {
+      "name": "祭礼の断片",
+      "file": "images/weapons/sacrificial_fragments.png"
+    },
+    "lost_prayer": {
+      "name": "四風原典",
+      "file": "images/weapons/lost_prayer.png"
+    },
+    "light_of_foliar_incision": {
+      "name": "裁葉の垂杖",
+      "file": "images/weapons/light_of_foliar_incision.png"
+    },
+    "primordial_jade_cutter": {
+      "name": "磐岩結緑",
+      "file": "images/weapons/primordial_jade_cutter.png"
+    },
+    "iron_sting": {
+      "name": "鉄蜂の刺し",
+      "file": "images/weapons/iron_sting.png"
+    },
+    "harbinger_of_dawn": {
+      "name": "黎明の神剣",
+      "file": "images/weapons/harbinger_of_dawn.png"
+    },
+    "hunters_path": {
+      "name": "猟人の道",
+      "file": "images/weapons/hunters_path.png"
+    },
+    "aqua_simulacra": {
+      "name": "若水",
+      "file": "images/weapons/aqua_simulacra.png"
+    },
+    "slingshot": {
+      "name": "弾弓",
+      "file": "images/weapons/slingshot.png"
+    },
+    "echoing_sound": {
+      "name": "胸中の谺",
+      "file": "images/weapons/echoing_sound.png"
+    },
+    "skyward_atlas": {
+      "name": "天空の巻",
+      "file": "images/weapons/skyward_atlas.png"
+    }
+  },
+  "artifacts": {
+    "deepwood_memories": {
+      "name": "深林の記憶",
+      "file": "images/artifacts/deepwood_memories.png"
+    },
+    "golden_troupe": {
+      "name": "黄金の劇団",
+      "file": "images/artifacts/golden_troupe.png"
+    },
+    "gilded_dreams": {
+      "name": "金メッキの夢",
+      "file": "images/artifacts/gilded_dreams.png"
+    },
+    "marechaussee_hunter": {
+      "name": "ファントムハンター",
+      "file": "images/artifacts/marechaussee_hunter.png"
+    },
+    "wanderers_troupe": {
+      "name": "大地を流浪する楽団",
+      "file": "images/artifacts/wanderers_troupe.png"
+    },
+    "shadow_phantom": {
+      "name": "影に沈む幻",
+      "file": "images/artifacts/shadow_phantom.png"
+    },
+    "furnace_heart": {
+      "name": "炉炎溶錬の心",
+      "file": "images/artifacts/furnace_heart.png"
+    },
+    "em_2_2": {
+      "name": "熟知80 + 熟知80 (2セット組)",
+      "file": "images/artifacts/em_2_2.png"
+    },
+    "atk_2_2": {
+      "name": "攻撃18% + 攻撃18% (2セット組)",
+      "file": "images/artifacts/atk_2_2.png"
+    }
+  },
+  "characters": {
+    "nahida": {
+      "name": "ナヒーダ",
+      "file": "images/characters/nahida.png"
+    },
+    "alhaitham": {
+      "name": "アルハイゼン",
+      "file": "images/characters/alhaitham.png"
+    },
+    "tighnari": {
+      "name": "ティナリ",
+      "file": "images/characters/tighnari.png"
+    },
+    "yaemiko": {
+      "name": "八重神子",
+      "file": "images/characters/yaemiko.png"
+    }
+  },
+  "others": {
+    "element_dendro": {
+      "name": "草元素アイコン",
+      "file": "images/others/element_dendro.png"
+    },
+    "element_electro": {
+      "name": "雷元素アイコン",
+      "file": "images/others/element_electro.png"
+    },
+    "stat_atk": {
+      "name": "攻撃力アイコン",
+      "file": "images/others/stat_atk.png"
+    },
+    "stat_em": {
+      "name": "元素熟知アイコン",
+      "file": "images/others/stat_em.png"
+    },
+    "stat_crit_rate": {
+      "name": "会心率アイコン",
+      "file": "images/others/stat_crit_rate.png"
+    },
+    "stat_crit_dmg": {
+      "name": "会心ダメージアイコン",
+      "file": "images/others/stat_crit_dmg.png"
+    },
+    "stat_er": {
+      "name": "元素チャージ効率アイコン",
+      "file": "images/others/stat_er.png"
+    },
+    "stat_dmg_bonus": {
+      "name": "元素ダメージバフアイコン",
+      "file": "images/others/stat_dmg_bonus.png"
+    }
+  }
+}
