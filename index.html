@@ -10,7 +10,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:va
 .card:hover{border-color:var(--pr);background:var(--hv);transform:translateY(-2px)}.card .ic{width:48px;height:48px;border-radius:50%}
 .flt{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:16px}.fr{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.fl{font-size:12px;color:var(--mu);width:52px}
 .chip{background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;margin-right:2px}.chip .ic{width:18px;height:18px;margin:0 4px 0 0}.card .sm .ic{width:16px;height:16px;margin:0 3px 0 0}
-.chip.on{background:var(--pr);border-color:var(--pr);color:#fff}.star{color:var(--gold);font-size:12px}
+.chip.on{background:var(--pr);border-color:var(--pr);color:#fff}.star{color:var(--gold);font-size:12px}.warn{color:#f87171;font-size:11px}
 .back{color:var(--ac);text-decoration:none;font-size:14px;display:inline-block;margin-bottom:10px}
 .bar{display:flex;gap:16px;flex-wrap:wrap;align-items:end;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:12px}
 .bar label{display:block;font-size:12px;color:var(--mu);margin-bottom:4px}
@@ -41,11 +41,11 @@ th{color:var(--mu);font-size:12px;user-select:none}th[data-k]{cursor:pointer}th.
 <div class="tw"><table><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table></div></div>
 </div>
 <script>var LOADFAIL=[];function lf(e){LOADFAIL.push(e.getAttribute("src"));}</script>
-<script src="common.js" onerror="lf(this)"></script>
-<script src="characters/nahida.js" onerror="lf(this)"></script>
-<script src="characters/alhaitham.js" onerror="lf(this)"></script>
-<script src="characters/tighnari.js" onerror="lf(this)"></script>
-<script src="characters/yaemiko.js" onerror="lf(this)"></script>
+<script src="common.js?v=20261023a" onerror="lf(this)"></script>
+<script src="characters/nahida.js?v=20261023a" onerror="lf(this)"></script>
+<script src="characters/alhaitham.js?v=20261023a" onerror="lf(this)"></script>
+<script src="characters/tighnari.js?v=20261023a" onerror="lf(this)"></script>
+<script src="characters/yaemiko.js?v=20261023a" onerror="lf(this)"></script>
 <script>
 const $=id=>document.getElementById(id);
 const IMG_EXT='webp';   // 画像の拡張子 (png に戻す場合はここだけ変更)
@@ -78,7 +78,7 @@ function renderGrid(){
   const L=window.CHARACTERS.filter(c=>(!F.r||String(c.rarity)===F.r)&&(!F.e||c.element===F.e)&&(!F.w||c.weaponType===F.w))
     .sort((a,b)=>order*(a.release||'').localeCompare(b.release||''));
   $('cnt').textContent=L.length+' / '+window.CHARACTERS.length+' キャラ';
-  $('grid').innerHTML=L.length?L.map(c=>`<a class="card" href="#${c.id}">${img('images/characters/'+c.id+'.'+IMG_EXT)}<div><b>${c.name}</b> <span class="star">${'★'.repeat(c.rarity||0)}</span><div class="sm">${oimg(WICON[c.weaponType])}${c.weaponType} ${oimg(ELICON[c.element])}${ELEM[c.element]||c.element}元素</div><div class="sm">${c.release?'v'+c.version+' ('+c.release+')':''}</div></div></a>`).join(''):'<div class="empty" style="grid-column:1/-1">条件に合うキャラがいません</div>';
+  $('grid').innerHTML=L.length?L.map(c=>`<a class="card" href="#${c.id}">${img('images/characters/'+c.id+'.'+IMG_EXT)}<div><b>${c.name}</b> <span class="star">${c.rarity?'★'.repeat(c.rarity):'<span class="warn">⚠レア度なし</span>'}</span><div class="sm">${oimg(WICON[c.weaponType])}${c.weaponType} ${oimg(ELICON[c.element])}${ELEM[c.element]||c.element}元素</div><div class="sm">${c.release?'v'+c.version+' ('+c.release+')':'<span class="warn">⚠実装日なし (キャラファイルが古い可能性)</span>'}</div></div></a>`).join(''):'<div class="empty" style="grid-column:1/-1">条件に合うキャラがいません</div>';
 }
 $('sort').onclick=()=>{order=-order;buildFilters();renderGrid();};
 if(window.CHARACTERS.length){buildFilters();renderGrid();}else{$('flt').hidden=true;}
