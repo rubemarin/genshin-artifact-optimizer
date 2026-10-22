@@ -9,7 +9,8 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:va
 .card{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;color:inherit;text-decoration:none;transition:.2s}
 .card:hover{border-color:var(--pr);background:var(--hv);transform:translateY(-2px)}.card .ic{width:48px;height:48px;border-radius:50%}
 .flt{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:16px}.fr{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.fl{font-size:12px;color:var(--mu);width:52px}
-.chip{background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;margin-right:2px}.chip.on{background:var(--pr);border-color:var(--pr);color:#fff}.star{color:var(--gold);font-size:12px}
+.chip{background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;margin-right:2px}.chip .ic{width:18px;height:18px;margin:0 4px 0 0}.card .sm .ic{width:16px;height:16px;margin:0 3px 0 0}
+.chip.on{background:var(--pr);border-color:var(--pr);color:#fff}.star{color:var(--gold);font-size:12px}
 .back{color:var(--ac);text-decoration:none;font-size:14px;display:inline-block;margin-bottom:10px}
 .bar{display:flex;gap:16px;flex-wrap:wrap;align-items:end;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:12px}
 .bar label{display:block;font-size:12px;color:var(--mu);margin-bottom:4px}
@@ -47,10 +48,15 @@ th{color:var(--mu);font-size:12px;user-select:none}th[data-k]{cursor:pointer}th.
 <script src="characters/yaemiko.js" onerror="lf(this)"></script>
 <script>
 const $=id=>document.getElementById(id);
+const IMG_EXT='webp';   // 画像の拡張子 (png に戻す場合はここだけ変更)
 // 画像の有無を記憶 (IMGS[パス]=true/false)。無い画像は2回目以降は出さない → 絞り込みのたびに空欄が出て詰まるチラつきを防ぐ
 const IMGS={};
 const img=p=>IMGS[p]===false?'':`<img class="ic" src="${p}" alt=""${IMGS[p]?'':' style="display:none"'} onload="IMGS['${p}']=true;this.style.display=''" onerror="IMGS['${p}']=false;this.remove()">`;
 const ELEM={dendro:'草',electro:'雷',pyro:'炎',hydro:'水',cryo:'氷',anemo:'風',geo:'岩'};
+// 属性・武器種のアイコン (images/others/ のファイル名に合わせる。大文字小文字も一致させること)
+const ELICON={pyro:'pyro',hydro:'hydro',electro:'electro',dendro:'dendro',anemo:'anemo',geo:'geo',cryo:'cryo'};
+const WICON={'片手剣':'sword_one_hand','両手剣':'claymore','長柄武器':'lance','弓':'bow','法器':'catalyst'};
+const oimg=n=>n?img('images/others/'+n+'.'+IMG_EXT):'';
 const COLS=[['#'],['武器'],['聖遺物セット'],['メインステ (時計/杯/冠)'],['サブステ割振 [上限]'],['Crit Value','cv'],['元素バフ','buff'],['参照ステ1','r1'],['参照ステ2','r2'],['チャージ効率','er'],['期待値ダメージ','dmg']];
 let ch=null,all=[],sk='dmg',dir=-1;
 if(typeof CHARACTERS==='undefined'||!CHARACTERS.length){$('grid').innerHTML='<div class="empty" style="grid-column:1/-1">キャラデータを読み込めませんでした。<br>読み込めなかったファイル: '+(LOADFAIL.length?LOADFAIL.join(' , '):'(読み込みは成功したがデータが空 → ファイルの中身を確認)')+'</div>';window.CHARACTERS=[];}
@@ -63,16 +69,16 @@ function chips(id,k,opts){
 function buildFilters(){
   const C=window.CHARACTERS;
   chips('f-r','r',[['5','★5'],['4','★4']]);
-  chips('f-e','e',ELORD.filter(e=>C.some(c=>c.element===e)).map(e=>[e,ELEM[e]]));
+  chips('f-e','e',ELORD.filter(e=>C.some(c=>c.element===e)).map(e=>[e,oimg(ELICON[e])+ELEM[e]]));
   const ws=WORD.filter(w=>C.some(c=>c.weaponType===w)).concat([...new Set(C.map(c=>c.weaponType))].filter(w=>!WORD.includes(w)));
-  chips('f-w','w',ws.map(w=>[w,w]));
+  chips('f-w','w',ws.map(w=>[w,oimg(WICON[w])+w]));
   $('sort').textContent='実装日: '+(order<0?'新しい順 ▼':'古い順 ▲');
 }
 function renderGrid(){
   const L=window.CHARACTERS.filter(c=>(!F.r||String(c.rarity)===F.r)&&(!F.e||c.element===F.e)&&(!F.w||c.weaponType===F.w))
     .sort((a,b)=>order*(a.release||'').localeCompare(b.release||''));
   $('cnt').textContent=L.length+' / '+window.CHARACTERS.length+' キャラ';
-  $('grid').innerHTML=L.length?L.map(c=>`<a class="card" href="#${c.id}">${img('images/characters/'+c.id+'.png')}<div><b>${c.name}</b> <span class="star">${'★'.repeat(c.rarity||0)}</span><div class="sm">${c.weaponType} / ${ELEM[c.element]||c.element}元素</div><div class="sm">${c.release?'v'+c.version+' ('+c.release+')':''}</div></div></a>`).join(''):'<div class="empty" style="grid-column:1/-1">条件に合うキャラがいません</div>';
+  $('grid').innerHTML=L.length?L.map(c=>`<a class="card" href="#${c.id}">${img('images/characters/'+c.id+'.'+IMG_EXT)}<div><b>${c.name}</b> <span class="star">${'★'.repeat(c.rarity||0)}</span><div class="sm">${oimg(WICON[c.weaponType])}${c.weaponType} ${oimg(ELICON[c.element])}${ELEM[c.element]||c.element}元素</div><div class="sm">${c.release?'v'+c.version+' ('+c.release+')':''}</div></div></a>`).join(''):'<div class="empty" style="grid-column:1/-1">条件に合うキャラがいません</div>';
 }
 $('sort').onclick=()=>{order=-order;buildFilters();renderGrid();};
 if(window.CHARACTERS.length){buildFilters();renderGrid();}else{$('flt').hidden=true;}
@@ -110,8 +116,8 @@ function render(){
   const list=all.filter(x=>(!fw||x.weaponKey===fw)&&(!fs||x.setKey===fs)).sort((a,b)=>dir*(val(a,sk)-val(b,sk)));
   $('info').textContent=all.length?`表示 ${list.length} / 全 ${all.length} パターン`:'';
   const f=v=>Math.round(v).toLocaleString();
-  $('body').innerHTML=all.length?list.map((x,i)=>`<tr><td>${i+1}</td><td>${img('images/weapons/'+x.weaponKey+'.png')}${x.weaponName}</td>
-   <td>${img('images/artifacts/'+x.setKey+'.png')}${x.setName}</td><td>${x.mainNames}</td>
+  $('body').innerHTML=all.length?list.map((x,i)=>`<tr><td>${i+1}</td><td>${img('images/weapons/'+x.weaponKey+'.'+IMG_EXT)}${x.weaponName}</td>
+   <td>${img('images/artifacts/'+x.setKey+'.'+IMG_EXT)}${x.setName}</td><td>${x.mainNames}</td>
    <td>${ch.subStats.map((s,q)=>ch.subLabels[q]+' <b>'+x.rolls[s]+'</b><span class="sm">['+x.caps[s]+']</span>').join(' / ')}</td>
    <td><span class="sm">${x.cr.toFixed(1)} : ${x.cd.toFixed(1)}</span> <span class="cv">${x.cv.toFixed(1)} cv</span></td><td>${x.elemBuff.toFixed(1)}%</td>
    <td>${ch.refs[0].label} ${f(x[ch.refs[0].key])}</td><td>${ch.refs[1]?ch.refs[1].label+' '+f(x[ch.refs[1].key]):''}</td>
