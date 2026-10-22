@@ -1,9 +1,11 @@
 // ティナリ専用データ + ダメージ計算 (重撃: 花筐の矢 + 蔓纏の矢4発 / 草激化)  前提: 2凸 / 天賦Lv10 (恒常キャラは2凸、限定キャラは無凸の方針)
+// パーティ: ティナリ+草1+雷2 (草共鳴 熟知+100)
 // 旧 tighnari.html からの修正点: 1凸の重撃会心率+15%を追加 / 2凸の草ダメ+20%は旧ページから継続
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'tighnari', name: 'ティナリ', element: 'dendro', weaponType: '弓',
   rarity: 5, version: '3.0', release: '2022-08-24',
-  parties: [{ key: 'standard', name: '標準 (異元素3人 / 2凸)', same: 0, diff: 3 }],   // 既存ページにパーティ選択なし
+  // same=同元素(草)の味方数 / diff=異元素の味方数 / resEm=草共鳴の熟知
+  parties: [{ key: 'aggravate', name: '激化 (ティナリ+草1+雷2 / 草共鳴 熟知+100 / 2凸)', same: 1, diff: 2, resEm: 100 }],
   refs: [{ key: 'em', label: '熟知' }, { key: 'atk', label: '攻撃力' }],
   subStats: ['em', 'cr', 'cd'], subLabels: ['熟', '率', '傷'],
   weapons: {
@@ -26,9 +28,12 @@
     const S = Engine.SUB, n = s => mains.filter(m => m === s).length;
     let em = 50 + 187 * n('em') + S.em * (2 + rolls.em) + (w.sameEm || 0) * sameN;
     if (set.key === 'wanderers_troupe') em += 80;
-    if (set.key === 'gilded_dreams') em += 80 + 150;
+    if (set.key === 'gilded_dreams') em += 80 + 50 * Math.min(3, pt.diff);   // 2セット80 + 4セット(異元素の味方×50)
     if (set.key === 'em_2_2') em += 160;
-    const atk = (268 + w.atk) * (1 + (2 * S.atk + (w.diffAtk || 0) * diffN) / 100) + 311 + 33.08;
+    em += pt.resEm || 0;                                          // 草共鳴
+    let atkPct = 2 * S.atk + (w.diffAtk || 0) * diffN;
+    if (set.key === 'gilded_dreams') atkPct += 14 * Math.min(3, pt.same);   // 同元素の味方×14%
+    const atk = (268 + w.atk) * (1 + atkPct / 100) + 311 + 33.08;
     const cr = Math.min(100, 5 + 15 + w.cr + n('cr') * 31.1 + (2 + rolls.cr) * S.cr);   // 1凸: 重撃の会心率+15%
     const cd = 50 + w.cd + n('cd') * 62.2 + (2 + rolls.cd) * S.cd;
     const elemBuff = 48.8 + (n('dendro') ? 46.6 : 0) + (w.elem || 0);   // 突破28.8 + 2凸20 + 杯 + 武器の全元素ダメ

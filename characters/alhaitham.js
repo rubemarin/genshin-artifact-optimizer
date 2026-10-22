@@ -2,6 +2,7 @@
 // 旧 alhaitham.html からの修正点: 金メッキの夢の熟知(+50×異元素)・攻撃力(+14%×同元素)をパーティの構成で変化させる
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'alhaitham', name: 'アルハイゼン', element: 'dendro', weaponType: '片手剣',
+  rarity: 5, version: '3.4', release: '2023-01-18',
   parties: [
     { key: 'dendro_2_electro_2', name: '草草雷雷 (草共鳴 熟知+100)', same: 1, diff: 2 },
     { key: 'dendro_2_hydro_electro', name: '草草水雷 (草共鳴 熟知+100)', same: 1, diff: 2 },

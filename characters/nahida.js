@@ -7,16 +7,17 @@
 // 前提: ナヒーダは場にいない状態。流浪楽章・四風原典は効果なし(会心ダメ/会心率の武器として扱う)
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'nahida', name: 'ナヒーダ', element: 'dendro', weaponType: '法器',
+  rarity: 5, version: '3.2', release: '2022-11-02',
   parties: [
     { key: 'dendro_2_electro_2', name: '草草雷雷 (草共鳴 熟知+100)', same: 1, diff: 2 },
     { key: 'dendro_2_hydro_electro', name: '草草水雷 (草共鳴 熟知+100)', same: 1, diff: 2 },
     { key: 'dendro_1_hydro_electro_other', name: '草水雷+草以外 (草共鳴なし)', same: 0, diff: 3 }
   ],
-  refs: [{ key: 'em', label: '熟知' }],               // 参照ステ1, 2(無ければ空欄)
+  refs: [{ key: 'em', label: '熟知' }, { key: 'atk', label: '攻撃力' }],   // 参照ステ1, 2(無ければ空欄)
   subStats: ['em', 'cr', 'cd'], subLabels: ['熟', '率', '傷'],
   weapons: {
     thousand_dreams:       { name: '千夜に浮かぶ夢', atk: 542, em: 265, cr: 0,    cd: 0,    buff: 0, sameEm: 32, diffBuff: 10 },  // 同元素の味方1人につき熟知+32 / 異元素の味方1人につき自元素ダメ+10% (各最大3層, R1)
-    kagura:                { name: '神楽の真意',     atk: 608, em: 0,        cr: 0,    cd: 66.2, buff: 48 },
+    kagura:                { name: '神楽の真意',     atk: 608, em: 0,        cr: 0,    cd: 66.2, buff: 36, elem: 12 },
     widsith:               { name: '流浪楽章 (R5)',  atk: 510, em: 0,        cr: 0,    cd: 55.1, buff: 0 },
     sacrificial_fragments: { name: '祭礼の断片 (R5)', atk: 454, em: 221,      cr: 0,    cd: 0,    buff: 0 },
     lost_prayer:           { name: '四風原典',       atk: 608, em: 0,        cr: 33.1, cd: 0,    buff: 0 }
@@ -39,9 +40,10 @@
     const ex = Math.max(0, em - 200);
     const cr = Math.min(100, 5 + weapon.cr + n('cr') * 31.1 + (2 + rolls.cr) * S.cr + Math.min(24, ex * 0.03));
     const cd = 50 + weapon.cd + n('cd') * 62.2 + (2 + rolls.cd) * S.cd;
-    const elemBuff = n('dendro') ? 46.6 : 0;
-    const setBuff = { golden_troupe: 70, deepwood_memories: 15 }[set.key] || 0;
-    const buff = Math.min(80, ex * 0.1) + elemBuff + setBuff + weapon.buff + (weapon.diffBuff || 0) * Math.min(3, pt.diff);
+    // 元素バフ(表示用) = キャラ画面の草元素ダメージバフ: 杯 + 深林2セット15 + 武器(千夜: 異元素の味方×10 / 神楽: 12)
+    const elemBuff = (n('dendro') ? 46.6 : 0) + (set.key === 'deepwood_memories' ? 15 : 0) + (weapon.elem || 0) + (weapon.diffBuff || 0) * Math.min(3, pt.diff);
+    // スキルダメージ限定のバフ: 黄金の劇団 70 / 神楽 36
+    const buff = Math.min(80, ex * 0.1) + elemBuff + (set.key === 'golden_troupe' ? 70 : 0) + weapon.buff;
     const base = atk * 1.8576 + em * 3.7152;
     const spread = 1.25 * 1446.85 * (1 + (5 * em) / (em + 1200));
     const res = set.key === 'deepwood_memories' ? 1.10 : 0.90;
