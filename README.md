@@ -1,83 +1,36 @@
-# 画像の置き場所
+# 原神 キャラ別 最適サブステ計算
 
-```
-images/
-├── weapons/      ← 武器画像
-├── artifacts/    ← 聖遺物セット画像
-├── characters/   ← キャラ画像 (ファイル名は キャラID.webp)
-├── others/       ← その他の画像(元素・ステータスのアイコン)
-└── manifest.json ← ID と日本語名の対応表
-```
+キャラを選び、パーティ構成とロール数を決めて計算すると、
+**武器 × 聖遺物セット × メインステータス**の全パターンについて、最適なサブステ割り振りを表示します。
 
-## ルール
-- 形式は **WebP**、拡張子は小文字の `.webp`
-- ファイル名は下の表のとおり(**半角英小文字とアンダースコア**。日本語名や大文字は使わない)
-- サイズは正方形で **128×128px 程度** にそろえると見た目と読み込みが安定します
-- 画像が無い項目は、表示されません(無くても動きます)
-- 画像は、使用が認められているものを自分で用意してください
+公開ページ: https://rubemarin.github.io/genshin-artifact-optimizer/
 
-## 武器 (`images/weapons/`)
-| ファイル名 | 名前 | 使うキャラ |
+## 対応キャラ
+| キャラ | 武器種 | 前提 |
 |---|---|---|
-| `weapons/thousand_dreams.webp` | 千夜に浮かぶ夢 | ナヒーダ/八重神子 |
-| `weapons/kagura.webp` | 神楽の真意 | ナヒーダ/八重神子 |
-| `weapons/widsith.webp` | 流浪楽章 | ナヒーダ/八重神子 |
-| `weapons/sacrificial_fragments.webp` | 祭礼の断片 | ナヒーダ |
-| `weapons/lost_prayer.webp` | 四風原典 | ナヒーダ/八重神子 |
-| `weapons/light_of_foliar_incision.webp` | 裁葉の垂杖 | アルハイゼン |
-| `weapons/primordial_jade_cutter.webp` | 磐岩結緑 | アルハイゼン |
-| `weapons/iron_sting.webp` | 鉄蜂の刺し | アルハイゼン |
-| `weapons/harbinger_of_dawn.webp` | 黎明の神剣 | アルハイゼン |
-| `weapons/hunters_path.webp` | 猟人の道 | ティナリ |
-| `weapons/aqua_simulacra.webp` | 若水 | ティナリ |
-| `weapons/slingshot.webp` | 弾弓 | ティナリ |
-| `weapons/jadevista.webp` | 鈞懸黎 | ティナリ |
-| `weapons/echoing_sound.webp` | 胸中の谺 | 八重神子 |
-| `weapons/skyward_atlas.webp` | 天空の巻 | 八重神子 |
+| ナヒーダ | 法器 | 無凸 / 天賦Lv10 / 場にいない状態 |
+| アルハイゼン | 片手剣 | 無凸 / 天賦Lv10 |
+| ティナリ | 弓 | 2凸 / 天賦Lv10 (恒常キャラは2凸) |
+| 八重神子 | 法器 | 無凸 / 天賦Lv10 |
 
-## 聖遺物セット (`images/artifacts/`)
-| ファイル名 | 名前 | 使うキャラ |
-|---|---|---|
-| `artifacts/deepwood_memories.webp` | 深林の記憶 | ナヒーダ |
-| `artifacts/golden_troupe.webp` | 黄金の劇団 | ナヒーダ/八重神子 |
-| `artifacts/gilded_dreams.webp` | 金メッキの夢 | ナヒーダ/アルハイゼン/ティナリ/八重神子 |
-| `artifacts/marechaussee_hunter.webp` | ファントムハンター | アルハイゼン |
-| `artifacts/wanderers_troupe.webp` | 大地を流浪する楽団 | ティナリ |
-| `artifacts/shadow_phantom.webp` | 影に沈む幻 | 八重神子 |
-| `artifacts/furnace_heart.webp` | 炉炎溶錬の心 | 八重神子 |
-| `artifacts/em_2_2.webp` | 熟知80 + 熟知80 (2セット組) | ナヒーダ/アルハイゼン/ティナリ/八重神子 |
-| `artifacts/atk_2_2.webp` | 攻撃18% + 攻撃18% (2セット組) | 八重神子 |
+## 使い方
+1. トップ画面でキャラを選ぶ (レア度・属性・武器種で絞り込み、実装日順で並び替え)
+2. パーティ構成・ベース可変ロール数・チャージロール数を決めて「計算開始」
+   - チャージロールに入れた数は必ず消費され、残りのロールを他のステに最適配分します
+3. 全パターンを表示。武器・聖遺物セットで絞り込み、列の見出しで並べ替え
 
-`em_2_2` と `atk_2_2` は、2種類のセットを組み合わせた構成です。代表の聖遺物の画像や、簡単なアイコンを使ってください。
+## フォルダ構成
+```
+index.html        画面
+common.js         共通の計算エンジン (総当たり)
+characters/       キャラごとのデータとダメージ計算式
+images/           画像 (置き場所と名前の規則は images/README.md)
+```
 
-## キャラ (`images/characters/`)
-ファイル名は、キャラのID(`characters/○○.js` の `id`)に `.webp` を付けます。
+## キャラの追加
+1. `characters/_template.js` をコピーして `キャラID.js` にし、★の部分を書き換える
+2. `index.html` に `<script src="characters/キャラID.js"></script>` を1行足す
+3. キャラ画像を `images/characters/キャラID.webp` に置く
 
-| ファイル名 | キャラ |
-|---|---|
-| `characters/nahida.webp` | ナヒーダ |
-| `characters/alhaitham.webp` | アルハイゼン |
-| `characters/tighnari.webp` | ティナリ |
-| `characters/yaemiko.webp` | 八重神子 |
-
-## その他 (`images/others/`)
-属性アイコンと武器種アイコンです。画面の絞り込みボタンとキャラのカードに表示します。
-ファイル名は、すべて小文字で、下の表のとおりにしてください(大文字小文字も一致が必要です)。
-
-| ファイル名 | 内容 |
-|---|---|
-| `others/pyro.webp` | 炎元素 |
-| `others/hydro.webp` | 水元素 |
-| `others/electro.webp` | 雷元素 |
-| `others/dendro.webp` | 草元素 |
-| `others/anemo.webp` | 風元素 |
-| `others/geo.webp` | 岩元素 |
-| `others/cryo.webp` | 氷元素 |
-| `others/sword_one_hand.webp` | 片手剣 |
-| `others/claymore.webp` | 両手剣 |
-| `others/lance.webp` | 長柄武器 |
-| `others/bow.webp` | 弓 |
-| `others/catalyst.webp` | 法器 |
-
-## キャラを増やすとき
-新しい武器、セット、キャラが必要になったら(キャラは `characters/<id>.webp`、必要なら新しい元素のアイコンも)、ID(英小文字+アンダースコア)を決めて、画像を置き、`manifest.json` に1行足してください。
+## 注意
+非公式のファンツールです。ゲーム内の名称・画像の権利は HoYoverse (miHoYo) に帰属します。
