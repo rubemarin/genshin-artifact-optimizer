@@ -34,6 +34,11 @@ images/
 | `weapons/jadevista.webp` | 千鈞懸黎 | ティナリ |
 | `weapons/echoing_sound.webp` | 胸中の谺 | 八重神子 |
 | `weapons/skyward_atlas.webp` | 天空の巻 | 八重神子 |
+| `weapons/sacrificial_sword.webp` | 祭礼の剣 | 行秋 |
+| `weapons/lunar_dawn.webp` | 月紡ぎの曙光 | 行秋 |
+| `weapons/mistsplitter_reforged.webp` | 霧切の廻光 | 行秋 |
+| `weapons/wolf_fang.webp` | 狼牙 | 行秋 |
+| `weapons/absolution.webp` | 黒蝕 | 行秋 |
 
 ## 聖遺物セット (`images/artifacts/`)
 | ファイル名 | 名前 | 使うキャラ |
@@ -49,6 +54,10 @@ images/
 | `artifacts/atk_2_2.webp` | 攻撃18% + 攻撃18% (2セット組) | 八重神子 |
 
 `em_2_2` と `atk_2_2` は、2種類のセットを組み合わせた構成です。代表の聖遺物の画像や、簡単なアイコンを使ってください。
+| `artifacts/emblem_of_severed_fate.webp` | 絶縁の旗印 | 行秋 |
+| `artifacts/noblesse_oblige.webp` | 旧貴族のしつけ | 行秋 |
+| `artifacts/nymphs_dream.webp` | 水仙の夢 | 行秋 |
+| `artifacts/noblesse_2_hydro_2.webp` | 旧貴族2 + 水仙/沈淪2 (2種の組み合わせ) | 行秋 |
 
 ## キャラ (`images/characters/`)
 ファイル名は、キャラのID(`characters/○○.js` の `id`)に `.webp` を付けます。
@@ -59,6 +68,7 @@ images/
 | `characters/alhaitham.webp` | アルハイゼン |
 | `characters/tighnari.webp` | ティナリ |
 | `characters/yaemiko.webp` | 八重神子 |
+| `characters/xingqiu.webp` | 行秋 |
 
 ## その他 (`images/others/`)
 属性アイコンと武器種アイコンです。画面の絞り込みボタンとキャラのカードに表示します。

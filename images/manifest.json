@@ -60,6 +60,26 @@
     "jadevista": {
       "name": "千鈞懸黎",
       "file": "images/weapons/jadevista.webp"
+    },
+    "sacrificial_sword": {
+      "name": "祭礼の剣",
+      "file": "images/weapons/sacrificial_sword.webp"
+    },
+    "lunar_dawn": {
+      "name": "月紡ぎの曙光",
+      "file": "images/weapons/lunar_dawn.webp"
+    },
+    "mistsplitter_reforged": {
+      "name": "霧切の廻光",
+      "file": "images/weapons/mistsplitter_reforged.webp"
+    },
+    "wolf_fang": {
+      "name": "狼牙",
+      "file": "images/weapons/wolf_fang.webp"
+    },
+    "absolution": {
+      "name": "黒蝕",
+      "file": "images/weapons/absolution.webp"
     }
   },
   "artifacts": {
@@ -98,6 +118,22 @@
     "atk_2_2": {
       "name": "攻撃18% + 攻撃18% (2セット組)",
       "file": "images/artifacts/atk_2_2.webp"
+    },
+    "emblem_of_severed_fate": {
+      "name": "絶縁の旗印",
+      "file": "images/artifacts/emblem_of_severed_fate.webp"
+    },
+    "noblesse_oblige": {
+      "name": "旧貴族のしつけ",
+      "file": "images/artifacts/noblesse_oblige.webp"
+    },
+    "nymphs_dream": {
+      "name": "水仙の夢",
+      "file": "images/artifacts/nymphs_dream.webp"
+    },
+    "noblesse_2_hydro_2": {
+      "name": "旧貴族2 + 水仙/沈淪2 (2種の組み合わせ)",
+      "file": "images/artifacts/noblesse_2_hydro_2.webp"
     }
   },
   "characters": {
@@ -116,6 +152,10 @@
     "yaemiko": {
       "name": "八重神子",
       "file": "images/characters/yaemiko.webp"
+    },
+    "xingqiu": {
+      "name": "行秋",
+      "file": "images/characters/xingqiu.webp"
     }
   },
   "others": {
