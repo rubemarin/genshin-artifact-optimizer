@@ -31,7 +31,7 @@ images/
 | `weapons/hunters_path.webp` | 猟人の道 | ティナリ |
 | `weapons/aqua_simulacra.webp` | 若水 | ティナリ |
 | `weapons/slingshot.webp` | 弾弓 | ティナリ |
-| `weapons/jadevista.webp` | 鈞懸黎 | ティナリ |
+| `weapons/jadevista.webp` | 千鈞懸黎 | ティナリ |
 | `weapons/echoing_sound.webp` | 胸中の谺 | 八重神子 |
 | `weapons/skyward_atlas.webp` | 天空の巻 | 八重神子 |
 
