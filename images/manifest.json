@@ -1,28 +1,28 @@
 {
   "_note": "画像は images/weapons/<id>.webp , images/artifacts/<id>.webp , images/characters/<キャラid>.webp , images/others/<id>.webp に置く。無い場合は表示しない。",
   "weapons": {
-    "thousand_dreams": {
+    "a_thousand_floating_dreams": {
       "name": "千夜に浮かぶ夢",
-      "file": "images/weapons/thousand_dreams.webp"
+      "file": "images/weapons/a_thousand_floating_dreams.webp"
     },
-    "kagura": {
+    "kaguras_verity": {
       "name": "神楽の真意",
-      "file": "images/weapons/kagura.webp"
+      "file": "images/weapons/kaguras_verity.webp"
     },
-    "widsith": {
+    "the_widsith": {
       "name": "流浪楽章",
-      "file": "images/weapons/widsith.webp"
+      "file": "images/weapons/the_widsith.webp"
     },
     "sacrificial_fragments": {
       "name": "祭礼の断片",
       "file": "images/weapons/sacrificial_fragments.webp"
     },
-    "lost_prayer": {
+    "lost_prayer_to_the_sacred_winds": {
       "name": "四風原典",
-      "file": "images/weapons/lost_prayer.webp"
+      "file": "images/weapons/lost_prayer_to_the_sacred_winds.webp"
     },
     "light_of_foliar_incision": {
-      "name": "裁葉の垂杖",
+      "name": "萃光の裁葉",
       "file": "images/weapons/light_of_foliar_incision.webp"
     },
     "primordial_jade_cutter": {
@@ -38,7 +38,7 @@
       "file": "images/weapons/harbinger_of_dawn.webp"
     },
     "hunters_path": {
-      "name": "猟人の道",
+      "name": "狩人の道",
       "file": "images/weapons/hunters_path.webp"
     },
     "aqua_simulacra": {
@@ -49,25 +49,25 @@
       "name": "弾弓",
       "file": "images/weapons/slingshot.webp"
     },
-    "echoing_sound": {
+    "echoes_of_the_heart": {
       "name": "胸中の谺",
-      "file": "images/weapons/echoing_sound.webp"
+      "file": "images/weapons/echoes_of_the_heart.webp"
     },
     "skyward_atlas": {
       "name": "天空の巻",
       "file": "images/weapons/skyward_atlas.webp"
     },
-    "jadevista": {
+    "jade_vista": {
       "name": "千鈞懸黎",
-      "file": "images/weapons/jadevista.webp"
+      "file": "images/weapons/jade_vista.webp"
     },
     "sacrificial_sword": {
       "name": "祭礼の剣",
       "file": "images/weapons/sacrificial_sword.webp"
     },
-    "lunar_dawn": {
+    "moonweavers_dawn": {
       "name": "月紡ぎの曙光",
-      "file": "images/weapons/lunar_dawn.webp"
+      "file": "images/weapons/moonweavers_dawn.webp"
     },
     "mistsplitter_reforged": {
       "name": "霧切の廻光",
@@ -77,9 +77,9 @@
       "name": "狼牙",
       "file": "images/weapons/wolf_fang.webp"
     },
-    "absolution": {
+    "athame_artis": {
       "name": "黒蝕",
-      "file": "images/weapons/absolution.webp"
+      "file": "images/weapons/athame_artis.webp"
     },
     "favonius_warbow": {
       "name": "西風猟弓",

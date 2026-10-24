@@ -9,6 +9,10 @@ images/
 └── manifest.json ← ID と日本語名の対応表
 ```
 
+## 武器のファイル名の決め方
+武器の英語の正式名を、**小文字にして、アポストロフィ(')を除き、記号とスペースを `_` に変えたもの**です。
+例: `Kagura's Verity` → `kaguras_verity` / `Wolf-Fang` → `wolf_fang` / `Hunter's Path` → `hunters_path` / `A Thousand Floating Dreams` → `a_thousand_floating_dreams`
+
 ## ルール
 - 形式は **WebP**、拡張子は小文字の `.webp`
 - ファイル名は下の表のとおり(**半角英小文字とアンダースコア**。日本語名や大文字は使わない)
@@ -19,26 +23,26 @@ images/
 ## 武器 (`images/weapons/`)
 | ファイル名 | 名前 | 使うキャラ |
 |---|---|---|
-| `weapons/thousand_dreams.webp` | 千夜に浮かぶ夢 | ナヒーダ/八重神子 |
-| `weapons/kagura.webp` | 神楽の真意 | ナヒーダ/八重神子 |
-| `weapons/widsith.webp` | 流浪楽章 | ナヒーダ/八重神子 |
+| `weapons/a_thousand_floating_dreams.webp` | 千夜に浮かぶ夢 | ナヒーダ/八重神子 |
+| `weapons/kaguras_verity.webp` | 神楽の真意 | ナヒーダ/八重神子 |
+| `weapons/the_widsith.webp` | 流浪楽章 | ナヒーダ/八重神子 |
 | `weapons/sacrificial_fragments.webp` | 祭礼の断片 | ナヒーダ |
-| `weapons/lost_prayer.webp` | 四風原典 | ナヒーダ/八重神子 |
-| `weapons/light_of_foliar_incision.webp` | 裁葉の垂杖 | アルハイゼン |
+| `weapons/lost_prayer_to_the_sacred_winds.webp` | 四風原典 | ナヒーダ/八重神子 |
+| `weapons/light_of_foliar_incision.webp` | 萃光の裁葉 | アルハイゼン |
 | `weapons/primordial_jade_cutter.webp` | 磐岩結緑 | アルハイゼン |
 | `weapons/iron_sting.webp` | 鉄蜂の刺し | アルハイゼン |
 | `weapons/harbinger_of_dawn.webp` | 黎明の神剣 | アルハイゼン |
-| `weapons/hunters_path.webp` | 猟人の道 | ティナリ |
+| `weapons/hunters_path.webp` | 狩人の道 | ティナリ |
 | `weapons/aqua_simulacra.webp` | 若水 | ティナリ |
 | `weapons/slingshot.webp` | 弾弓 | ティナリ |
-| `weapons/jadevista.webp` | 千鈞懸黎 | ティナリ |
-| `weapons/echoing_sound.webp` | 胸中の谺 | 八重神子 |
+| `weapons/jade_vista.webp` | 千鈞懸黎 | ティナリ |
+| `weapons/echoes_of_the_heart.webp` | 胸中の谺 | 八重神子 |
 | `weapons/skyward_atlas.webp` | 天空の巻 | 八重神子 |
 | `weapons/sacrificial_sword.webp` | 祭礼の剣 | 行秋 |
-| `weapons/lunar_dawn.webp` | 月紡ぎの曙光 | 行秋 |
+| `weapons/moonweavers_dawn.webp` | 月紡ぎの曙光 | 行秋 |
 | `weapons/mistsplitter_reforged.webp` | 霧切の廻光 | 行秋 |
 | `weapons/wolf_fang.webp` | 狼牙 | 行秋 |
-| `weapons/absolution.webp` | 黒蝕 | 行秋 |
+| `weapons/athame_artis.webp` | 黒蝕 | 行秋 |
 | `weapons/favonius_warbow.webp` | 西風猟弓 | 夜蘭 |
 | `weapons/fading_twilight.webp` | 落霞 | 夜蘭 |
 | `weapons/recurve_bow.webp` | リカーブボウ | 夜蘭 |
