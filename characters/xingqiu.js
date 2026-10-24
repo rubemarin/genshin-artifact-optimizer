@@ -29,7 +29,7 @@
   cups:     [{ name: '水バフ', stat: 'hydro' }, { name: '攻撃%', stat: 'atk' }],
   circlets: [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat: 'cd' }],
   calc({ weapon: w, set, mains, rolls, erRolls }) {
-    const S = Engine.SUB, n = s => mains.filter(m => m === s).length, k = set.key;
+    const S = Engine.SUB, n = s => (mains.c[s] || 0), k = set.key;
     // チャージ効率
     const er = 100 + (w.er || 0) + 51.8 * n('er') + (k === 'emblem_of_severed_fate' ? 20 : 0) + Engine.ER_ROLL * erRolls;
     // 攻撃力

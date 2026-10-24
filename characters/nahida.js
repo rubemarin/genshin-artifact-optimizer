@@ -31,7 +31,7 @@
   circlets: [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat: 'cd' }, { name: '熟知', stat: 'em' }],
   calc({ weapon, set, mains, rolls, party }) {
     const pt = this.parties.find(x => x.key === party);
-    const S = Engine.SUB, n = s => mains.filter(m => m === s).length;
+    const S = Engine.SUB, n = s => (mains.c[s] || 0);
     let em = 115 + weapon.em + (weapon.sameEm || 0) * Math.min(3, pt.same) + 187 * n('em') + S.em * (2 + rolls.em);
     if (set.key === 'gilded_dreams') em += 80 + (party === 'dendro_1_hydro_electro_other' ? 150 : 100); // 2セット80 + 4セット(異元素×50)
     if (set.key === 'em_2_2') em += 160;

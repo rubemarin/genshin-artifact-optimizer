@@ -25,7 +25,7 @@
   calc({ weapon: w, set, mains, rolls, party }) {
     const pt = this.parties.find(x => x.key === party);
     const sameN = Math.min(3, pt.same), diffN = Math.min(3 - sameN, pt.diff);   // 同元素優先で合計3層
-    const S = Engine.SUB, n = s => mains.filter(m => m === s).length;
+    const S = Engine.SUB, n = s => (mains.c[s] || 0);
     let em = 50 + 187 * n('em') + S.em * (2 + rolls.em) + (w.sameEm || 0) * sameN;
     if (set.key === 'wanderers_troupe') em += 80;
     if (set.key === 'gilded_dreams') em += 80 + 50 * Math.min(3, pt.diff);   // 2セット80 + 4セット(異元素の味方×50)

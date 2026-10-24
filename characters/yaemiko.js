@@ -45,7 +45,7 @@ const CIR     = [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat
   clocks: [], cups: [], circlets: [],   // パーティ側で指定
   calc({ weapon: w, set, mains, rolls, party }) {
     const pt = this.parties.find(x => x.key === party);
-    const S = Engine.SUB, n = s => mains.filter(m => m === s).length, k = set.key;
+    const S = Engine.SUB, n = s => (mains.c[s] || 0), k = set.key;
     // 熟知
     let em = 187 * n('em') + w.em + (w.sameEm || 0) * Math.min(3, pt.same) + S.em * (2 + rolls.em);
     if (k === 'gilded_dreams') em += 80 + 50 * Math.min(3, pt.diff);   // 2セット80 + 4セット(異元素の味方×50)
