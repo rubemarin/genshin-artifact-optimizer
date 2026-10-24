@@ -10,6 +10,7 @@ const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // 爆発を多く回�
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'xingqiu', name: '行秋', element: 'hydro', weaponType: '片手剣',
   rarity: 4, version: '1.0', release: '2020-09-28',
+  engine: 2,   // このファイルが必要とする common.js の版 (古い common.js だと、画面に警告が出る)
   base: { hp: 10222.42, atk: 201.78, def: 757.60, em: 0 },   // Lv90の基礎ステータス (計算で参照しないものも記入)
   ascend: { atkPct: 24 },   // 突破ボーナス
   parties: [{ key: 'solo', name: '特になし (単体で計算)', same: 0, diff: 0 }],

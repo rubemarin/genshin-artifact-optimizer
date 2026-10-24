@@ -10,6 +10,7 @@ const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // チャージ武器�
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'yelan', name: '夜蘭', element: 'hydro', weaponType: '弓',
   rarity: 5, version: '2.7', release: '2022-05-31',
+  engine: 2,   // このファイルが必要とする common.js の版 (古い common.js だと、画面に警告が出る)
   base: { hp: 14450.17, atk: 243.96, def: 547.98, em: 0 },   // Lv90の基礎ステータス (計算で参照しないものも記入)
   ascend: { cr: 19.2 },   // 突破ボーナス
   // passiveHp=Turn Control / resHp=水共鳴(HP+25%) / resCr=氷共鳴(会心率+15%)

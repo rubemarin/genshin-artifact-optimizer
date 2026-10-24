@@ -11,6 +11,7 @@ const CIR     = [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'yaemiko', name: '八重神子', element: 'electro', weaponType: '法器',
   rarity: 5, version: '2.5', release: '2022-02-16',
+  engine: 2,   // このファイルが必要とする common.js の版 (古い common.js だと、画面に警告が出る)
   base: { hp: 10372.29, atk: 339.63, def: 568.73, em: 0 },   // Lv90の基礎ステータス (計算で参照しないものも記入)
   ascend: { cr: 19.2 },   // 突破ボーナス
   // パーティごとに 武器・セット・メインステの候補が変わる (common.js の avail が上書きする)

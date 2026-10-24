@@ -4,6 +4,7 @@
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'alhaitham', name: 'アルハイゼン', element: 'dendro', weaponType: '片手剣',
   rarity: 5, version: '3.4', release: '2023-01-18',
+  engine: 2,   // このファイルが必要とする common.js の版 (古い common.js だと、画面に警告が出る)
   base: { hp: 13348.04, atk: 313.32, def: 781.62, em: 0 },   // Lv90の基礎ステータス (計算で参照しないものも記入)
   ascend: { dendroDmg: 28.8 },   // 突破ボーナス
   parties: [

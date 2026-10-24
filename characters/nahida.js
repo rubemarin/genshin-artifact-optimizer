@@ -9,6 +9,7 @@
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'nahida', name: 'ナヒーダ', element: 'dendro', weaponType: '法器',
   rarity: 5, version: '3.2', release: '2022-11-02',
+  engine: 2,   // このファイルが必要とする common.js の版 (古い common.js だと、画面に警告が出る)
   base: { hp: 10360.04, atk: 298.97, def: 630.21, em: 0 },   // Lv90の基礎ステータス (計算で参照しないものも記入)
   ascend: { em: 115.2 },   // 突破ボーナス
   parties: [

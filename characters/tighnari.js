@@ -5,6 +5,7 @@
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'tighnari', name: 'ティナリ', element: 'dendro', weaponType: '弓',
   rarity: 5, version: '3.0', release: '2022-08-24',
+  engine: 2,   // このファイルが必要とする common.js の版 (古い common.js だと、画面に警告が出る)
   base: { hp: 10849.88, atk: 267.88, def: 630.21, em: 0 },   // Lv90の基礎ステータス (計算で参照しないものも記入)
   ascend: { dendroDmg: 28.8 },   // 突破ボーナス
   passive: { em: 50, heavyCr: 15, dendroDmg: 20 },   // 固有天賦の熟知+50 / 1凸 重撃会心率+15% / 2凸 草ダメ+20%
