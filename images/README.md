@@ -39,6 +39,10 @@ images/
 | `weapons/mistsplitter_reforged.webp` | 霧切の廻光 | 行秋 |
 | `weapons/wolf_fang.webp` | 狼牙 | 行秋 |
 | `weapons/absolution.webp` | 黒蝕 | 行秋 |
+| `weapons/favonius_warbow.webp` | 西風猟弓 | 夜蘭 |
+| `weapons/fading_twilight.webp` | 落霞 | 夜蘭 |
+| `weapons/recurve_bow.webp` | リカーブボウ | 夜蘭 |
+| `weapons/the_stringless.webp` | 絶弦 | 夜蘭 |
 
 ## 聖遺物セット (`images/artifacts/`)
 | ファイル名 | 名前 | 使うキャラ |
@@ -58,6 +62,8 @@ images/
 | `artifacts/noblesse_oblige.webp` | 旧貴族のしつけ | 行秋 |
 | `artifacts/nymphs_dream.webp` | 水仙の夢 | 行秋 |
 | `artifacts/noblesse_2_hydro_2.webp` | 旧貴族2 + 水仙/沈淪2 (2種の組み合わせ) | 行秋 |
+| `artifacts/hp_2_2.webp` | HP20% + HP20% (2種の組み合わせ) | 夜蘭 |
+| `artifacts/hydro_2_hp_2.webp` | 水ダメ15% + HP20% (2種の組み合わせ) | 夜蘭 |
 
 ## キャラ (`images/characters/`)
 ファイル名は、キャラのID(`characters/○○.js` の `id`)に `.webp` を付けます。
@@ -69,6 +75,7 @@ images/
 | `characters/tighnari.webp` | ティナリ |
 | `characters/yaemiko.webp` | 八重神子 |
 | `characters/xingqiu.webp` | 行秋 |
+| `characters/yelan.webp` | 夜蘭 |
 
 ## その他 (`images/others/`)
 属性アイコンと武器種アイコンです。画面の絞り込みボタンとキャラのカードに表示します。

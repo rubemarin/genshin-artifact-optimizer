@@ -80,6 +80,22 @@
     "absolution": {
       "name": "黒蝕",
       "file": "images/weapons/absolution.webp"
+    },
+    "favonius_warbow": {
+      "name": "西風猟弓",
+      "file": "images/weapons/favonius_warbow.webp"
+    },
+    "fading_twilight": {
+      "name": "落霞",
+      "file": "images/weapons/fading_twilight.webp"
+    },
+    "recurve_bow": {
+      "name": "リカーブボウ",
+      "file": "images/weapons/recurve_bow.webp"
+    },
+    "the_stringless": {
+      "name": "絶弦",
+      "file": "images/weapons/the_stringless.webp"
     }
   },
   "artifacts": {
@@ -134,6 +150,14 @@
     "noblesse_2_hydro_2": {
       "name": "旧貴族2 + 水仙/沈淪2 (2種の組み合わせ)",
       "file": "images/artifacts/noblesse_2_hydro_2.webp"
+    },
+    "hp_2_2": {
+      "name": "HP20% + HP20% (2種の組み合わせ)",
+      "file": "images/artifacts/hp_2_2.webp"
+    },
+    "hydro_2_hp_2": {
+      "name": "水ダメ15% + HP20% (2種の組み合わせ)",
+      "file": "images/artifacts/hydro_2_hp_2.webp"
     }
   },
   "characters": {
@@ -156,6 +180,10 @@
     "xingqiu": {
       "name": "行秋",
       "file": "images/characters/xingqiu.webp"
+    },
+    "yelan": {
+      "name": "夜蘭",
+      "file": "images/characters/yelan.webp"
     }
   },
   "others": {
