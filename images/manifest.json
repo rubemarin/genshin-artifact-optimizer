@@ -147,17 +147,9 @@
       "name": "水仙の夢",
       "file": "images/artifacts/nymphs_dream.webp"
     },
-    "noblesse_2_hydro_2": {
-      "name": "旧貴族2 + 水仙/沈淪2 (2種の組み合わせ)",
-      "file": "images/artifacts/noblesse_2_hydro_2.webp"
-    },
     "hp_2_2": {
       "name": "HP20% + HP20% (2種の組み合わせ)",
       "file": "images/artifacts/hp_2_2.webp"
-    },
-    "hydro_2_hp_2": {
-      "name": "水ダメ15% + HP20% (2種の組み合わせ)",
-      "file": "images/artifacts/hydro_2_hp_2.webp"
     }
   },
   "characters": {

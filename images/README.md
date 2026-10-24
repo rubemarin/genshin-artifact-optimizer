@@ -55,15 +55,13 @@ images/
 | `artifacts/shadow_phantom.webp` | 影に沈む幻 | 八重神子 |
 | `artifacts/furnace_heart.webp` | 炉炎溶錬の心 | 八重神子 |
 | `artifacts/em_2_2.webp` | 熟知80 + 熟知80 (2セット組) | ナヒーダ/アルハイゼン/ティナリ/八重神子 |
-| `artifacts/atk_2_2.webp` | 攻撃18% + 攻撃18% (2セット組) | 八重神子 |
+| `artifacts/atk_2_2.webp` | 攻撃18% + 攻撃18% (2セット組) | 八重神子 / 行秋 |
 
 `em_2_2` と `atk_2_2` は、2種類のセットを組み合わせた構成です。代表の聖遺物の画像や、簡単なアイコンを使ってください。
 | `artifacts/emblem_of_severed_fate.webp` | 絶縁の旗印 | 行秋 |
 | `artifacts/noblesse_oblige.webp` | 旧貴族のしつけ | 行秋 |
 | `artifacts/nymphs_dream.webp` | 水仙の夢 | 行秋 |
-| `artifacts/noblesse_2_hydro_2.webp` | 旧貴族2 + 水仙/沈淪2 (2種の組み合わせ) | 行秋 |
 | `artifacts/hp_2_2.webp` | HP20% + HP20% (2種の組み合わせ) | 夜蘭 |
-| `artifacts/hydro_2_hp_2.webp` | 水ダメ15% + HP20% (2種の組み合わせ) | 夜蘭 |
 
 ## キャラ (`images/characters/`)
 ファイル名は、キャラのID(`characters/○○.js` の `id`)に `.webp` を付けます。
