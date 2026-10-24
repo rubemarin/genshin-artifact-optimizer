@@ -10,7 +10,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:va
 .card:hover{border-color:var(--pr);background:var(--hv);transform:translateY(-2px)}.card .ic{width:48px;height:48px;border-radius:50%}
 .flt{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:16px}.fr{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.fl{font-size:12px;color:var(--mu);width:52px}
 .chip{background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;margin-right:2px}.chip .ic{width:18px;height:18px;margin:0 4px 0 0}.card .sm .ic{width:16px;height:16px;margin:0 3px 0 0}
-.chip.on{background:var(--pr);border-color:var(--pr);color:#fff}.star{color:var(--gold);font-size:12px}.warn{color:#f87171;font-size:11px}
+.chip.on{background:var(--pr);border-color:var(--pr);color:#fff}.star{color:var(--gold);font-size:12px}.warnbar{background:#7f1d1d;color:#fecaca;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;line-height:1.7}.warn{color:#f87171;font-size:11px}
 .back{color:var(--ac);text-decoration:none;font-size:14px;display:inline-block;margin-bottom:10px}
 .bar{display:flex;gap:16px;flex-wrap:wrap;align-items:end;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:12px}
 .bar label{display:block;font-size:12px;color:var(--mu);margin-bottom:4px}
@@ -21,6 +21,7 @@ table{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap}th,t
 th{color:var(--mu);font-size:12px;user-select:none}th[data-k]{cursor:pointer}th.on{color:var(--ac)}tbody tr:hover td{background:var(--hv)}
 .ic{width:28px;height:28px;object-fit:contain;vertical-align:middle;margin-right:6px}.cv{color:var(--gold);font-weight:bold}.empty{text-align:center;color:var(--mu);padding:28px}
 </style></head><body><div class="wrap">
+<div id="warn" class="warnbar" hidden></div>
 <div id="portal"><h1>原神 キャラ別 最適サブステ計算</h1>
 <div class="sub">キャラクターを選ぶと、武器・聖遺物セット・メインステの全パターンについて、最適なサブステ割り振りを計算します</div>
 <div class="flt" id="flt">
@@ -41,15 +42,26 @@ th{color:var(--mu);font-size:12px;user-select:none}th[data-k]{cursor:pointer}th.
 <div class="tw"><table><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table></div></div>
 </div>
 <script>var LOADFAIL=[];function lf(e){LOADFAIL.push(e.getAttribute("src"));}</script>
-<script src="common.js?v=20261023k" onerror="lf(this)"></script>
-<script src="characters/nahida.js?v=20261023k" onerror="lf(this)"></script>
-<script src="characters/alhaitham.js?v=20261023k" onerror="lf(this)"></script>
-<script src="characters/tighnari.js?v=20261023k" onerror="lf(this)"></script>
-<script src="characters/yaemiko.js?v=20261023k" onerror="lf(this)"></script>
-<script src="characters/xingqiu.js?v=20261023k" onerror="lf(this)"></script>
-<script src="characters/yelan.js?v=20261023k" onerror="lf(this)"></script>
+<script src="common.js?v=20261023l" onerror="lf(this)"></script>
+<script src="characters/nahida.js?v=20261023l" onerror="lf(this)"></script>
+<script src="characters/alhaitham.js?v=20261023l" onerror="lf(this)"></script>
+<script src="characters/tighnari.js?v=20261023l" onerror="lf(this)"></script>
+<script src="characters/yaemiko.js?v=20261023l" onerror="lf(this)"></script>
+<script src="characters/xingqiu.js?v=20261023l" onerror="lf(this)"></script>
+<script src="characters/yelan.js?v=20261023l" onerror="lf(this)"></script>
 <script>
 const $=id=>document.getElementById(id);
+const NEED_ENGINE=2;   // この画面が必要とする common.js の版
+// ファイルの版が食い違っているとき (一部のファイルだけ更新したときなど) に、画面に理由を出す
+(function(){
+  const ver=(typeof Engine!=='undefined'&&Engine.version)||0,msgs=[];
+  if(!ver)msgs.push('common.js が古い版か、読み込めていません。最新の common.js をアップロードしてください。');
+  else if(ver<NEED_ENGINE)msgs.push('common.js が古い版です (v'+ver+' / 必要: v'+NEED_ENGINE+')。最新の common.js をアップロードしてください。');
+  const old=(window.CHARACTERS||[]).filter(c=>(c.engine||0)<NEED_ENGINE).map(c=>c.name);
+  if(old.length)msgs.push('キャラのファイルが古い版です: '+old.join('、')+' (characters フォルダの最新版をアップロードしてください)');
+  if(typeof LOADFAIL!=='undefined'&&LOADFAIL.length)msgs.push('読み込めなかったファイル: '+LOADFAIL.join(' , '));
+  if(msgs.length){$('warn').hidden=false;$('warn').innerHTML='⚠ '+msgs.join('<br>⚠ ');}
+})();
 const IMG_EXT='webp';   // 画像の拡張子 (png に戻す場合はここだけ変更)
 // 画像の有無を記憶 (IMGS[パス]=true/false)。無い画像は2回目以降は出さない → 絞り込みのたびに空欄が出て詰まるチラつきを防ぐ
 const IMGS={};
@@ -107,7 +119,13 @@ $('party').onchange=()=>fillFilters(false);
 $('go').onclick=()=>{
   const rolls=+$('rolls').value||20,er=Math.min(rolls,Math.max(0,+$('er').value||0));
   const t0=performance.now();
-  all=Engine.optimize(ch,{rolls,erRolls:er,party:$('party').value}).map(x=>Object.assign(x,{er:x.er!=null?x.er:100+Engine.ER_ROLL*er,cv:2*x.cr+x.cd}));
+  try{
+    all=Engine.optimize(ch,{rolls,erRolls:er,party:$('party').value}).map(x=>Object.assign(x,{er:x.er!=null?x.er:100+Engine.ER_ROLL*er,cv:2*x.cr+x.cd}));
+  }catch(e){
+    all=[];render();console.error(e);
+    $('info').innerHTML='<span class="warn">計算エラー: '+e.message+' ― common.js とキャラのファイルの版が合っていない可能性があります (全部まとめて最新版をアップロードしてください)</span>';
+    return;
+  }
   calcMs=performance.now()-t0;shown=PAGE;
   render();
 };

@@ -1,10 +1,24 @@
 // 共通エンジン: 武器 × 聖遺物セット × メインステ を総当たりし、各組み合わせでサブステ割り振りを総当たりして最大値を探す
 (function (g) {
-  const SUB = { atk: 4.96, hp: 4.96, em: 19.82, cr: 3.31, cd: 6.62 }; // 1ロール(平均)あたりの上昇値
+  const SUB = { atk: 4.96, hp: 4.96, em: 19.82, cr: 3.31, cd: 6.62 }; // 1ロール(平均)あたりの上昇値 (割り振り対象のステ用)
+  // KQM基準: 全サブステに2ロールずつ (実数値も含む)。1ロールあたり: 防御%=6.2 防御=19.68 HP=253.94 HP%=4.96 攻撃=16.54 攻撃%=4.96 チャージ=5.51 熟知=19.82 会心率=3.31 会心ダメ=6.62
+  const SUBV = { defPct: 6.2, defFlat: 19.68, hpFlat: 253.94, hpPct: 4.96, atkFlat: 16.54, atkPct: 4.96, er: 5.51, em: 19.82, cr: 3.31, cd: 6.62 };
   const ER_ROLL = 5.51;                                      // チャージ効率1ロール
   const BASE_SUB = 2;                                        // 各サブステ初期ロール(固定)
 
   // そのパーティで使える候補 (パーティ側に weaponKeys / setKeys / clocks / cups / circlets があれば上書き。武器側の clocks / cups / circlets はさらに優先)
+  // サブステの合計値 s を作る (全ステ 2ロール + 割り振り + チャージロール)。calc は ctx.s を参照する
+  function fillSub(s, rolls, erRolls) {
+    const B = BASE_SUB;
+    s.atkPct = SUBV.atkPct * (B + (rolls.atk || 0));  s.atkFlat = SUBV.atkFlat * B;
+    s.hpPct  = SUBV.hpPct  * (B + (rolls.hp  || 0));  s.hpFlat  = SUBV.hpFlat  * B;
+    s.defPct = SUBV.defPct * (B + (rolls.def || 0));  s.defFlat = SUBV.defFlat * B;
+    s.er = SUBV.er * (B + erRolls + (rolls.er || 0));
+    s.em = SUBV.em * (B + (rolls.em || 0));
+    s.cr = SUBV.cr * (B + (rolls.cr || 0));
+    s.cd = SUBV.cd * (B + (rolls.cd || 0));
+  }
+
   function avail(ch, partyKey) {
     const pt = (ch.parties || []).find(p => p.key === partyKey) || {};
     return {
@@ -27,9 +41,12 @@
           const caps = {};
           for (const s of stats) caps[s] = Math.max(0, budget - (mains.c[s] || 0) * 4 - BASE_SUB);
           const rolls = {}; let best = null;
-          const ctx = { weapon: w, set, mains, rolls, party: o.party, erRolls: o.erRolls };   // 1組み合わせにつき1つ (rolls は使い回す)
+          const sub = {};
+          const ctx = { weapon: w, set, mains, rolls, party: o.party, erRolls: o.erRolls, s: sub };   // 1組み合わせにつき1つ (rolls は使い回す)
           const ev = () => {
+            fillSub(sub, rolls, o.erRolls);
             const r = ch.calc(ctx);
+            if (r.er == null) r.er = 100 + sub.er;          // チャージ効率: calc が返さなければ 100% + サブステ分
             if (!best || r.damage > best.damage) best = Object.assign({}, r, { rolls: Object.assign({}, rolls) });
           };
           const rec = (i, rem) => {
@@ -45,6 +62,6 @@
         }
     return out.sort((a, b) => b.damage - a.damage);
   }
-  g.Engine = { optimize, avail, SUB, ER_ROLL, BASE_SUB };
+  g.Engine = { version: 2, optimize, avail, SUB, SUBV, ER_ROLL, BASE_SUB };   // version: 2 = KQM基準(全サブステ2ロール / calc に s を渡す)
   if (typeof module !== 'undefined') module.exports = g.Engine;
 })(globalThis);
