@@ -3,7 +3,9 @@
 // 倍率: スキルLv13 = 357.00% + 405.875% (4凸の1.5倍は含まない) / 爆発Lv13 = 115.3875% × 50hit (6凸の波込み)
 // 2凸: 爆発hit時 敵の水耐性-15% (爆発のみ適用) / 4凸: スキルダメ×1.5 (独立乗算) / 固有天賦: 水ダメ+20%
 // 黒蝕(R1): 爆発の会心ダメ+16% / 白昼の刃で攻撃力+20% (爆発hit後3秒。爆発中はずっと有効で、4凸の条件上スキルも爆発中に使うため両方に適用) / 魔導秘技なし
+// 時計: チャージ効率サブステの武器(祭礼の剣)は チャージ/攻撃% から選択、それ以外の武器は チャージ効率に固定
 // 霧切の廻光: 全元素+12% + 峰の印2層(R1: 16%) = 水ダメ+28% / 狼牙: 表にいる時のみの会心率効果は使わず、スキル・爆発ダメ+32%(R5)のみ
+const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // 爆発を多く回すため、チャージ武器以外は時計をチャージ効率に固定
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'xingqiu', name: '行秋', element: 'hydro', weaponType: '片手剣',
   rarity: 4, version: '1.0', release: '2020-09-28',
@@ -13,11 +15,11 @@
   // atkPct/er/cr/cd=サブステ / hpPct・hpToAtk=磐岩結緑 / elem=水ダメ+% / skillBonus=スキルダメ+% / burst=爆発ダメ+% / burstCd=爆発の会心ダメ+% / atkBuff=攻撃力+% / skillCount=スキル回数
   weapons: {
     sacrificial_sword:      { name: '祭礼の剣 (R5)',  atk: 454, atkPct: 0,    er: 61.3, cr: 0,    cd: 0,    skillCount: 2 },   // スキルCTリセット → スキル2回
-    primordial_jade_cutter: { name: '磐岩結緑 (R1)',  atk: 542, atkPct: 0,    er: 0,    cr: 44.1, cd: 0,    hpPct: 20, hpToAtk: 1.2 },
-    lunar_dawn:             { name: '月紡ぎの曙光 (R5)', atk: 565, atkPct: 27.6, er: 0,    cr: 0,    cd: 0,    burst: 40 },      // 爆発+40% (エネルギー80>60のため追加分なし)
-    mistsplitter_reforged:  { name: '霧切の廻光 (R1)',  atk: 674, atkPct: 0,    er: 0,    cr: 0,    cd: 44.1, elem: 12 + 16 },  // 全元素+12% + 峰の印2層16%
-    wolf_fang:              { name: '狼牙 (R5)',       atk: 510, atkPct: 0,    er: 0,    cr: 27.6, cd: 0,    skillBonus: 32, burst: 32 },  // スキル・爆発ダメ+32% (会心率の効果は表にいる時のみのため除外)
-    absolution:             { name: '黒蝕 (R1)',       atk: 608, atkPct: 0,    er: 0,    cr: 33.1, cd: 0,    burstCd: 16, atkBuff: 20 }  // 爆発の会心ダメ+16% / 攻撃力+20%
+    primordial_jade_cutter: { name: '磐岩結緑 (R1)',  atk: 542, atkPct: 0,    er: 0,    cr: 44.1, cd: 0,    hpPct: 20, hpToAtk: 1.2, clocks: CLK_ER },
+    lunar_dawn:             { name: '月紡ぎの曙光 (R5)', atk: 565, atkPct: 27.6, er: 0,    cr: 0,    cd: 0,    burst: 40, clocks: CLK_ER },      // 爆発+40% (エネルギー80>60のため追加分なし)
+    mistsplitter_reforged:  { name: '霧切の廻光 (R1)',  atk: 674, atkPct: 0,    er: 0,    cr: 0,    cd: 44.1, elem: 12 + 16, clocks: CLK_ER },  // 全元素+12% + 峰の印2層16%
+    wolf_fang:              { name: '狼牙 (R5)',       atk: 510, atkPct: 0,    er: 0,    cr: 27.6, cd: 0,    skillBonus: 32, burst: 32, clocks: CLK_ER },  // スキル・爆発ダメ+32% (会心率の効果は表にいる時のみのため除外)
+    absolution:             { name: '黒蝕 (R1)',       atk: 608, atkPct: 0,    er: 0,    cr: 33.1, cd: 0,    burstCd: 16, atkBuff: 20, clocks: CLK_ER }  // 爆発の会心ダメ+16% / 攻撃力+20%
   },
   sets: [
     { key: 'emblem_of_severed_fate', name: '絶縁の旗印 4' },
