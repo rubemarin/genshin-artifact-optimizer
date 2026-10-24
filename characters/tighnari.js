@@ -1,19 +1,23 @@
 // ティナリ専用データ + ダメージ計算 (重撃: 花筐の矢 + 蔓纏の矢4発 / 草激化)  前提: 2凸 / 天賦Lv10 (恒常キャラは2凸、限定キャラは無凸の方針)
 // パーティ: ティナリ+草1+雷2 (草共鳴 熟知+100)
 // 旧 tighnari.html からの修正点: 1凸の重撃会心率+15%を追加 / 2凸の草ダメ+20%は旧ページから継続
+(() => {   // このファイルの const 名が他のキャラのファイルと衝突しないように、囲いの中に入れる
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'tighnari', name: 'ティナリ', element: 'dendro', weaponType: '弓',
   rarity: 5, version: '3.0', release: '2022-08-24',
+  base: { hp: 10849.88, atk: 267.88, def: 630.21, em: 0 },   // Lv90の基礎ステータス (計算で参照しないものも記入)
+  ascend: { dendroDmg: 28.8 },   // 突破ボーナス
+  passive: { em: 50, heavyCr: 15, dendroDmg: 20 },   // 固有天賦の熟知+50 / 1凸 重撃会心率+15% / 2凸 草ダメ+20%
   // same=同元素(草)の味方数 / diff=異元素の味方数 / resEm=草共鳴の熟知
   parties: [{ key: 'aggravate', name: '激化 (ティナリ+草1+雷2 / 草共鳴 熟知+100 / 2凸)', same: 1, diff: 2, resEm: 100 }],
   refs: [{ key: 'em', label: '熟知' }, { key: 'atk', label: '攻撃力' }],
   subStats: ['em', 'cr', 'cd'], subLabels: ['熟', '率', '傷'],
   weapons: {
-    hunters_path:   { name: '猟人の道 (R1)', atk: 542, cr: 44.1, cd: 0,    buff: 0,  elem: 12, emFlat: 1.60 },
+    hunters_path:   { name: '狩人の道 (R1)', atk: 542, cr: 44.1, cd: 0,    buff: 0,  elem: 12, emFlat: 1.60 },
     aqua_simulacra: { name: '若水 (R1)',     atk: 542, cr: 0,    cd: 88.2, buff: 20, emFlat: 0 },
     slingshot:      { name: '弾弓 (R5)',     atk: 354, cr: 31.2, cd: 0,    buff: 60, emFlat: 0 },
     // 千鈞懸黎 (R5): 味方1人ごとに 同元素→熟知+128 / 異元素→攻撃力+24%。合計3層まで、同元素が優先 (R1は熟知64 / 攻撃力12%)
-    jadevista:      { name: '千鈞懸黎 (R5)', atk: 510, cr: 27.6, cd: 0,    buff: 0,  emFlat: 0, sameEm: 128, diffAtk: 24 }
+    jade_vista:      { name: '千鈞懸黎 (R5)', atk: 510, cr: 27.6, cd: 0,    buff: 0,  emFlat: 0, sameEm: 128, diffAtk: 24 }
   },
   sets: [
     { key: 'wanderers_troupe', name: '大地を流浪する楽団 4' }, { key: 'gilded_dreams', name: '金メッキの夢 4' },
@@ -22,21 +26,21 @@
   clocks:   [{ name: '熟知', stat: 'em' }],
   cups:     [{ name: '草バフ', stat: 'dendro' }, { name: '熟知', stat: 'em' }],
   circlets: [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat: 'cd' }],   // 既存ページの表示対象に合わせて2種
-  calc({ weapon: w, set, mains, rolls, party }) {
+  calc({ weapon: w, set, mains, party, s }) {
     const pt = this.parties.find(x => x.key === party);
     const sameN = Math.min(3, pt.same), diffN = Math.min(3 - sameN, pt.diff);   // 同元素優先で合計3層
-    const S = Engine.SUB, n = s => (mains.c[s] || 0);
-    let em = 50 + 187 * n('em') + S.em * (2 + rolls.em) + (w.sameEm || 0) * sameN;
+    const n = k => (mains.c[k] || 0);
+    let em = this.base.em + this.passive.em + 187 * n('em') + s.em + (w.sameEm || 0) * sameN;
     if (set.key === 'wanderers_troupe') em += 80;
     if (set.key === 'gilded_dreams') em += 80 + 50 * Math.min(3, pt.diff);   // 2セット80 + 4セット(異元素の味方×50)
     if (set.key === 'em_2_2') em += 160;
     em += pt.resEm || 0;                                          // 草共鳴
-    let atkPct = 2 * S.atk + (w.diffAtk || 0) * diffN;
+    let atkPct = s.atkPct + (w.diffAtk || 0) * diffN;
     if (set.key === 'gilded_dreams') atkPct += 14 * Math.min(3, pt.same);   // 同元素の味方×14%
-    const atk = (268 + w.atk) * (1 + atkPct / 100) + 311 + 33.08;
-    const cr = Math.min(100, 5 + 15 + w.cr + n('cr') * 31.1 + (2 + rolls.cr) * S.cr);   // 1凸: 重撃の会心率+15%
-    const cd = 50 + w.cd + n('cd') * 62.2 + (2 + rolls.cd) * S.cd;
-    const elemBuff = 48.8 + (n('dendro') ? 46.6 : 0) + (w.elem || 0);   // 突破28.8 + 2凸20 + 杯 + 武器の全元素ダメ
+    const atk = (this.base.atk + w.atk) * (1 + atkPct / 100) + 311 + s.atkFlat;
+    const cr = Math.min(100, 5 + this.passive.heavyCr + w.cr + n('cr') * 31.1 + s.cr);   // 1凸: 重撃の会心率+15%
+    const cd = 50 + w.cd + n('cd') * 62.2 + s.cd;
+    const elemBuff = this.ascend.dendroDmg + this.passive.dendroDmg + (n('dendro') ? 46.6 : 0) + (w.elem || 0);   // 突破 + 2凸 + 杯 + 武器の全元素ダメ
     const buff = elemBuff + Math.min(60, em * 0.06) + w.buff + (set.key === 'wanderers_troupe' ? 35 : 0);
     const hunter = em * w.emFlat;
     const spread = 1446.85 * 1.25 * (1 + (5 * em) / (em + 1200));
@@ -45,3 +49,4 @@
     return { damage, em, atk, cr, cd, buff, elemBuff };
   }
 });
+})();
