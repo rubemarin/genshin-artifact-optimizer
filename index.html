@@ -9,7 +9,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:va
 .card{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;color:inherit;text-decoration:none;transition:.2s}
 .card:hover{border-color:var(--pr);background:var(--hv);transform:translateY(-2px)}.card .ic{width:48px;height:48px;border-radius:50%}
 .flt{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:16px}.fr{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.fl{font-size:12px;color:var(--mu);width:52px}
-.chip{background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;margin-right:2px}.chip .ic{width:18px;height:18px;margin:0 4px 0 0}.card .sm .ic{width:16px;height:16px;margin:0 3px 0 0}
+.chip{background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;margin-right:2px}.chip .ic{width:18px;height:18px;margin:0 4px 0 0}.ref{white-space:nowrap}.ref .ic{width:18px;height:18px;margin:0 3px 0 0}.ab{font-size:11px;color:var(--mu);margin-right:4px}.ico img:not([style*="display:none"])+.ab{display:none}.card .sm .ic{width:16px;height:16px;margin:0 3px 0 0}
 .chip.on{background:var(--pr);border-color:var(--pr);color:#fff}.star{color:var(--gold);font-size:12px}.warnbar{background:#7f1d1d;color:#fecaca;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;line-height:1.7}.warn{color:#f87171;font-size:11px}
 .back{color:var(--ac);text-decoration:none;font-size:14px;display:inline-block;margin-bottom:10px}
 .bar{display:flex;gap:16px;flex-wrap:wrap;align-items:end;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:12px}
@@ -40,21 +40,22 @@ th{color:var(--mu);font-size:12px;user-select:none}th[data-k]{cursor:pointer}th.
  <button id="go">計算開始</button>
 </div>
 <div class="bar"><div><label>武器で絞り込み</label><select id="fw"></select></div><div><label>聖遺物セットで絞り込み</label><select id="fs"></select></div><span class="sm" id="info"></span></div>
-<div class="tw"><table><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table></div></div>
+<div class="tw"><table><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table></div>
+<div class="sm" style="margin-top:8px">※ Crit Value = 会心率×2 + 会心ダメ。<b>冠のメインステとサブステの合計のみ</b>で、初期値(5%/50%)・武器・突破・共鳴・天賦の会心は含みません。セルにカーソルを合わせる(長押し)と、最終の会心率・会心ダメが出ます。</div></div>
 </div>
 <script>
 var LOADFAIL=[];function lf(e){LOADFAIL.push(e.getAttribute("src"));}
 // 読み込むファイルの一覧 (新しいキャラを追加したら、ここにファイル名を1つ足す)
 var CHARACTER_FILES=['nahida','alhaitham','tighnari','yaemiko','xingqiu','yelan'];
 // 更新番号: ファイルを更新したら変える (古いキャッシュを使わせない)。ローカルで開くときは付けない
-var V=location.protocol==='file:'?'':'?v=20261023m';
+var V=location.protocol==='file:'?'':'?v=20261023q';
 ['common.js'].concat(CHARACTER_FILES.map(function(c){return 'characters/'+c+'.js';})).forEach(function(f){
   document.write('<script src="'+f+V+'" onerror="lf(this)"><\/script>');
 });
 </script>
 <script>
 const $=id=>document.getElementById(id);
-const NEED_ENGINE=2;   // この画面が必要とする common.js の版
+const NEED_ENGINE=3,NEED_CHAR=2;   // この画面が必要とする common.js の版 / キャラのファイルの版
 // ファイルの版が食い違っているとき (一部のファイルだけ更新したときなど) に、画面に理由を出す
 (function(){
   const ver=(typeof Engine!=='undefined'&&Engine.version)||0,msgs=[];
@@ -62,7 +63,7 @@ const NEED_ENGINE=2;   // この画面が必要とする common.js の版
     ?'ファイルを読み込めません。index.html と同じ場所に、common.js と characters フォルダがあるか確認してください (zipの中から開いていませんか? 先に「すべて展開」してから、展開したフォルダの index.html を開いてください)。'
     :'common.js が古い版です。最新の common.js をアップロードしてください。');
   else if(ver<NEED_ENGINE)msgs.push('common.js が古い版です (v'+ver+' / 必要: v'+NEED_ENGINE+')。最新の common.js をアップロードしてください。');
-  const old=(window.CHARACTERS||[]).filter(c=>(c.engine||0)<NEED_ENGINE).map(c=>c.name);
+  const old=(window.CHARACTERS||[]).filter(c=>(c.engine||0)<NEED_CHAR).map(c=>c.name);
   if(old.length)msgs.push('キャラのファイルが最新版ではありません: '+old.join('、')+' (計算は動きますが、数値が古い可能性があります。characters フォルダの最新版をアップロードしてください)');
   if(typeof LOADFAIL!=='undefined'&&LOADFAIL.length)msgs.push('読み込めなかったファイル: '+LOADFAIL.join(' , '));
   if(msgs.length){$('warn').hidden=false;$('warn').innerHTML='⚠ '+msgs.join('<br>⚠ ');}
@@ -76,7 +77,12 @@ const ELEM={dendro:'草',electro:'雷',pyro:'炎',hydro:'水',cryo:'氷',anemo:'
 const ELICON={pyro:'pyro',hydro:'hydro',electro:'electro',dendro:'dendro',anemo:'anemo',geo:'geo',cryo:'cryo'};
 const WICON={'片手剣':'sword_one_hand','両手剣':'claymore','長柄武器':'lance','弓':'bow','法器':'catalyst'};
 const oimg=n=>n?img('images/others/'+n+'.'+IMG_EXT):'';
-const COLS=[['#'],['武器'],['聖遺物セット'],['メインステ (時計/杯/冠)'],['サブステ割振 [上限]'],['Crit Value','cv'],['元素バフ','buff'],['参照ステ1','r1'],['参照ステ2','r2'],['チャージ効率','er'],['期待値ダメージ','dmg']];
+// ステータスのアイコン (images/others/ のファイル名)。画像が無い間は、略称(攻/HP/熟/防)を出す
+const STATICON={atk:'stat_atk',hp:'stat_hp',em:'stat_em',def:'stat_def',er:'stat_er',cr:'stat_cr',cd:'stat_cd',phys:'stat_physical',heal:'stat_healing'},
+      STATABBR={atk:'攻',hp:'HP',em:'熟',def:'防',er:'充',cr:'率',cd:'傷',phys:'物',heal:'治'};
+const iconNum=(file,abbr,text,title)=>`<span class="ref" title="${title}"><span class="ico">${oimg(file)}<span class="ab">${abbr}</span></span>${text}</span>`;
+const refCell=(x,r,f)=>r?`<span class="ref" title="${r.label}"><span class="ico">${oimg(STATICON[r.key])}<span class="ab">${STATABBR[r.key]||r.label}</span></span>${f(x[r.key])}</span>`:'';
+const COLS=[['#'],['武器'],['聖遺物セット'],['メインステ (時計/杯/冠)'],['サブステ割振 [上限]'],['Crit Value','cv'],['元素バフ','buff'],['参照1','r1'],['参照2','r2'],['チャージ','er'],['期待値ダメージ','dmg']];
 let ch=null,all=[],sk='dmg',dir=-1,calcMs=0,shown=100;const PAGE=100;   // 表は上位100件ずつ表示 (行が多いキャラでも軽く)
 if(typeof CHARACTERS==='undefined'||!CHARACTERS.length){$('grid').innerHTML='<div class="empty" style="grid-column:1/-1">キャラデータを読み込めませんでした。<br>読み込めなかったファイル: '+(LOADFAIL.length?LOADFAIL.join(' , '):'(読み込みは成功したがデータが空 → ファイルの中身を確認)')+'</div>';window.CHARACTERS=[];}
 const ELORD=['pyro','hydro','electro','dendro','anemo','geo','cryo'],WORD=['片手剣','両手剣','長柄武器','弓','法器'];
@@ -125,7 +131,8 @@ $('go').onclick=()=>{
   const rolls=+$('rolls').value||20,er=Math.min(rolls,Math.max(0,+$('er').value||0));
   const t0=performance.now();
   try{
-    all=Engine.optimize(ch,{rolls,erRolls:er,party:$('party').value}).map(x=>Object.assign(x,{er:x.er!=null?x.er:100+Engine.ER_ROLL*er,cv:2*x.cr+x.cd}));
+    all=Engine.optimize(ch,{rolls,erRolls:er,party:$('party').value}).map(x=>Object.assign(x,{er:x.er!=null?x.er:100+Engine.ER_ROLL*er,vcr:x.cvCr!=null?x.cvCr:x.cr,vcd:x.cvCd!=null?x.cvCd:x.cd}));
+    all.forEach(x=>{x.cv=2*x.vcr+x.vcd;});
   }catch(e){
     all=[];render();console.error(e);
     $('info').innerHTML='<span class="warn">計算エラー: '+e.message+' ― common.js とキャラのファイルの版が合っていない可能性があります (全部まとめて最新版をアップロードしてください)</span>';
@@ -148,9 +155,9 @@ function render(){
   $('body').innerHTML=all.length?vis.map((x,i)=>`<tr><td>${i+1}</td><td>${img('images/weapons/'+x.weaponKey+'.'+IMG_EXT)}${x.weaponName}</td>
    <td>${img('images/artifacts/'+x.setKey+'.'+IMG_EXT)}${x.setName}</td><td>${x.mainNames}</td>
    <td>${ch.subStats.map((s,q)=>ch.subLabels[q]+' <b>'+x.rolls[s]+'</b><span class="sm">['+x.caps[s]+']</span>').join(' / ')}</td>
-   <td><span class="sm">${x.cr.toFixed(1)} : ${x.cd.toFixed(1)}</span> <span class="cv">${x.cv.toFixed(1)} cv</span></td><td>${x.elemBuff.toFixed(1)}%</td>
-   <td>${ch.refs[0].label} ${f(x[ch.refs[0].key])}</td><td>${ch.refs[1]?ch.refs[1].label+' '+f(x[ch.refs[1].key]):''}</td>
-   <td>${x.er.toFixed(1)}%</td><td><b>${x.damage.toLocaleString()}</b></td></tr>`).join('')+(list.length>vis.length?`<tr><td colspan="11" class="empty"><button class="chip on" id="more">さらに${Math.min(PAGE,list.length-vis.length)}件表示 (残り ${list.length-vis.length}件)</button></td></tr>`:''):`<tr><td colspan="11" class="empty">条件を決めて「計算開始」を押してください</td></tr>`;
+   <td title="最終の会心率 ${x.cr.toFixed(1)}% / 会心ダメ ${x.cd.toFixed(1)}%"><span class="sm">${x.vcr.toFixed(1)} : ${x.vcd.toFixed(1)}</span> <span class="cv">${x.cv.toFixed(1)} cv</span></td><td>${iconNum(ch.element==='physical'?STATICON.phys:ELICON[ch.element],ELEM[ch.element]||'元',x.elemBuff.toFixed(1)+'%',(ELEM[ch.element]||'')+'元素ダメージバフ')}</td>
+   <td>${refCell(x,ch.refs[0],f)}</td><td>${refCell(x,ch.refs[1],f)}</td>
+   <td>${iconNum(STATICON.er,STATABBR.er,x.er.toFixed(1)+'%','元素チャージ効率')}</td><td><b>${x.damage.toLocaleString()}</b></td></tr>`).join('')+(list.length>vis.length?`<tr><td colspan="11" class="empty"><button class="chip on" id="more">さらに${Math.min(PAGE,list.length-vis.length)}件表示 (残り ${list.length-vis.length}件)</button></td></tr>`:''):`<tr><td colspan="11" class="empty">条件を決めて「計算開始」を押してください</td></tr>`;
   if($('more'))$('more').onclick=()=>{shown+=PAGE;render();};
 }
 addEventListener('hashchange',route);route();
