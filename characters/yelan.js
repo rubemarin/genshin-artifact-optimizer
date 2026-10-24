@@ -4,11 +4,14 @@
 // 突破: 会心率 5% + 19.2% / 基礎: HP14450.17 / HP固定値: 花4780 + サブ固定ロール 253.94×2
 // ※ 固有天賦(Adapt With Ease: 爆発中 毎秒+3.5% 最大+50%)は、フィールド上のキャラのダメージが上がる効果。
 //    夜蘭は裏から攻撃するため乗らない → 0 (表で戦わせる場合だけ値を入れる)
+(() => {   // このファイルの const 名が他のキャラのファイルと衝突しないように、囲いの中に入れる
 const A4_DMG = 0;
 const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // チャージ武器以外は時計をチャージ効率に固定
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'yelan', name: '夜蘭', element: 'hydro', weaponType: '弓',
   rarity: 5, version: '2.7', release: '2022-05-31',
+  base: { hp: 14450.17, atk: 243.96, def: 547.98, em: 0 },   // Lv90の基礎ステータス (計算で参照しないものも記入)
+  ascend: { cr: 19.2 },   // 突破ボーナス
   // passiveHp=Turn Control / resHp=水共鳴(HP+25%) / resCr=氷共鳴(会心率+15%)
   parties: [
     { key: 'types4',       name: '異属性4 (水+3元素 / 共鳴なし)',                     same: 0, diff: 3, passiveHp: 30 },
@@ -33,18 +36,18 @@ const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // チャージ武器�
   clocks:   [{ name: 'HP%', stat: 'hp' }, { name: 'チャージ', stat: 'er' }],
   cups:     [{ name: '水バフ', stat: 'hydro' }, { name: 'HP%', stat: 'hp' }],
   circlets: [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat: 'cd' }, { name: 'HP%', stat: 'hp' }],
-  calc({ weapon: w, set, mains, rolls, party, erRolls }) {
+  calc({ weapon: w, set, mains, party, s }) {
     const pt = this.parties.find(x => x.key === party);
-    const S = Engine.SUB, n = s => (mains.c[s] || 0), k = set.key;
+    const n = k => (mains.c[k] || 0), k = set.key;
     // チャージ効率
-    const er = 100 + (w.er || 0) + 51.8 * n('er') + (k === 'emblem_of_severed_fate' ? 20 : 0) + Engine.ER_ROLL * erRolls;
+    const er = 100 + (w.er || 0) + 51.8 * n('er') + (k === 'emblem_of_severed_fate' ? 20 : 0) + s.er;
     // 最大HP
-    let hpPct = (w.hpPct || 0) + 46.6 * n('hp') + S.hp * (2 + rolls.hp) + pt.passiveHp + (pt.resHp || 0);
+    let hpPct = (w.hpPct || 0) + 46.6 * n('hp') + s.hpPct + pt.passiveHp + (pt.resHp || 0);
     if (k === 'hp_2_2') hpPct += 40;            // HP2セット×2
-    const hp = 14450.17 * (1 + hpPct / 100) + 4780 + 253.94 * 2;   // 花4780 + サブ固定ロール
+    const hp = this.base.hp * (1 + hpPct / 100) + 4780 + s.hpFlat;   // 花4780 + サブ固定ロール
     // 会心
-    const cr = Math.min(100, 5 + 19.2 + (pt.resCr || 0) + w.cr + 31.1 * n('cr') + (2 + rolls.cr) * S.cr);
-    const cd = 50 + w.cd + 62.2 * n('cd') + (2 + rolls.cd) * S.cd;
+    const cr = Math.min(100, 5 + this.ascend.cr + (pt.resCr || 0) + w.cr + 31.1 * n('cr') + s.cr);
+    const cd = 50 + w.cd + 62.2 * n('cd') + s.cd;
     const crit = 1 + (cr / 100) * (cd / 100);
     // バフ
     const hydro = n('hydro') ? 46.6 : 0;                                           // 水元素ダメ (キャラ画面)
@@ -57,3 +60,4 @@ const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // チャージ武器�
     return { damage: Math.round(skill + burst), hp, cr, cd, er, buff: burstB, elemBuff: hydro };
   }
 });
+})();
