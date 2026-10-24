@@ -4,7 +4,7 @@
   const ER_ROLL = 5.51;                                      // チャージ効率1ロール
   const BASE_SUB = 2;                                        // 各サブステ初期ロール(固定)
 
-  // そのパーティで使える候補 (パーティ側に weaponKeys / setKeys / clocks / cups / circlets があれば上書き)
+  // そのパーティで使える候補 (パーティ側に weaponKeys / setKeys / clocks / cups / circlets があれば上書き。武器側の clocks / cups / circlets はさらに優先)
   function avail(ch, partyKey) {
     const pt = (ch.parties || []).find(p => p.key === partyKey) || {};
     return {
@@ -20,7 +20,7 @@
     const out = [], A = avail(ch, o.party);
     for (const [wk, w] of A.weapons)
       for (const set of A.sets)
-        for (const clock of A.clocks) for (const cup of A.cups) for (const circlet of A.circlets) {
+        for (const clock of (w.clocks || A.clocks)) for (const cup of (w.cups || A.cups)) for (const circlet of (w.circlets || A.circlets)) {   // 武器側の指定があれば優先
           const mains = [clock.stat, cup.stat, circlet.stat];
           mains.c = {};                                   // メインステの個数 (calc 側は mains.c[stat] で参照: 計算のたびに数え直さない)
           for (const m of mains) mains.c[m] = (mains.c[m] || 0) + 1;
