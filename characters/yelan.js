@@ -28,8 +28,7 @@ const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // チャージ武器�
   },
   sets: [
     { key: 'emblem_of_severed_fate', name: '絶縁の旗印 4' },
-    { key: 'hp_2_2',                 name: 'HP20% + HP20% (2+2)' },
-    { key: 'hydro_2_hp_2',           name: '水ダメ15% + HP20% (2+2)' }
+    { key: 'hp_2_2',                 name: 'HP20% + HP20% (2+2)' }
   ],
   clocks:   [{ name: 'HP%', stat: 'hp' }, { name: 'チャージ', stat: 'er' }],
   cups:     [{ name: '水バフ', stat: 'hydro' }, { name: 'HP%', stat: 'hp' }],
@@ -42,14 +41,13 @@ const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // チャージ武器�
     // 最大HP
     let hpPct = (w.hpPct || 0) + 46.6 * n('hp') + S.hp * (2 + rolls.hp) + pt.passiveHp + (pt.resHp || 0);
     if (k === 'hp_2_2') hpPct += 40;            // HP2セット×2
-    if (k === 'hydro_2_hp_2') hpPct += 20;      // HP2セット
     const hp = 14450.17 * (1 + hpPct / 100) + 4780 + 253.94 * 2;   // 花4780 + サブ固定ロール
     // 会心
     const cr = Math.min(100, 5 + 19.2 + (pt.resCr || 0) + w.cr + 31.1 * n('cr') + (2 + rolls.cr) * S.cr);
     const cd = 50 + w.cd + 62.2 * n('cd') + (2 + rolls.cd) * S.cd;
     const crit = 1 + (cr / 100) * (cd / 100);
     // バフ
-    const hydro = (n('hydro') ? 46.6 : 0) + (k === 'hydro_2_hp_2' ? 15 : 0);     // 水元素ダメ (キャラ画面)
+    const hydro = n('hydro') ? 46.6 : 0;                                           // 水元素ダメ (キャラ画面)
     const common = hydro + (w.dmg || 0) + A4_DMG;                                   // スキル・爆発共通
     const skillB = common + (w.sb || 0);
     const burstB = common + (w.sb || 0) + (k === 'emblem_of_severed_fate' ? Math.min(75, er * 0.25) : 0);

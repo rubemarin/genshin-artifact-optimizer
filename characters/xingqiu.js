@@ -25,7 +25,7 @@ const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // 爆発を多く回�
     { key: 'emblem_of_severed_fate', name: '絶縁の旗印 4' },
     { key: 'noblesse_oblige',        name: '旧貴族のしつけ 4' },
     { key: 'nymphs_dream',           name: '水仙の夢 4' },
-    { key: 'noblesse_2_hydro_2',     name: '旧貴族2 + 水仙/沈淪2' }
+    { key: 'atk_2_2',                name: '攻撃18% + 攻撃18% (2+2)' }
   ],
   clocks:   [{ name: 'チャージ', stat: 'er' }, { name: '攻撃%', stat: 'atk' }],
   cups:     [{ name: '水バフ', stat: 'hydro' }, { name: '攻撃%', stat: 'atk' }],
@@ -38,6 +38,7 @@ const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // 爆発を多く回�
     let atkPct = 24 + S.atk * (2 + rolls.atk) + 46.6 * n('atk') + (w.atkPct || 0) + (w.atkBuff || 0);   // 突破24
     if (k === 'noblesse_oblige') atkPct += 20;       // 旧貴族4: チーム全員の攻撃+20%
     if (k === 'nymphs_dream') atkPct += 25;          // 水仙の夢4: 3層で攻撃+25%
+    if (k === 'atk_2_2') atkPct += 36;               // 攻撃力2セット×2 (18%×2)
     const maxHp = 10222 * (1 + (w.hpPct || 0) / 100) + 4780;   // 花のHP4780のみ
     const atk = (201.78 + w.atk) * (1 + atkPct / 100) + 311 + 33.08 + (w.hpToAtk ? maxHp * w.hpToAtk / 100 : 0);
     // 会心
@@ -48,10 +49,9 @@ const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // 爆発を多く回�
     // 水元素ダメ (キャラ画面の水ダメ): 固有天賦20 + 杯 + セット
     let hydro = 20 + (n('hydro') ? 46.6 : 0) + (w.elem || 0);
     if (k === 'nymphs_dream') hydro += 15 + 15;      // 2セット15 + 4セット(3層)15
-    if (k === 'noblesse_2_hydro_2') hydro += 15;     // 水仙/沈淪の2セット
     // 元素爆発ダメ+%
     let burstBonus = (w.burst || 0);
-    if (k === 'noblesse_oblige' || k === 'noblesse_2_hydro_2') burstBonus += 20;
+    if (k === 'noblesse_oblige') burstBonus += 20;
     if (k === 'emblem_of_severed_fate') burstBonus += Math.min(75, er * 0.25);
     // ダメージ (防御0.5 / 敵の水耐性10%。2凸で耐性-15% → -5% なのでスキル・爆発とも ×1.025)
     const skill = atk * 7.62875 * (w.skillCount || 1) * 1.5 * (1 + (hydro + (w.skillBonus || 0)) / 100) * crit * 0.5 * 1.025;   // 4凸 ×1.5
