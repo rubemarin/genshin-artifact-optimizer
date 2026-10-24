@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公開ファイルの版の確認</title>
+<style>
+body{font-family:'Helvetica Neue',Arial,sans-serif;background:#0f172a;color:#f8fafc;margin:0;padding:20px}
+.w{max-width:900px;margin:0 auto}h1{color:#10b981;font-size:20px}p,.sm{font-size:13px;color:#94a3b8}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}th,td{padding:8px 10px;text-align:left;border-bottom:1px solid #334155}
+.ok{color:#10b981}.ng{color:#f87171;font-weight:bold}.box{margin-top:16px;padding:12px 14px;border-radius:8px;font-size:14px;line-height:1.7}
+.box.ok{background:#064e3b;color:#a7f3d0}.box.ng{background:#7f1d1d;color:#fecaca}a{color:#38bdf8}
+</style></head><body><div class="w">
+<h1>公開ファイルの版の確認</h1>
+<p>公開されている各ファイルを、キャッシュを避けて取得し、最新版の目印が入っているかを調べます。「古い」と出たファイルを、GitHubにアップロードし直してください。</p>
+<div id="sum" class="box" hidden></div>
+<table><thead><tr><th>ファイル</th><th>状態</th><th>サイズ</th><th>最新版の目印</th><th>判定</th></tr></thead><tbody id="rows"></tbody></table>
+<p class="sm" style="margin-top:16px"><a href="./">← 計算ページへ戻る</a></p>
+</div>
+<script>
+// [ファイル, [最新版にだけ入っている目印]] ― 新しいキャラを追加したら、ここにも1行足す
+const CHARS=['nahida','alhaitham','tighnari','yaemiko','xingqiu','yelan'];
+const FILES=[['index.html',['NEED_ENGINE','fillFilters']],['common.js',['version: 2','fillSub']]]
+  .concat(CHARS.map(c=>['characters/'+c+'.js',['engine: 2','base:']]));
+const rows=document.getElementById('rows');let bad=[];
+Promise.all(FILES.map(async([f,marks])=>{
+  const tr=document.createElement('tr');rows.appendChild(tr);
+  try{
+    const r=await fetch(f+'?nc='+Date.now(),{cache:'no-store'});
+    if(!r.ok){tr.innerHTML=`<td>${f}</td><td class="ng">${r.status}</td><td>-</td><td>-</td><td class="ng">見つからない</td>`;bad.push(f+' (見つからない)');return;}
+    const t=await r.text(),miss=marks.filter(m=>!t.includes(m)),ok=!miss.length;
+    tr.innerHTML=`<td>${f}</td><td>${r.status}</td><td>${(t.length/1024).toFixed(1)}KB</td><td>${marks.map(m=>t.includes(m)?'✓ '+m:'✗ '+m).join('<br>')}</td><td class="${ok?'ok':'ng'}">${ok?'最新':'古い'}</td>`;
+    if(!ok)bad.push(f+' (古い)');
+  }catch(e){tr.innerHTML=`<td>${f}</td><td class="ng">エラー</td><td>-</td><td>${e.message}</td><td class="ng">取得できない</td>`;bad.push(f);}
+})).then(()=>{
+  const s=document.getElementById('sum');s.hidden=false;
+  if(bad.length){s.className='box ng';s.innerHTML='⚠ 古い、または見つからないファイル:<br>'+bad.join('<br>')+'<br>→ これらを最新版にして、GitHubにアップロードし直してください。';}
+  else{s.className='box ok';s.textContent='すべてのファイルが最新版です。それでも動かないときは、計算ページで、Shiftを押しながら再読み込みしてください(まだ古い表示が残っているだけです)。';}
+});
+</script></body></html>

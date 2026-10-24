@@ -30,7 +30,8 @@ th{color:var(--mu);font-size:12px;user-select:none}th[data-k]{cursor:pointer}th.
  <div class="fr"><span class="fl">武器種</span><span id="f-w"></span></div>
  <div class="fr"><button class="chip on" id="sort"></button><span class="sm" id="cnt"></span></div>
 </div>
-<div class="grid" id="grid"></div></div>
+<div class="grid" id="grid"></div>
+<div class="sub" style="margin-top:20px"><a href="check.html" style="color:#64748b">動かないとき: ファイルの版の確認</a></div></div>
 <div id="view" hidden><a class="back" href="#">← キャラ選択へ戻る</a><h1 id="vt"></h1>
 <div class="bar">
  <div><label>パーティ構成</label><select id="party"></select></div>
@@ -41,24 +42,28 @@ th{color:var(--mu);font-size:12px;user-select:none}th[data-k]{cursor:pointer}th.
 <div class="bar"><div><label>武器で絞り込み</label><select id="fw"></select></div><div><label>聖遺物セットで絞り込み</label><select id="fs"></select></div><span class="sm" id="info"></span></div>
 <div class="tw"><table><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table></div></div>
 </div>
-<script>var LOADFAIL=[];function lf(e){LOADFAIL.push(e.getAttribute("src"));}</script>
-<script src="common.js?v=20261023l" onerror="lf(this)"></script>
-<script src="characters/nahida.js?v=20261023l" onerror="lf(this)"></script>
-<script src="characters/alhaitham.js?v=20261023l" onerror="lf(this)"></script>
-<script src="characters/tighnari.js?v=20261023l" onerror="lf(this)"></script>
-<script src="characters/yaemiko.js?v=20261023l" onerror="lf(this)"></script>
-<script src="characters/xingqiu.js?v=20261023l" onerror="lf(this)"></script>
-<script src="characters/yelan.js?v=20261023l" onerror="lf(this)"></script>
+<script>
+var LOADFAIL=[];function lf(e){LOADFAIL.push(e.getAttribute("src"));}
+// 読み込むファイルの一覧 (新しいキャラを追加したら、ここにファイル名を1つ足す)
+var CHARACTER_FILES=['nahida','alhaitham','tighnari','yaemiko','xingqiu','yelan'];
+// 更新番号: ファイルを更新したら変える (古いキャッシュを使わせない)。ローカルで開くときは付けない
+var V=location.protocol==='file:'?'':'?v=20261023m';
+['common.js'].concat(CHARACTER_FILES.map(function(c){return 'characters/'+c+'.js';})).forEach(function(f){
+  document.write('<script src="'+f+V+'" onerror="lf(this)"><\/script>');
+});
+</script>
 <script>
 const $=id=>document.getElementById(id);
 const NEED_ENGINE=2;   // この画面が必要とする common.js の版
 // ファイルの版が食い違っているとき (一部のファイルだけ更新したときなど) に、画面に理由を出す
 (function(){
   const ver=(typeof Engine!=='undefined'&&Engine.version)||0,msgs=[];
-  if(!ver)msgs.push('common.js が古い版か、読み込めていません。最新の common.js をアップロードしてください。');
+  if(!ver)msgs.push((typeof LOADFAIL!=='undefined'&&LOADFAIL.length)
+    ?'ファイルを読み込めません。index.html と同じ場所に、common.js と characters フォルダがあるか確認してください (zipの中から開いていませんか? 先に「すべて展開」してから、展開したフォルダの index.html を開いてください)。'
+    :'common.js が古い版です。最新の common.js をアップロードしてください。');
   else if(ver<NEED_ENGINE)msgs.push('common.js が古い版です (v'+ver+' / 必要: v'+NEED_ENGINE+')。最新の common.js をアップロードしてください。');
   const old=(window.CHARACTERS||[]).filter(c=>(c.engine||0)<NEED_ENGINE).map(c=>c.name);
-  if(old.length)msgs.push('キャラのファイルが古い版です: '+old.join('、')+' (characters フォルダの最新版をアップロードしてください)');
+  if(old.length)msgs.push('キャラのファイルが最新版ではありません: '+old.join('、')+' (計算は動きますが、数値が古い可能性があります。characters フォルダの最新版をアップロードしてください)');
   if(typeof LOADFAIL!=='undefined'&&LOADFAIL.length)msgs.push('読み込めなかったファイル: '+LOADFAIL.join(' , '));
   if(msgs.length){$('warn').hidden=false;$('warn').innerHTML='⚠ '+msgs.join('<br>⚠ ');}
 })();
