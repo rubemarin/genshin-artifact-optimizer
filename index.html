@@ -41,12 +41,12 @@ th{color:var(--mu);font-size:12px;user-select:none}th[data-k]{cursor:pointer}th.
 <div class="tw"><table><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table></div></div>
 </div>
 <script>var LOADFAIL=[];function lf(e){LOADFAIL.push(e.getAttribute("src"));}</script>
-<script src="common.js?v=20261023d" onerror="lf(this)"></script>
-<script src="characters/nahida.js?v=20261023d" onerror="lf(this)"></script>
-<script src="characters/alhaitham.js?v=20261023d" onerror="lf(this)"></script>
-<script src="characters/tighnari.js?v=20261023d" onerror="lf(this)"></script>
-<script src="characters/yaemiko.js?v=20261023d" onerror="lf(this)"></script>
-<script src="characters/xingqiu.js?v=20261023d" onerror="lf(this)"></script>
+<script src="common.js?v=20261023e" onerror="lf(this)"></script>
+<script src="characters/nahida.js?v=20261023e" onerror="lf(this)"></script>
+<script src="characters/alhaitham.js?v=20261023e" onerror="lf(this)"></script>
+<script src="characters/tighnari.js?v=20261023e" onerror="lf(this)"></script>
+<script src="characters/yaemiko.js?v=20261023e" onerror="lf(this)"></script>
+<script src="characters/xingqiu.js?v=20261023e" onerror="lf(this)"></script>
 <script>
 const $=id=>document.getElementById(id);
 const IMG_EXT='webp';   // 画像の拡張子 (png に戻す場合はここだけ変更)
@@ -59,7 +59,7 @@ const ELICON={pyro:'pyro',hydro:'hydro',electro:'electro',dendro:'dendro',anemo:
 const WICON={'片手剣':'sword_one_hand','両手剣':'claymore','長柄武器':'lance','弓':'bow','法器':'catalyst'};
 const oimg=n=>n?img('images/others/'+n+'.'+IMG_EXT):'';
 const COLS=[['#'],['武器'],['聖遺物セット'],['メインステ (時計/杯/冠)'],['サブステ割振 [上限]'],['Crit Value','cv'],['元素バフ','buff'],['参照ステ1','r1'],['参照ステ2','r2'],['チャージ効率','er'],['期待値ダメージ','dmg']];
-let ch=null,all=[],sk='dmg',dir=-1;
+let ch=null,all=[],sk='dmg',dir=-1,calcMs=0,shown=100;const PAGE=100;   // 表は上位100件ずつ表示 (行が多いキャラでも軽く)
 if(typeof CHARACTERS==='undefined'||!CHARACTERS.length){$('grid').innerHTML='<div class="empty" style="grid-column:1/-1">キャラデータを読み込めませんでした。<br>読み込めなかったファイル: '+(LOADFAIL.length?LOADFAIL.join(' , '):'(読み込みは成功したがデータが空 → ファイルの中身を確認)')+'</div>';window.CHARACTERS=[];}
 const ELORD=['pyro','hydro','electro','dendro','anemo','geo','cryo'],WORD=['片手剣','両手剣','長柄武器','弓','法器'];
 const F={r:'',e:'',w:''};let order=-1;   // order: -1=実装が新しい順 / 1=古い順
@@ -105,24 +105,29 @@ function fillFilters(first){
 $('party').onchange=()=>fillFilters(false);
 $('go').onclick=()=>{
   const rolls=+$('rolls').value||20,er=Math.min(rolls,Math.max(0,+$('er').value||0));
+  const t0=performance.now();
   all=Engine.optimize(ch,{rolls,erRolls:er,party:$('party').value}).map(x=>Object.assign(x,{er:x.er!=null?x.er:100+Engine.ER_ROLL*er,cv:2*x.cr+x.cd}));
+  calcMs=performance.now()-t0;shown=PAGE;
   render();
 };
-$('fw').onchange=$('fs').onchange=()=>render();
-const val=(x,k)=>({cv:x.cv,buff:x.elemBuff,r1:x[ch.refs[0].key],r2:ch.refs[1]?x[ch.refs[1].key]:-1,er:x.er,dmg:x.damage}[k]);
+$('fw').onchange=$('fs').onchange=()=>{shown=PAGE;render();};
+const keyFn=k=>{const r=ch.refs;return {cv:x=>x.cv,buff:x=>x.elemBuff,r1:x=>x[r[0].key],r2:x=>r[1]?x[r[1].key]:-1,er:x=>x.er,dmg:x=>x.damage}[k];};
 function render(){
   $('head').innerHTML=COLS.map(([n,k])=>`<th ${k?`data-k="${k}"`:''} class="${k===sk?'on':''}">${n}${k===sk?(dir<0?' ▼':' ▲'):''}</th>`).join('');
-  document.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{const k=th.dataset.k;dir=k===sk?-dir:-1;sk=k;render();});
+  document.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{const k=th.dataset.k;dir=k===sk?-dir:-1;sk=k;shown=PAGE;render();});
   const fw=$('fw').value,fs=$('fs').value;
-  const list=all.filter(x=>(!fw||x.weaponKey===fw)&&(!fs||x.setKey===fs)).sort((a,b)=>dir*(val(a,sk)-val(b,sk)));
-  $('info').textContent=all.length?`表示 ${list.length} / 全 ${all.length} パターン`:'';
+  const kf=keyFn(sk);
+  const list=all.filter(x=>(!fw||x.weaponKey===fw)&&(!fs||x.setKey===fs)).sort((a,b)=>dir*(kf(a)-kf(b)));
+  const vis=list.slice(0,shown);
+  $('info').textContent=all.length?`表示 ${vis.length} / 絞り込み ${list.length} / 全 ${all.length} パターン (計算 ${calcMs.toFixed(0)}ms)`:'';
   const f=v=>Math.round(v).toLocaleString();
-  $('body').innerHTML=all.length?list.map((x,i)=>`<tr><td>${i+1}</td><td>${img('images/weapons/'+x.weaponKey+'.'+IMG_EXT)}${x.weaponName}</td>
+  $('body').innerHTML=all.length?vis.map((x,i)=>`<tr><td>${i+1}</td><td>${img('images/weapons/'+x.weaponKey+'.'+IMG_EXT)}${x.weaponName}</td>
    <td>${img('images/artifacts/'+x.setKey+'.'+IMG_EXT)}${x.setName}</td><td>${x.mainNames}</td>
    <td>${ch.subStats.map((s,q)=>ch.subLabels[q]+' <b>'+x.rolls[s]+'</b><span class="sm">['+x.caps[s]+']</span>').join(' / ')}</td>
    <td><span class="sm">${x.cr.toFixed(1)} : ${x.cd.toFixed(1)}</span> <span class="cv">${x.cv.toFixed(1)} cv</span></td><td>${x.elemBuff.toFixed(1)}%</td>
    <td>${ch.refs[0].label} ${f(x[ch.refs[0].key])}</td><td>${ch.refs[1]?ch.refs[1].label+' '+f(x[ch.refs[1].key]):''}</td>
-   <td>${x.er.toFixed(1)}%</td><td><b>${x.damage.toLocaleString()}</b></td></tr>`).join(''):`<tr><td colspan="11" class="empty">条件を決めて「計算開始」を押してください</td></tr>`;
+   <td>${x.er.toFixed(1)}%</td><td><b>${x.damage.toLocaleString()}</b></td></tr>`).join('')+(list.length>vis.length?`<tr><td colspan="11" class="empty"><button class="chip on" id="more">さらに${Math.min(PAGE,list.length-vis.length)}件表示 (残り ${list.length-vis.length}件)</button></td></tr>`:''):`<tr><td colspan="11" class="empty">条件を決めて「計算開始」を押してください</td></tr>`;
+  if($('more'))$('more').onclick=()=>{shown+=PAGE;render();};
 }
 addEventListener('hashchange',route);route();
 </script></body></html>

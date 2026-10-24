@@ -22,11 +22,14 @@
       for (const set of A.sets)
         for (const clock of A.clocks) for (const cup of A.cups) for (const circlet of A.circlets) {
           const mains = [clock.stat, cup.stat, circlet.stat];
+          mains.c = {};                                   // メインステの個数 (calc 側は mains.c[stat] で参照: 計算のたびに数え直さない)
+          for (const m of mains) mains.c[m] = (mains.c[m] || 0) + 1;
           const caps = {};
-          for (const s of stats) caps[s] = Math.max(0, budget - mains.filter(m => m === s).length * 4 - BASE_SUB);
+          for (const s of stats) caps[s] = Math.max(0, budget - (mains.c[s] || 0) * 4 - BASE_SUB);
           const rolls = {}; let best = null;
+          const ctx = { weapon: w, set, mains, rolls, party: o.party, erRolls: o.erRolls };   // 1組み合わせにつき1つ (rolls は使い回す)
           const ev = () => {
-            const r = ch.calc({ weapon: w, set, mains, rolls, party: o.party });
+            const r = ch.calc(ctx);
             if (!best || r.damage > best.damage) best = Object.assign({}, r, { rolls: Object.assign({}, rolls) });
           };
           const rec = (i, rem) => {
