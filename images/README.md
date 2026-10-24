@@ -80,7 +80,7 @@ images/
 | `characters/yelan.webp` | 夜蘭 |
 
 ## その他 (`images/others/`)
-属性アイコンと武器種アイコンです。画面の絞り込みボタンとキャラのカードに表示します。
+属性・武器種・ステータスのアイコンです。属性と武器種は絞り込みボタンとキャラのカードに、ステータスは表の「参照」列に表示します (ステータスの画像が無い間は、略称の文字が出ます)。
 ファイル名は、すべて小文字で、下の表のとおりにしてください(大文字小文字も一致が必要です)。
 
 | ファイル名 | 内容 |
@@ -97,6 +97,15 @@ images/
 | `others/lance.webp` | 長柄武器 |
 | `others/bow.webp` | 弓 |
 | `others/catalyst.webp` | 法器 |
+| `others/stat_atk.webp` | 攻撃力のアイコン (表の「参照」列) |
+| `others/stat_hp.webp` | 最大HPのアイコン (表の「参照」列) |
+| `others/stat_em.webp` | 元素熟知のアイコン (表の「参照」列) |
+| `others/stat_def.webp` | 防御力のアイコン (表の「参照」列) |
+| `others/stat_er.webp` | 元素チャージ効率のアイコン (表の「参照」列) |
+| `others/stat_cr.webp` | 会心率のアイコン |
+| `others/stat_cd.webp` | 会心ダメージのアイコン |
+| `others/stat_physical.webp` | 物理ダメージバフのアイコン |
+| `others/stat_healing.webp` | 与える治療効果バフのアイコン |
 
 ## キャラを増やすとき
 新しい武器、セット、キャラが必要になったら(キャラは `characters/<id>.webp`、必要なら新しい元素のアイコンも)、ID(英小文字+アンダースコア)を決めて、画像を置き、`manifest.json` に1行足してください。

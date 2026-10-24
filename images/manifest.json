@@ -226,6 +226,42 @@
     "catalyst": {
       "name": "法器",
       "file": "images/others/catalyst.webp"
+    },
+    "stat_atk": {
+      "name": "攻撃力",
+      "file": "images/others/stat_atk.webp"
+    },
+    "stat_hp": {
+      "name": "最大HP",
+      "file": "images/others/stat_hp.webp"
+    },
+    "stat_em": {
+      "name": "元素熟知",
+      "file": "images/others/stat_em.webp"
+    },
+    "stat_def": {
+      "name": "防御力",
+      "file": "images/others/stat_def.webp"
+    },
+    "stat_er": {
+      "name": "元素チャージ効率",
+      "file": "images/others/stat_er.webp"
+    },
+    "stat_cr": {
+      "name": "会心率",
+      "file": "images/others/stat_cr.webp"
+    },
+    "stat_cd": {
+      "name": "会心ダメージ",
+      "file": "images/others/stat_cd.webp"
+    },
+    "stat_physical": {
+      "name": "物理ダメージバフ",
+      "file": "images/others/stat_physical.webp"
+    },
+    "stat_healing": {
+      "name": "与える治療効果バフ",
+      "file": "images/others/stat_healing.webp"
     }
   }
 }
