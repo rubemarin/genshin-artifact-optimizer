@@ -9,7 +9,11 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:va
 .card{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;color:inherit;text-decoration:none;transition:.2s}
 .card:hover{border-color:var(--pr);background:var(--hv);transform:translateY(-2px)}.card .ic{width:48px;height:48px;border-radius:50%}
 .flt{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:16px}.fr{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.fl{font-size:12px;color:var(--mu);width:52px}
-.chip{background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;margin-right:2px}.chip .ic{width:18px;height:18px;margin:0 4px 0 0}.ref{white-space:nowrap}.ref .ic{width:18px;height:18px;margin:0 3px 0 0}.ab{font-size:11px;color:var(--mu);margin-right:4px}.ico img:not([style*="display:none"])+.ab{display:none}.card .sm .ic{width:16px;height:16px;margin:0 3px 0 0}
+.chip{background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;margin-right:2px}.chip .ic{width:18px;height:18px;margin:0 4px 0 0}
+.pmem{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}.pmem .pl{color:var(--mu);font-size:14px}
+.pm{position:relative;width:38px;height:38px;border-radius:50%;background:var(--bg);border:1px solid var(--bd);display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.pm.self{border-color:var(--pr)}.pm .ico{display:flex;width:100%;height:100%;align-items:center;justify-content:center}.pm .ico .ic{width:100%;height:100%;margin:0;border-radius:50%;object-fit:cover}.pm .ab{margin:0;font-size:13px;color:var(--tx)}
+.pm .bd{position:absolute;right:-5px;bottom:-5px;width:17px;height:17px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:10px}.pm .bd .ic{width:15px;height:15px;margin:0}.pm .bd .ab{font-size:10px}.ref{white-space:nowrap}.ref .ic{width:18px;height:18px;margin:0 3px 0 0}.ab{font-size:11px;color:var(--mu);margin-right:4px}.ico img:not([style*="display:none"])+.ab{display:none}.card .sm .ic{width:16px;height:16px;margin:0 3px 0 0}
 .chip.on{background:var(--pr);border-color:var(--pr);color:#fff}.star{color:var(--gold);font-size:12px}.warnbar{background:#7f1d1d;color:#fecaca;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;line-height:1.7}.warn{color:#f87171;font-size:11px}
 .back{color:var(--ac);text-decoration:none;font-size:14px;display:inline-block;margin-bottom:10px}
 .bar{display:flex;gap:16px;flex-wrap:wrap;align-items:end;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:12px}
@@ -34,7 +38,7 @@ th{color:var(--mu);font-size:12px;user-select:none}th[data-k]{cursor:pointer}th.
 <div class="sub" style="margin-top:20px"><a href="check.html" style="color:#64748b">動かないとき: ファイルの版の確認</a></div></div>
 <div id="view" hidden><a class="back" href="#">← キャラ選択へ戻る</a><h1 id="vt"></h1>
 <div class="bar">
- <div><label>パーティ構成</label><select id="party"></select></div>
+ <div><label>パーティ構成</label><select id="party"></select><div id="pmem" class="pmem"></div></div>
  <div><label>ベース可変ロール数</label><input type="number" id="rolls" value="20" min="5" max="40"></div>
  <div><label>チャージロール数 (必ず消費)</label><input type="number" id="er" value="0" min="0" max="40"></div>
  <button id="go">計算開始</button>
@@ -48,7 +52,7 @@ var LOADFAIL=[];function lf(e){LOADFAIL.push(e.getAttribute("src"));}
 // 読み込むファイルの一覧 (新しいキャラを追加したら、ここにファイル名を1つ足す)
 var CHARACTER_FILES=['nahida','alhaitham','tighnari','yaemiko','xingqiu','yelan'];
 // 更新番号: ファイルを更新したら変える (古いキャッシュを使わせない)。ローカルで開くときは付けない
-var V=location.protocol==='file:'?'':'?v=20261023r';
+var V=location.protocol==='file:'?'':'?v=20261023s';
 ['common.js'].concat(CHARACTER_FILES.map(function(c){return 'characters/'+c+'.js';})).forEach(function(f){
   document.write('<script src="'+f+V+'" onerror="lf(this)"><\/script>');
 });
@@ -116,6 +120,19 @@ function route(){
 }
 // パーティごとに使える武器・セットが変わるキャラ(八重神子など)に対応: 候補が変わったら古い結果は消す
 let sig='';
+// パーティの構成メンバーをアイコンで表示: 先頭=このキャラ自身 → 味方 (元素アイコン / chars を指定すればキャラ画像)
+function renderMembers(){
+  const p=ch.parties.find(x=>x.key===$('party').value)||{},mem=p.members;
+  const badge=el=>`<span class="bd">${oimg(ELICON[el])}<span class="ab">${ELEM[el]||''}</span></span>`;
+  const av=(id,fb)=>`<span class="ico">${img('images/characters/'+id+'.'+IMG_EXT)}<span class="ab">${fb}</span></span>`;
+  const self=`<span class="pm self" title="${ch.name} (${ELEM[ch.element]||ch.element}元素)">${av(ch.id,ch.name[0])}${badge(ch.element)}</span>`;
+  const one=m=>{const el=(m&&m.el)||m;
+    if(el==='any'&&!(m&&m.char))return `<span class="pm" title="元素は不問"><span class="ab">?</span></span>`;
+    const t=(ELEM[el]||'?')+'元素';
+    return m&&m.char?`<span class="pm" title="${t}">${av(m.char,(ELEM[el]||'?'))}${badge(el)}</span>`
+                    :`<span class="pm" title="${t}"><span class="ico">${oimg(ELICON[el])}<span class="ab">${ELEM[el]||'?'}</span></span></span>`;};
+  $('pmem').innerHTML=self+(mem&&mem.length?mem.map(m=>'<span class="pl">+</span>'+one(m)).join(''):(mem?'':`<span class="sm">同元素×${p.same||0} / 異元素×${p.diff||0}</span>`));
+}
 function fillFilters(first){
   const A=Engine.avail(ch,$('party').value),pw=$('fw').value,ps=$('fs').value;
   const s=JSON.stringify([A.weapons.map(x=>x[0]),A.sets.map(x=>x.key)]);
@@ -124,7 +141,7 @@ function fillFilters(first){
   if(A.weapons.some(([k])=>k===pw))$('fw').value=pw;
   if(A.sets.some(x=>x.key===ps))$('fs').value=ps;
   if(!first&&s!==sig)all=[];
-  sig=s;render();
+  sig=s;renderMembers();render();
 }
 $('party').onchange=()=>fillFilters(false);
 $('go').onclick=()=>{
