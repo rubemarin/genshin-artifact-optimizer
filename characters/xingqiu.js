@@ -13,7 +13,7 @@ const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // 爆発を多く回�
   engine: 2,   // このファイルが必要とする common.js の版 (古い common.js だと、画面に警告が出る)
   base: { hp: 10222.42, atk: 201.78, def: 757.60, em: 0 },   // Lv90の基礎ステータス (計算で参照しないものも記入)
   ascend: { atkPct: 24 },   // 突破ボーナス
-  parties: [{ key: 'solo', name: '特になし (単体で計算)', same: 0, diff: 0 }],
+  parties: [{ key: 'solo', members: [], name: '特になし (単体で計算)', same: 0, diff: 0 }],
   refs: [{ key: 'atk', label: '攻撃力' }],
   subStats: ['atk', 'cr', 'cd'], subLabels: ['攻', '率', '傷'],   // チャージ効率は画面の「チャージロール」で指定 (必ず消費)
   // atkPct/er/cr/cd=サブステ / hpPct・hpToAtk=磐岩結緑 / elem=水ダメ+% / skillBonus=スキルダメ+% / burst=爆発ダメ+% / burstCd=爆発の会心ダメ+% / atkBuff=攻撃力+% / skillCount=スキル回数

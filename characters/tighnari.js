@@ -10,7 +10,7 @@
   ascend: { dendroDmg: 28.8 },   // 突破ボーナス
   passive: { em: 50, heavyCr: 15, dendroDmg: 20 },   // 固有天賦の熟知+50 / 1凸 重撃会心率+15% / 2凸 草ダメ+20%
   // same=同元素(草)の味方数 / diff=異元素の味方数 / resEm=草共鳴の熟知
-  parties: [{ key: 'aggravate', name: '激化 (ティナリ+草1+雷2 / 草共鳴 熟知+100 / 2凸)', same: 1, diff: 2, resEm: 100 }],
+  parties: [{ key: 'aggravate', members: ['dendro', 'electro', 'electro'], name: '激化 (ティナリ+草1+雷2 / 草共鳴 熟知+100 / 2凸)', same: 1, diff: 2, resEm: 100 }],
   refs: [{ key: 'em', label: '熟知' }, { key: 'atk', label: '攻撃力' }],
   subStats: ['em', 'cr', 'cd'], subLabels: ['熟', '率', '傷'],
   weapons: {

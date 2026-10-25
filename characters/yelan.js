@@ -15,9 +15,9 @@ const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // チャージ武器�
   ascend: { cr: 19.2 },   // 突破ボーナス
   // passiveHp=Turn Control / resHp=水共鳴(HP+25%) / resCr=氷共鳴(会心率+15%)
   parties: [
-    { key: 'types4',       name: '異属性4 (水+3元素 / 共鳴なし)',                     same: 0, diff: 3, passiveHp: 30 },
-    { key: 'hydro2',       name: '水2+その他2種 (水共鳴 HP+25%)',                     same: 1, diff: 2, passiveHp: 18, resHp: 25 },
-    { key: 'cryo2_hydro2', name: '氷2+水2 (氷共鳴 会心率+15% / 水共鳴 HP+25%)',        same: 1, diff: 2, passiveHp: 12, resHp: 25, resCr: 15 }
+    { key: 'types4', members: ['any', 'any', 'any'],       name: '異属性4 (水+3元素 / 共鳴なし)',                     same: 0, diff: 3, passiveHp: 30 },
+    { key: 'hydro2', members: ['hydro', 'any', 'any'],       name: '水2+その他2種 (水共鳴 HP+25%)',                     same: 1, diff: 2, passiveHp: 18, resHp: 25 },
+    { key: 'cryo2_hydro2', members: ['hydro', 'cryo', 'cryo'], name: '氷2+水2 (氷共鳴 会心率+15% / 水共鳴 HP+25%)',        same: 1, diff: 2, passiveHp: 12, resHp: 25, resCr: 15 }
   ],
   refs: [{ key: 'hp', label: '最大HP' }],
   subStats: ['hp', 'cr', 'cd'], subLabels: ['HP', '率', '傷'],   // チャージ効率は画面の「チャージロール」で指定

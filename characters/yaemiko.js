@@ -17,16 +17,16 @@ const CIR     = [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat
   // パーティごとに 武器・セット・メインステの候補が変わる (common.js の avail が上書きする)
   // same=八重神子と同元素(雷)の味方の数 / diff=異元素の味方の数。resEm/resAtk/resCr=元素共鳴 / aggravate・star=反応モード
   parties: [
-    { key: 'aggravate', name: '激化 (八重神子+雷1+草2 / 草共鳴 熟知+100 / 超激化1回)', same: 1, diff: 2, resEm: 100, aggravate: true,
+    { key: 'aggravate', members: ['electro', 'dendro', 'dendro'], name: '激化 (八重神子+雷1+草2 / 草共鳴 熟知+100 / 超激化1回)', same: 1, diff: 2, resEm: 100, aggravate: true,
       weaponKeys: ['kaguras_verity', 'a_thousand_floating_dreams', 'lost_prayer_to_the_sacred_winds', 'the_widsith'],
       setKeys: ['golden_troupe', 'gilded_dreams', 'em_2_2'], clocks: CLK_EM, cups: CUP_EM, circlets: CIR },
-    { key: 'overload_electro', name: '過負荷 (八重神子+雷1+炎2 / 炎共鳴 攻撃+25%)', same: 1, diff: 2, resAtk: 25,
+    { key: 'overload_electro', members: ['electro', 'pyro', 'pyro'], name: '過負荷 (八重神子+雷1+炎2 / 炎共鳴 攻撃+25%)', same: 1, diff: 2, resAtk: 25,
       weaponKeys: ['kaguras_verity', 'lost_prayer_to_the_sacred_winds', 'skyward_atlas', 'the_widsith'],
       setKeys: ['golden_troupe', 'gilded_dreams', 'atk_2_2'], clocks: CLK_ATK, cups: CUP_ATK, circlets: CIR },
-    { key: 'overload_pyro', name: '過負荷 (八重神子+炎3 / 炎共鳴 攻撃+25%)', same: 0, diff: 3, resAtk: 25,
+    { key: 'overload_pyro', members: ['pyro', 'pyro', 'pyro'], name: '過負荷 (八重神子+炎3 / 炎共鳴 攻撃+25%)', same: 0, diff: 3, resAtk: 25,
       weaponKeys: ['kaguras_verity', 'lost_prayer_to_the_sacred_winds', 'skyward_atlas', 'the_widsith'],
       setKeys: ['golden_troupe', 'gilded_dreams', 'atk_2_2'], clocks: CLK_ATK, cups: CUP_ATK, circlets: CIR },
-    { key: 'star_conduct', name: '星電導 (八重神子+雷1+氷2 / 氷共鳴 会心率+15% / 星電導200%追撃)', same: 1, diff: 2, resCr: 15, star: true,
+    { key: 'star_conduct', members: ['electro', 'cryo', 'cryo'], name: '星電導 (八重神子+雷1+氷2 / 氷共鳴 会心率+15% / 星電導200%追撃)', same: 1, diff: 2, resCr: 15, star: true,
       weaponKeys: ['kaguras_verity', 'echoes_of_the_heart', 'lost_prayer_to_the_sacred_winds', 'the_widsith'],
       setKeys: ['disenchantment_in_deep_shadow', 'heart_of_the_furnace', 'golden_troupe', 'gilded_dreams'], clocks: CLK_EM, cups: CUP_EM, circlets: CIR }
   ],

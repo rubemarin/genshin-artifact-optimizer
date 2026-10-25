@@ -16,7 +16,9 @@
   // ★3 パーティ構成 ― 計算に影響するものだけ。1つ目が初期値。same=同元素の味方数 / diff=異元素の味方数
   //    武器・セット・メインステがパーティで変わるなら weaponKeys / setKeys / clocks / cups / circlets を書く
   parties: [
-    { key: 'party_a', name: '構成A', same: 1, diff: 2 }
+    // members = リオセスリ自身を除く味方の元素 (画面のパーティ選択の下にアイコンで出る)。pyro hydro electro dendro anemo geo cryo / 不明は 'any'
+    //           キャラ画像も出したいときは { el: 'dendro', char: 'nahida' } のように書く (images/characters/nahida.webp)
+    { key: 'party_a', name: '構成A', members: ['dendro', 'electro', 'electro'], same: 1, diff: 2 }
   ],
 
   // ★4 一覧に出す参照ステ (優先度の高い順に最大2つ)。key は calc が返す値の名前

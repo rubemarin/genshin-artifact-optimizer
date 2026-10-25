@@ -8,9 +8,9 @@
   base: { hp: 13348.04, atk: 313.32, def: 781.62, em: 0 },   // Lv90の基礎ステータス (計算で参照しないものも記入)
   ascend: { dendroDmg: 28.8 },   // 突破ボーナス
   parties: [
-    { key: 'dendro_2_electro_2', name: '草草雷雷 (草共鳴 熟知+100)', same: 1, diff: 2 },
-    { key: 'dendro_2_hydro_electro', name: '草草水雷 (草共鳴 熟知+100)', same: 1, diff: 2 },
-    { key: 'dendro_1_hydro_electro_other', name: '草水雷+草以外 (草共鳴なし)', same: 0, diff: 3 }
+    { key: 'dendro_2_electro_2', members: ['dendro', 'electro', 'electro'], name: '草草雷雷 (草共鳴 熟知+100)', same: 1, diff: 2 },
+    { key: 'dendro_2_hydro_electro', members: ['dendro', 'hydro', 'electro'], name: '草草水雷 (草共鳴 熟知+100)', same: 1, diff: 2 },
+    { key: 'dendro_1_hydro_electro_other', members: ['hydro', 'electro', 'any'], name: '草水雷+草以外 (草共鳴なし)', same: 0, diff: 3 }
   ],
   refs: [{ key: 'em', label: '熟知' }, { key: 'atk', label: '攻撃力' }],
   subStats: ['em', 'cr', 'cd'], subLabels: ['熟', '率', '傷'],
