@@ -119,13 +119,13 @@
       "name": "大地を流浪する楽団",
       "file": "images/artifacts/wanderers_troupe.webp"
     },
-    "shadow_phantom": {
+    "disenchantment_in_deep_shadow": {
       "name": "影に沈む幻",
-      "file": "images/artifacts/shadow_phantom.webp"
+      "file": "images/artifacts/disenchantment_in_deep_shadow.webp"
     },
-    "furnace_heart": {
+    "heart_of_the_furnace": {
       "name": "炉炎溶錬の心",
-      "file": "images/artifacts/furnace_heart.webp"
+      "file": "images/artifacts/heart_of_the_furnace.webp"
     },
     "em_2_2": {
       "name": "熟知80 + 熟知80 (2セット組)",

@@ -13,6 +13,11 @@ images/
 武器の英語の正式名を、**小文字にして、アポストロフィ(')を除き、記号とスペースを `_` に変えたもの**です。
 例: `Kagura's Verity` → `kaguras_verity` / `Wolf-Fang` → `wolf_fang` / `Hunter's Path` → `hunters_path` / `A Thousand Floating Dreams` → `a_thousand_floating_dreams`
 
+## 聖遺物セットのファイル名の決め方
+武器と同じ規則で、**英語の正式名**を小文字にして、アポストロフィを除き、記号とスペースを `_` に変えたものです。
+例: `Wanderer's Troupe` → `wanderers_troupe` / `Disenchantment in Deep Shadow` → `disenchantment_in_deep_shadow` / `Heart of the Furnace` → `heart_of_the_furnace`
+2種類のセットを組み合わせた構成(`em_2_2` `atk_2_2` `hp_2_2`)だけは、専用の名前です。
+
 ## ルール
 - 形式は **WebP**、拡張子は小文字の `.webp`
 - ファイル名は下の表のとおり(**半角英小文字とアンダースコア**。日本語名や大文字は使わない)
@@ -56,8 +61,8 @@ images/
 | `artifacts/gilded_dreams.webp` | 金メッキの夢 | ナヒーダ/アルハイゼン/ティナリ/八重神子 |
 | `artifacts/marechaussee_hunter.webp` | ファントムハンター | アルハイゼン |
 | `artifacts/wanderers_troupe.webp` | 大地を流浪する楽団 | ティナリ |
-| `artifacts/shadow_phantom.webp` | 影に沈む幻 | 八重神子 |
-| `artifacts/furnace_heart.webp` | 炉炎溶錬の心 | 八重神子 |
+| `artifacts/disenchantment_in_deep_shadow.webp` | 影に沈む幻 | 八重神子 |
+| `artifacts/heart_of_the_furnace.webp` | 炉炎溶錬の心 | 八重神子 |
 | `artifacts/em_2_2.webp` | 熟知80 + 熟知80 (2セット組) | ナヒーダ/アルハイゼン/ティナリ/八重神子 |
 | `artifacts/atk_2_2.webp` | 攻撃18% + 攻撃18% (2セット組) | 八重神子 / 行秋 |
 
