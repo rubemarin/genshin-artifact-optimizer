@@ -28,7 +28,7 @@ const CIR     = [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat
       setKeys: ['golden_troupe', 'gilded_dreams', 'atk_2_2'], clocks: CLK_ATK, cups: CUP_ATK, circlets: CIR },
     { key: 'star_conduct', name: '星電導 (八重神子+雷1+氷2 / 氷共鳴 会心率+15% / 星電導200%追撃)', same: 1, diff: 2, resCr: 15, star: true,
       weaponKeys: ['kaguras_verity', 'echoes_of_the_heart', 'lost_prayer_to_the_sacred_winds', 'the_widsith'],
-      setKeys: ['shadow_phantom', 'furnace_heart', 'golden_troupe', 'gilded_dreams'], clocks: CLK_EM, cups: CUP_EM, circlets: CIR }
+      setKeys: ['disenchantment_in_deep_shadow', 'heart_of_the_furnace', 'golden_troupe', 'gilded_dreams'], clocks: CLK_EM, cups: CUP_EM, circlets: CIR }
   ],
   refs: [{ key: 'atk', label: '攻撃力' }, { key: 'em', label: '熟知' }],
   subStats: ['atk', 'em', 'cr', 'cd'], subLabels: ['攻', '熟', '率', '傷'],
@@ -44,7 +44,7 @@ const CIR     = [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat
   sets: [
     { key: 'golden_troupe', name: '黄金の劇団 4' }, { key: 'gilded_dreams', name: '金メッキの夢 4' },
     { key: 'em_2_2', name: '熟知80 + 熟知80' }, { key: 'atk_2_2', name: '攻撃18% + 攻撃18%' },
-    { key: 'shadow_phantom', name: '影に沈む幻 4' }, { key: 'furnace_heart', name: '炉炎溶錬の心 4' }
+    { key: 'disenchantment_in_deep_shadow', name: '影に沈む幻 4' }, { key: 'heart_of_the_furnace', name: '炉炎溶錬の心 4' }
   ],
   clocks: [], cups: [], circlets: [],   // パーティ側で指定
   calc({ weapon: w, set, mains, party, s }) {
@@ -58,15 +58,15 @@ const CIR     = [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat
     // 攻撃力
     let atkPct = s.atkPct + 46.6 * n('atk') + w.atkPct;
     if (k === 'gilded_dreams') atkPct += 14 * Math.min(3, pt.same);   // 同元素の味方×14%
-    if (k === 'shadow_phantom') atkPct += 18;
-    if (k === 'furnace_heart') atkPct += 30;
+    if (k === 'disenchantment_in_deep_shadow') atkPct += 18;
+    if (k === 'heart_of_the_furnace') atkPct += 30;
     if (k === 'atk_2_2') atkPct += 36;
     atkPct += pt.resAtk || 0;                                   // 炎共鳴
     const atk = (this.base.atk + w.atk) * (1 + atkPct / 100) + 311 + s.atkFlat;
     // 会心
     let cr = 5 + this.ascend.cr + w.cr + 31.1 * n('cr') + s.cr;
     cr += pt.resCr || 0;                                        // 氷共鳴
-    if (k === 'shadow_phantom') cr += 16;
+    if (k === 'disenchantment_in_deep_shadow') cr += 16;
     cr = Math.min(100, cr);
     const cd = 50 + w.cd + 62.2 * n('cd') + s.cd;
     const crit = 1 + (cr / 100) * (cd / 100);
@@ -78,7 +78,7 @@ const CIR     = [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat
     const normal = (atk * 4.1636 + aggr) * (1 + buff / 100) * crit * 0.5 * 0.90;
     let star = 0;
     if (pt.star) {
-      const starBuff = (k === 'shadow_phantom' ? 0.40 : 0) + (k === 'furnace_heart' ? 0.50 : 0) + w.star;
+      const starBuff = (k === 'disenchantment_in_deep_shadow' ? 0.40 : 0) + (k === 'heart_of_the_furnace' ? 0.50 : 0) + w.star;
       star = 1.8 * atk * 2.00 * (1 + (6 * em) / (em + 2000) + starBuff) * crit * 0.90;
     }
     return { damage: Math.round(normal + star), em, atk, cr, cd, buff, elemBuff };
