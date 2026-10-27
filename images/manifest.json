@@ -96,6 +96,22 @@
     "the_stringless": {
       "name": "絶弦",
       "file": "images/weapons/the_stringless.webp"
+    },
+    "cashflow_supervision": {
+      "name": "凛流の監視者",
+      "file": "images/weapons/cashflow_supervision.webp"
+    },
+    "clash_of_kings": {
+      "name": "諸王の対局",
+      "file": "images/weapons/clash_of_kings.webp"
+    },
+    "reliquary_of_truth": {
+      "name": "真言の匣",
+      "file": "images/weapons/reliquary_of_truth.webp"
+    },
+    "flowing_purity": {
+      "name": "純水流華",
+      "file": "images/weapons/flowing_purity.webp"
     }
   },
   "artifacts": {
@@ -150,6 +166,14 @@
     "hp_2_2": {
       "name": "HP20% + HP20% (2種の組み合わせ)",
       "file": "images/artifacts/hp_2_2.webp"
+    },
+    "shimenawas_reminiscence": {
+      "name": "追憶のしめ縄",
+      "file": "images/artifacts/shimenawas_reminiscence.webp"
+    },
+    "blizzard_strayer": {
+      "name": "氷風を彷徨う勇士",
+      "file": "images/artifacts/blizzard_strayer.webp"
     }
   },
   "characters": {
@@ -176,6 +200,10 @@
     "yelan": {
       "name": "夜蘭",
       "file": "images/characters/yelan.webp"
+    },
+    "wriothesley": {
+      "name": "リオセスリ",
+      "file": "images/characters/wriothesley.webp"
     }
   },
   "others": {
@@ -262,6 +290,10 @@
     "stat_healing": {
       "name": "与える治療効果バフ",
       "file": "images/others/stat_healing.webp"
+    },
+    "other_element": {
+      "name": "元素が決まっていない味方 (その他の元素)",
+      "file": "images/others/other_element.webp"
     }
   }
 }

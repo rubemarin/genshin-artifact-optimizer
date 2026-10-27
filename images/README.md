@@ -12,11 +12,16 @@ images/
 ## 武器のファイル名の決め方
 武器の英語の正式名を、**小文字にして、アポストロフィ(')を除き、記号とスペースを `_` に変えたもの**です。
 例: `Kagura's Verity` → `kaguras_verity` / `Wolf-Fang` → `wolf_fang` / `Hunter's Path` → `hunters_path` / `A Thousand Floating Dreams` → `a_thousand_floating_dreams`
+| `weapons/cashflow_supervision.webp` | 凛流の監視者 | リオセスリ |
+| `weapons/clash_of_kings.webp` | 諸王の対局 | リオセスリ |
+| `weapons/reliquary_of_truth.webp` | 真言の匣 | リオセスリ |
+| `weapons/flowing_purity.webp` | 純水流華 | リオセスリ |
 
 ## 聖遺物セットのファイル名の決め方
 武器と同じ規則で、**英語の正式名**を小文字にして、アポストロフィを除き、記号とスペースを `_` に変えたものです。
 例: `Wanderer's Troupe` → `wanderers_troupe` / `Disenchantment in Deep Shadow` → `disenchantment_in_deep_shadow` / `Heart of the Furnace` → `heart_of_the_furnace`
 2種類のセットを組み合わせた構成(`em_2_2` `atk_2_2` `hp_2_2`)だけは、専用の名前です。
+| `artifacts/shimenawas_reminiscence.webp` | 追憶のしめ縄 | リオセスリ |
 
 ## ルール
 - 形式は **WebP**、拡張子は小文字の `.webp`
@@ -41,7 +46,7 @@ images/
 | `weapons/aqua_simulacra.webp` | 若水 | ティナリ |
 | `weapons/slingshot.webp` | 弾弓 | ティナリ |
 | `weapons/jade_vista.webp` | 千鈞懸黎 | ティナリ |
-| `weapons/echoes_of_the_heart.webp` | 胸中の谺 | 八重神子 |
+| `weapons/echoes_of_the_heart.webp` | 胸中の谺 | 八重神子 / リオセスリ |
 | `weapons/skyward_atlas.webp` | 天空の巻 | 八重神子 |
 | `weapons/sacrificial_sword.webp` | 祭礼の剣 | 行秋 |
 | `weapons/moonweavers_dawn.webp` | 月紡ぎの曙光 | 行秋 |
@@ -61,7 +66,7 @@ images/
 | `artifacts/gilded_dreams.webp` | 金メッキの夢 | ナヒーダ/アルハイゼン/ティナリ/八重神子 |
 | `artifacts/marechaussee_hunter.webp` | ファントムハンター | アルハイゼン |
 | `artifacts/wanderers_troupe.webp` | 大地を流浪する楽団 | ティナリ |
-| `artifacts/disenchantment_in_deep_shadow.webp` | 影に沈む幻 | 八重神子 |
+| `artifacts/disenchantment_in_deep_shadow.webp` | 影に沈む幻 | 八重神子 / リオセスリ |
 | `artifacts/heart_of_the_furnace.webp` | 炉炎溶錬の心 | 八重神子 |
 | `artifacts/em_2_2.webp` | 熟知80 + 熟知80 (2セット組) | ナヒーダ/アルハイゼン/ティナリ/八重神子 |
 | `artifacts/atk_2_2.webp` | 攻撃18% + 攻撃18% (2セット組) | 八重神子 / 行秋 |
@@ -71,6 +76,7 @@ images/
 | `artifacts/noblesse_oblige.webp` | 旧貴族のしつけ | 行秋 |
 | `artifacts/nymphs_dream.webp` | 水仙の夢 | 行秋 |
 | `artifacts/hp_2_2.webp` | HP20% + HP20% (2種の組み合わせ) | 夜蘭 |
+| `artifacts/blizzard_strayer.webp` | 氷風を彷徨う勇士 | リオセスリ |
 
 ## キャラ (`images/characters/`)
 ファイル名は、キャラのID(`characters/○○.js` の `id`)に `.webp` を付けます。
@@ -83,6 +89,7 @@ images/
 | `characters/yaemiko.webp` | 八重神子 |
 | `characters/xingqiu.webp` | 行秋 |
 | `characters/yelan.webp` | 夜蘭 |
+| `characters/wriothesley.webp` | リオセスリ |
 
 ## その他 (`images/others/`)
 属性・武器種・ステータスのアイコンです。属性と武器種は絞り込みボタンとキャラのカードに、ステータスは表の「参照」列に表示します (ステータスの画像が無い間は、略称の文字が出ます)。
@@ -111,6 +118,7 @@ images/
 | `others/stat_cd.webp` | 会心ダメージのアイコン |
 | `others/stat_physical.webp` | 物理ダメージバフのアイコン |
 | `others/stat_healing.webp` | 与える治療効果バフのアイコン |
+| `others/other_element.webp` | 元素が決まっていない味方 (パーティ表示の「?」の代わり) |
 
 ## キャラを増やすとき
 新しい武器、セット、キャラが必要になったら(キャラは `characters/<id>.webp`、必要なら新しい元素のアイコンも)、ID(英小文字+アンダースコア)を決めて、画像を置き、`manifest.json` に1行足してください。
