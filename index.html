@@ -50,9 +50,9 @@ th{color:var(--mu);font-size:12px;user-select:none}th[data-k]{cursor:pointer}th.
 <script>
 var LOADFAIL=[];function lf(e){LOADFAIL.push(e.getAttribute("src"));}
 // 読み込むファイルの一覧 (新しいキャラを追加したら、ここにファイル名を1つ足す)
-var CHARACTER_FILES=['nahida','alhaitham','tighnari','yaemiko','xingqiu','yelan'];
+var CHARACTER_FILES=['nahida','alhaitham','tighnari','yaemiko','xingqiu','yelan','wriothesley'];
 // 更新番号: ファイルを更新したら変える (古いキャッシュを使わせない)。ローカルで開くときは付けない
-var V=location.protocol==='file:'?'':'?v=20261023s';
+var V=location.protocol==='file:'?'':'?v=20261023w';
 ['common.js'].concat(CHARACTER_FILES.map(function(c){return 'characters/'+c+'.js';})).forEach(function(f){
   document.write('<script src="'+f+V+'" onerror="lf(this)"><\/script>');
 });
@@ -127,7 +127,7 @@ function renderMembers(){
   const av=(id,fb)=>`<span class="ico">${img('images/characters/'+id+'.'+IMG_EXT)}<span class="ab">${fb}</span></span>`;
   const self=`<span class="pm self" title="${ch.name} (${ELEM[ch.element]||ch.element}元素)">${av(ch.id,ch.name[0])}${badge(ch.element)}</span>`;
   const one=m=>{const el=(m&&m.el)||m;
-    if(el==='any'&&!(m&&m.char))return `<span class="pm" title="元素は不問"><span class="ab">?</span></span>`;
+    if(el==='any'&&!(m&&m.char))return `<span class="pm" title="元素は不問"><span class="ico">${oimg('other_element')}<span class="ab">?</span></span></span>`;
     const t=(ELEM[el]||'?')+'元素';
     return m&&m.char?`<span class="pm" title="${t}">${av(m.char,(ELEM[el]||'?'))}${badge(el)}</span>`
                     :`<span class="pm" title="${t}"><span class="ico">${oimg(ELICON[el])}<span class="ab">${ELEM[el]||'?'}</span></span></span>`;};

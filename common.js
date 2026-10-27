@@ -47,6 +47,9 @@
             fillSub(sub, rolls, o.erRolls);
             const r = ch.calc(ctx);
             if (r.er == null) r.er = 100 + sub.er;          // チャージ効率: calc が返さなければ 100% + サブステ分
+            // CV用: 冠のメインステ + サブステ合計 のみ (初期値5%/50%・武器・突破・共鳴・天賦の会心は含めない。サブステには固定2ロールを含む)
+            r.cvCr = 31.1 * (mains.c.cr || 0) + sub.cr;
+            r.cvCd = 62.2 * (mains.c.cd || 0) + sub.cd;
             if (!best || r.damage > best.damage) best = Object.assign({}, r, { rolls: Object.assign({}, rolls) });
           };
           const rec = (i, rem) => {
@@ -62,6 +65,6 @@
         }
     return out.sort((a, b) => b.damage - a.damage);
   }
-  g.Engine = { version: 2, optimize, avail, SUB, SUBV, ER_ROLL, BASE_SUB };   // version: 2 = KQM基準(全サブステ2ロール / calc に s を渡す)
+  g.Engine = { version: 3, optimize, avail, SUB, SUBV, ER_ROLL, BASE_SUB };   // version: 2 = KQM基準(全サブステ2ロール / calc に s を渡す) / 3 = CV用の cvCr・cvCd を返す
   if (typeof module !== 'undefined') module.exports = g.Engine;
 })(globalThis);

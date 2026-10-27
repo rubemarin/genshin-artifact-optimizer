@@ -16,8 +16,8 @@ table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}th,td{p
 </div>
 <script>
 // [ファイル, [最新版にだけ入っている目印]] ― 新しいキャラを追加したら、ここにも1行足す
-const CHARS=['nahida','alhaitham','tighnari','yaemiko','xingqiu','yelan'];
-const FILES=[['index.html',['NEED_ENGINE','fillFilters']],['common.js',['version: 2','fillSub']]]
+const CHARS=['nahida','alhaitham','tighnari','yaemiko','xingqiu','yelan','wriothesley'];
+const FILES=[['index.html',['NEED_ENGINE','fillFilters']],['common.js',['version: 3','cvCr']]]
   .concat(CHARS.map(c=>['characters/'+c+'.js',['engine: 2','base:']]));
 const rows=document.getElementById('rows');let bad=[];
 Promise.all(FILES.map(async([f,marks])=>{
