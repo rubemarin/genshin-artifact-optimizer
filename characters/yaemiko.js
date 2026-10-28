@@ -3,6 +3,7 @@
 //                              過負荷は4人目が雷(overload_electro)か炎(overload_pyro)かで2パーティに分割
 // メインステの stat 名: 'atk' = 攻撃力% (サブステの atk と同じ名前にして上限計算を合わせる)
 (() => {   // このファイルの const 名が他のキャラのファイルと衝突しないように、囲いの中に入れる
+const { add: A, putSum, putMul, hit: H } = Engine;   // 内訳の記録 (タップで詳細を出すため)
 const CLK_EM  = [{ name: '攻撃%', stat: 'atk' }, { name: '熟知', stat: 'em' }];
 const CUP_EM  = [{ name: '雷バフ', stat: 'electro' }, { name: '攻撃%', stat: 'atk' }, { name: '熟知', stat: 'em' }];
 const CLK_ATK = [{ name: '攻撃%', stat: 'atk' }];
@@ -11,7 +12,7 @@ const CIR     = [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'yaemiko', name: '八重神子', element: 'electro', weaponType: '法器',
   rarity: 5, version: '2.5', release: '2022-02-16',
-  engine: 2,   // このファイルが必要とする common.js の版 (古い common.js だと、画面に警告が出る)
+  engine: 4,   // このファイルが必要とする common.js の版 (古い common.js だと、画面に警告が出る)
   base: { hp: 10372.29, atk: 339.63, def: 568.73, em: 0 },   // Lv90の基礎ステータス (計算で参照しないものも記入)
   ascend: { cr: 19.2 },   // 突破ボーナス
   // パーティごとに 武器・セット・メインステの候補が変わる (common.js の avail が上書きする)
@@ -47,39 +48,53 @@ const CIR     = [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat
     { key: 'disenchantment_in_deep_shadow', name: '影に沈む幻 4' }, { key: 'heart_of_the_furnace', name: '炉炎溶錬の心 4' }
   ],
   clocks: [], cups: [], circlets: [],   // パーティ側で指定
-  calc({ weapon: w, set, mains, party, s }) {
+  calc({ weapon: w, set, mains, party, s, x: X }) {
     const pt = this.parties.find(x => x.key === party);
     const n = k => (mains.c[k] || 0), k = set.key;
+    const E = X ? [] : null, AP = X ? [] : null, CRp = X ? [] : null, CDp = X ? [] : null, EB = X ? [] : null, BF = X ? [] : null;
     // 熟知
-    let em = this.base.em + 187 * n('em') + w.em + (w.sameEm || 0) * Math.min(3, pt.same) + s.em;
-    if (k === 'gilded_dreams') em += 80 + 50 * Math.min(3, pt.diff);   // 2セット80 + 4セット(異元素の味方×50)
-    if (k === 'em_2_2') em += 160;
-    em += pt.resEm || 0;                                        // 草共鳴
+    let em = A(E, 'キャラ基礎熟知', this.base.em) + A(E, 'メインステ 熟知', 187 * n('em')) + A(E, '武器の熟知', w.em) + A(E, '千夜: 同元素の味方×32', (w.sameEm || 0) * Math.min(3, pt.same)) + A(E, 'サブステ 熟知 (固定2ロール+割り振り)', s.em);
+    if (k === 'gilded_dreams') em += A(E, '金メッキの夢 (2セット80 + 異元素の味方×50)', 80 + 50 * Math.min(3, pt.diff));
+    if (k === 'em_2_2') em += A(E, '熟知80 + 熟知80 (2+2)', 160);
+    em += A(E, '草共鳴', pt.resEm || 0);
     // 攻撃力
-    let atkPct = s.atkPct + 46.6 * n('atk') + w.atkPct;
-    if (k === 'gilded_dreams') atkPct += 14 * Math.min(3, pt.same);   // 同元素の味方×14%
-    if (k === 'disenchantment_in_deep_shadow') atkPct += 18;
-    if (k === 'heart_of_the_furnace') atkPct += 30;
-    if (k === 'atk_2_2') atkPct += 36;
-    atkPct += pt.resAtk || 0;                                   // 炎共鳴
+    let atkPct = A(AP, 'サブステ 攻撃力% (固定2ロール+割り振り)', s.atkPct) + A(AP, 'メインステ 攻撃%', 46.6 * n('atk')) + A(AP, '武器: 攻撃力%', w.atkPct);
+    if (k === 'gilded_dreams') atkPct += A(AP, '金メッキの夢4 (同元素の味方×14%)', 14 * Math.min(3, pt.same));
+    if (k === 'disenchantment_in_deep_shadow') atkPct += A(AP, '影に沈む幻 (2セット)', 18);
+    if (k === 'heart_of_the_furnace') atkPct += A(AP, '炉炎溶錬の心 (2セット18 + 4セット12)', 30);
+    if (k === 'atk_2_2') atkPct += A(AP, '攻撃力18% + 攻撃力18% (2+2)', 36);
+    atkPct += A(AP, '炎共鳴', pt.resAtk || 0);
     const atk = (this.base.atk + w.atk) * (1 + atkPct / 100) + 311 + s.atkFlat;
     // 会心
-    let cr = 5 + this.ascend.cr + w.cr + 31.1 * n('cr') + s.cr;
-    cr += pt.resCr || 0;                                        // 氷共鳴
-    if (k === 'disenchantment_in_deep_shadow') cr += 16;
-    cr = Math.min(100, cr);
-    const cd = 50 + w.cd + 62.2 * n('cd') + s.cd;
+    let cr = A(CRp, '初期値', 5) + A(CRp, '突破 会心率', this.ascend.cr) + A(CRp, '武器の会心率', w.cr) + A(CRp, '冠 会心率', 31.1 * n('cr')) + A(CRp, 'サブステ 会心率 (固定2ロール+割り振り)', s.cr);
+    cr += A(CRp, '氷共鳴', pt.resCr || 0);
+    if (k === 'disenchantment_in_deep_shadow') cr += A(CRp, '影に沈む幻4 (星電導の影響下)', 16);
+    const crRaw = cr; cr = Math.min(100, cr);
+    const cd = A(CDp, '初期値', 50) + A(CDp, '武器の会心ダメ', w.cd) + A(CDp, '冠 会心ダメ', 62.2 * n('cd')) + A(CDp, 'サブステ 会心ダメ (固定2ロール+割り振り)', s.cd);
     const crit = 1 + (cr / 100) * (cd / 100);
     // バフ (元素バフ=キャラ画面の雷ダメ / スキル限定バフは分離)
-    const elemBuff = (n('electro') ? 46.6 : 0) + w.elem + (w.diffElem || 0) * Math.min(3, pt.diff);
-    const buff = elemBuff + em * 0.15 + (k === 'golden_troupe' ? 70 : 0) + w.skillBuff;
+    const elemBuff = A(EB, '杯 雷バフ', n('electro') ? 46.6 : 0) + A(EB, '武器: 全元素ダメ', w.elem) + A(EB, '千夜: 異元素の味方×10%', (w.diffElem || 0) * Math.min(3, pt.diff));
+    const buff = A(BF, '元素バフ (上の内訳)', elemBuff) + A(BF, '固有天賦 (熟知×0.15%)', em * 0.15) + A(BF, '黄金の劇団4 (スキルダメ)', k === 'golden_troupe' ? 70 : 0) + A(BF, '武器: スキルダメ', w.skillBuff);
     // ダメージ (殺生桜 壱〜参階 = 109.21% + 136.51% + 170.64% = 416.36%)
     const aggr = pt.aggravate ? 1.15 * 1446.85 * (1 + (5 * em) / (em + 1200)) : 0;
     const normal = (atk * 4.1636 + aggr) * (1 + buff / 100) * crit * 0.5 * 0.90;
-    let star = 0;
+    let star = 0, starBuff = 0;
     if (pt.star) {
-      const starBuff = (k === 'disenchantment_in_deep_shadow' ? 0.40 : 0) + (k === 'heart_of_the_furnace' ? 0.50 : 0) + w.star;
+      starBuff = (k === 'disenchantment_in_deep_shadow' ? 0.40 : 0) + (k === 'heart_of_the_furnace' ? 0.50 : 0) + w.star;
       star = 1.8 * atk * 2.00 * (1 + (6 * em) / (em + 2000) + starBuff) * crit * 0.90;
+    }
+    if (X) {
+      putSum(X, 'em', '元素熟知', '', em, E);
+      putMul(X, 'atk', '攻撃力', [['キャラ基礎攻撃力', this.base.atk], ['武器の基礎攻撃力', w.atk]], AP, [['羽の攻撃力 (固定)', 311], ['サブステ 攻撃実数値 (固定2ロール)', s.atkFlat]], atk);
+      putSum(X, 'cr', '会心率', '%', cr, CRp, crRaw > 100 ? '(上限100%で頭打ち)' : '');
+      putSum(X, 'cd', '会心ダメージ', '%', cd, CDp);
+      putSum(X, 'elem', '元素バフ (雷ダメ)', '%', elemBuff, EB);
+      putSum(X, 'buff', 'ダメージバフ合計 (スキル)', '%', buff, BF);
+      const K = (1 + buff / 100) * crit * 0.5 * 0.90;
+      const f = what => `${what} × (1 + ${buff.toFixed(1)}%) × 会心 ${crit.toFixed(3)} × 防御 0.5 × 耐性 0.9`;
+      H(X, null, '殺生桜 壱〜参階 (攻撃力×416.36%)', atk * 4.1636 * K, f(`${Math.round(atk)} × 416.36%`));
+      if (aggr) H(X, null, '超激化の追加ダメージ (係数1.15)', aggr * K, f(`激化 ${Math.round(aggr)}`));
+      if (pt.star) H(X, null, '星電導の追撃 (反応係数1.8 × 攻撃力 × 200%)', star, `1.8 × ${Math.round(atk)} × 200% × (1 + 熟知${(600 * em / (em + 2000)).toFixed(1)}% + 星電導${(starBuff * 100).toFixed(0)}%) × 会心 ${crit.toFixed(3)} × 耐性 0.9 (防御・ダメバフなし)`);
     }
     return { damage: Math.round(normal + star), em, atk, cr, cd, buff, elemBuff };
   }

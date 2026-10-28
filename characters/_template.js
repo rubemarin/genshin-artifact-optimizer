@@ -7,7 +7,7 @@
   // ★1 基本情報 ― id は画像名 images/characters/<id>.webp と一致させる
   id: 'キャラID', name: 'キャラ名', element: 'dendro', weaponType: '法器',
   rarity: 5, version: '3.2', release: '2022-11-02',   // レア度 / 実装バージョン / 実装日(YYYY-MM-DD。並び順に使う)
-  engine: 2,   // このファイルが必要とする common.js の版 (古い common.js だと、画面に警告が出る)
+  engine: 4,   // このファイルが必要とする common.js の版 (古い common.js だと、画面に警告が出る)
 
   // ★2 Lv90の基礎ステータスと突破ボーナス ― 計算で参照しないステータスも必ず記入する (小数2桁まで)
   base:   { hp: 10000.00, atk: 300.00, def: 600.00, em: 0 },

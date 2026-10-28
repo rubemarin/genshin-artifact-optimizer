@@ -5,12 +5,13 @@
 // ※ 固有天賦(Adapt With Ease: 爆発中 毎秒+3.5% 最大+50%)は、フィールド上のキャラのダメージが上がる効果。
 //    夜蘭は裏から攻撃するため乗らない → 0 (表で戦わせる場合だけ値を入れる)
 (() => {   // このファイルの const 名が他のキャラのファイルと衝突しないように、囲いの中に入れる
+const { add: A, putSum, putMul, hit: H } = Engine;   // 内訳の記録 (タップで詳細を出すため)
 const A4_DMG = 0;
 const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // チャージ武器以外は時計をチャージ効率に固定
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'yelan', name: '夜蘭', element: 'hydro', weaponType: '弓',
   rarity: 5, version: '2.7', release: '2022-05-31',
-  engine: 2,   // このファイルが必要とする common.js の版 (古い common.js だと、画面に警告が出る)
+  engine: 4,   // このファイルが必要とする common.js の版 (古い common.js だと、画面に警告が出る)
   base: { hp: 14450.17, atk: 243.96, def: 547.98, em: 0 },   // Lv90の基礎ステータス (計算で参照しないものも記入)
   ascend: { cr: 19.2 },   // 突破ボーナス
   // passiveHp=Turn Control / resHp=水共鳴(HP+25%) / resCr=氷共鳴(会心率+15%)
@@ -37,18 +38,20 @@ const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // チャージ武器�
   clocks:   [{ name: 'HP%', stat: 'hp' }, { name: 'チャージ', stat: 'er' }],
   cups:     [{ name: '水バフ', stat: 'hydro' }, { name: 'HP%', stat: 'hp' }],
   circlets: [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat: 'cd' }, { name: 'HP%', stat: 'hp' }],
-  calc({ weapon: w, set, mains, party, s }) {
+  calc({ weapon: w, set, mains, party, s, x: X }) {
     const pt = this.parties.find(x => x.key === party);
     const n = k => (mains.c[k] || 0), k = set.key;
+    const ERp = X ? [] : null, HPp = X ? [] : null, CRp = X ? [] : null, CDp = X ? [] : null, BF = X ? [] : null;
     // チャージ効率
-    const er = 100 + (w.er || 0) + 51.8 * n('er') + (k === 'emblem_of_severed_fate' ? 20 : 0) + s.er;
+    const er = A(ERp, '初期値', 100) + A(ERp, '武器: チャージ', w.er || 0) + A(ERp, 'メインステ 時計 チャージ', 51.8 * n('er')) + A(ERp, '絶縁の旗印 (2セット)', k === 'emblem_of_severed_fate' ? 20 : 0) + A(ERp, 'サブステ チャージ (固定2ロール+チャージロール)', s.er);
     // 最大HP
-    let hpPct = (w.hpPct || 0) + 46.6 * n('hp') + s.hpPct + pt.passiveHp + (pt.resHp || 0);
-    if (k === 'hp_2_2') hpPct += 40;            // HP2セット×2
+    let hpPct = A(HPp, '武器: HP%', w.hpPct || 0) + A(HPp, 'メインステ HP%', 46.6 * n('hp')) + A(HPp, 'サブステ HP% (固定2ロール+割り振り)', s.hpPct) + A(HPp, '固有天賦 (チームの元素の種類)', pt.passiveHp) + A(HPp, '水共鳴', pt.resHp || 0);
+    if (k === 'hp_2_2') hpPct += A(HPp, 'HP20% + HP20% (2+2)', 40);            // HP2セット×2
     const hp = this.base.hp * (1 + hpPct / 100) + 4780 + s.hpFlat;   // 花4780 + サブ固定ロール
     // 会心
-    const cr = Math.min(100, 5 + this.ascend.cr + (pt.resCr || 0) + w.cr + 31.1 * n('cr') + s.cr);
-    const cd = 50 + w.cd + 62.2 * n('cd') + s.cd;
+    const crRaw = A(CRp, '初期値', 5) + A(CRp, '突破 会心率', this.ascend.cr) + A(CRp, '氷共鳴', pt.resCr || 0) + A(CRp, '武器の会心率', w.cr) + A(CRp, '冠 会心率', 31.1 * n('cr')) + A(CRp, 'サブステ 会心率 (固定2ロール+割り振り)', s.cr);
+    const cr = Math.min(100, crRaw);
+    const cd = A(CDp, '初期値', 50) + A(CDp, '武器の会心ダメ', w.cd) + A(CDp, '冠 会心ダメ', 62.2 * n('cd')) + A(CDp, 'サブステ 会心ダメ (固定2ロール+割り振り)', s.cd);
     const crit = 1 + (cr / 100) * (cd / 100);
     // バフ
     const hydro = n('hydro') ? 46.6 : 0;                                           // 水元素ダメ (キャラ画面)
@@ -58,6 +61,19 @@ const CLK_ER = [{ name: 'チャージ', stat: 'er' }];   // チャージ武器�
     // ダメージ (防御0.5 / 水耐性10%)
     const skill = hp * 0.40698 * (1 + skillB / 100) * crit * 0.5 * 0.90;
     const burst = hp * (0.13158 + 0.08766 * 3 * 12) * (1 + burstB / 100) * crit * 0.5 * 0.90;
+    if (X) {
+      putMul(X, 'hp', '最大HP', [['キャラ基礎HP', this.base.hp]], HPp, [['花のHP (固定)', 4780], ['サブステ HP実数値 (固定2ロール)', s.hpFlat]], hp);
+      putSum(X, 'er', 'チャージ効率', '%', er, ERp);
+      putSum(X, 'cr', '会心率', '%', cr, CRp, crRaw > 100 ? '(上限100%で頭打ち)' : '');
+      putSum(X, 'cd', '会心ダメージ', '%', cd, CDp);
+      putSum(X, 'elem', '元素バフ (水ダメ)', '%', hydro, [['杯 水バフ', hydro]].filter(l => l[1]));
+      putSum(X, 'buff', 'ダメージバフ (スキル / 爆発)', '%', skillB, [['杯 水バフ', hydro], ['武器: 与ダメージ+', w.dmg || 0], ['固有天賦 (爆発中の上昇: 裏からのため0)', A4_DMG], ['武器: スキル・爆発ダメ+', w.sb || 0]].filter(l => l[1]),
+        k === 'emblem_of_severed_fate' ? `(爆発はさらに 絶縁の旗印 +${Math.min(75, er * 0.25).toFixed(1)}% → ${burstB.toFixed(1)}%)` : '');
+      const f = (what, bonus) => `${what} × (1 + ${bonus.toFixed(1)}%) × 会心 ${crit.toFixed(3)} × 防御 0.5 × 耐性 0.9`;
+      H(X, null, 'スキル (最大HP×40.698%)', skill, f(`${Math.round(hp)} × 40.698%`, skillB));
+      H(X, null, '元素爆発 初撃 (最大HP×13.158%)', hp * 0.13158 * (1 + burstB / 100) * crit * 0.5 * 0.90, f(`${Math.round(hp)} × 13.158%`, burstB));
+      H(X, null, '元素爆発 追撃 (最大HP×8.766% × 3hit × 12回 = 36hit)', hp * 0.08766 * 3 * 12 * (1 + burstB / 100) * crit * 0.5 * 0.90, f(`${Math.round(hp)} × 315.576% (1hit = 8.766%)`, burstB));
+    }
     return { damage: Math.round(skill + burst), hp, cr, cd, er, buff: burstB, elemBuff: hydro };
   }
 });

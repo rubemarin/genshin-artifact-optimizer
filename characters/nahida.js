@@ -6,10 +6,11 @@
 //                              ⑧千夜に浮かぶ夢: 熟知+32を常時加算していたのをやめ、パーティの味方の元素で変化 (同元素→熟知+32 / 異元素→草ダメ+10%)
 // 前提: ナヒーダは場にいない状態。流浪楽章・四風原典は効果なし(会心ダメ/会心率の武器として扱う)
 (() => {   // このファイルの const 名が他のキャラのファイルと衝突しないように、囲いの中に入れる
+const { add: A, putSum, putMul, hit: H } = Engine;   // 内訳の記録 (タップで詳細を出すため)
 (globalThis.CHARACTERS = globalThis.CHARACTERS || []).push({
   id: 'nahida', name: 'ナヒーダ', element: 'dendro', weaponType: '法器',
   rarity: 5, version: '3.2', release: '2022-11-02',
-  engine: 2,   // このファイルが必要とする common.js の版 (古い common.js だと、画面に警告が出る)
+  engine: 4,   // このファイルが必要とする common.js の版 (古い common.js だと、画面に警告が出る)
   base: { hp: 10360.04, atk: 298.97, def: 630.21, em: 0 },   // Lv90の基礎ステータス (計算で参照しないものも記入)
   ascend: { em: 115.2 },   // 突破ボーナス
   parties: [
@@ -33,25 +34,41 @@
   clocks:   [{ name: '熟知', stat: 'em' }],
   cups:     [{ name: '草バフ', stat: 'dendro' }, { name: '熟知', stat: 'em' }],
   circlets: [{ name: '会心率', stat: 'cr' }, { name: '会心ダメ', stat: 'cd' }, { name: '熟知', stat: 'em' }],
-  calc({ weapon, set, mains, party, s }) {
+  calc({ weapon, set, mains, party, s, x: X }) {
     const pt = this.parties.find(x => x.key === party);
-    const n = k => (mains.c[k] || 0);
-    let em = this.base.em + this.ascend.em + weapon.em + (weapon.sameEm || 0) * Math.min(3, pt.same) + 187 * n('em') + s.em;
-    if (set.key === 'gilded_dreams') em += 80 + (party === 'dendro_1_hydro_electro_other' ? 150 : 100); // 2セット80 + 4セット(異元素×50)
-    if (set.key === 'em_2_2') em += 160;
-    if (party.includes('dendro_2')) em += 100;
+    const n = k => (mains.c[k] || 0), k = set.key;
+    const E = X ? [] : null, CRp = X ? [] : null, CDp = X ? [] : null, EB = X ? [] : null, BF = X ? [] : null;   // 内訳の記録 (通常は null)
+    let em = A(E, 'キャラ基礎熟知', this.base.em) + A(E, '突破ボーナス (熟知)', this.ascend.em) + A(E, '武器の熟知', weapon.em)
+      + A(E, '千夜: 同元素の味方×32', (weapon.sameEm || 0) * Math.min(3, pt.same)) + A(E, 'メインステ 熟知', 187 * n('em')) + A(E, 'サブステ 熟知 (固定2ロール+割り振り)', s.em);
+    if (k === 'gilded_dreams') em += A(E, '金メッキの夢 (2セット80 + 異元素の味方×50)', 80 + (party === 'dendro_1_hydro_electro_other' ? 150 : 100));
+    if (k === 'em_2_2') em += A(E, '熟知80 + 熟知80 (2+2)', 160);
+    if (party.includes('dendro_2')) em += A(E, '草共鳴', 100);
     const atk = (this.base.atk + weapon.atk) * (1 + s.atkPct / 100) + 311 + s.atkFlat;
     const ex = Math.max(0, em - 200);
-    const cr = Math.min(100, 5 + weapon.cr + n('cr') * 31.1 + s.cr + Math.min(24, ex * 0.03));
-    const cd = 50 + weapon.cd + n('cd') * 62.2 + s.cd;
-    // 元素バフ(表示用) = キャラ画面の草元素ダメージバフ: 杯 + 深林2セット15 + 武器(千夜: 異元素の味方×10 / 神楽: 12)
-    const elemBuff = (n('dendro') ? 46.6 : 0) + (set.key === 'deepwood_memories' ? 15 : 0) + (weapon.elem || 0) + (weapon.diffBuff || 0) * Math.min(3, pt.diff);
-    // スキルダメージ限定のバフ: 黄金の劇団 70 / 神楽 36
-    const buff = Math.min(80, ex * 0.1) + elemBuff + (set.key === 'golden_troupe' ? 70 : 0) + weapon.buff;
+    const crRaw = A(CRp, '初期値', 5) + A(CRp, '武器の会心率', weapon.cr) + A(CRp, '冠 会心率', n('cr') * 31.1) + A(CRp, 'サブステ 会心率 (固定2ロール+割り振り)', s.cr) + A(CRp, '固有天賦 (熟知200超過×0.03%, 上限24%)', Math.min(24, ex * 0.03));
+    const cr = Math.min(100, crRaw);
+    const cd = A(CDp, '初期値', 50) + A(CDp, '武器の会心ダメ', weapon.cd) + A(CDp, '冠 会心ダメ', n('cd') * 62.2) + A(CDp, 'サブステ 会心ダメ (固定2ロール+割り振り)', s.cd);
+    // 元素バフ(表示用) = キャラ画面の草元素ダメージバフ
+    const elemBuff = A(EB, '杯 草バフ', n('dendro') ? 46.6 : 0) + A(EB, '深林の記憶2セット', set.key === 'deepwood_memories' ? 15 : 0) + A(EB, '武器: 全元素ダメ', weapon.elem || 0) + A(EB, '千夜: 異元素の味方×10%', (weapon.diffBuff || 0) * Math.min(3, pt.diff));
+    // スキルダメージ限定のバフを含む合計
+    const buff = A(BF, '固有天賦 (熟知200超過×0.1%, 上限80%)', Math.min(80, ex * 0.1)) + A(BF, '元素バフ (上の内訳)', elemBuff) + A(BF, '黄金の劇団4 (スキルダメ)', set.key === 'golden_troupe' ? 70 : 0) + A(BF, '武器: スキルダメ', weapon.buff);
     const base = atk * 1.8576 + em * 3.7152;
     const spread = 1.25 * 1446.85 * (1 + (5 * em) / (em + 1200));
     const res = set.key === 'deepwood_memories' ? 1.10 : 0.90;
     const damage = Math.round((base + spread) * (1 + buff / 100) * (1 + (cr / 100) * (cd / 100)) * 0.5 * res);
+    if (X) {
+      const crit = 1 + (cr / 100) * (cd / 100), K = (1 + buff / 100) * crit * 0.5 * res;
+      putSum(X, 'em', '元素熟知', '', em, E);
+      putMul(X, 'atk', '攻撃力', [['キャラ基礎攻撃力', this.base.atk], ['武器の基礎攻撃力', weapon.atk]], [['サブステ 攻撃力% (固定2ロール)', s.atkPct]], [['羽の攻撃力 (固定)', 311], ['サブステ 攻撃実数値 (固定2ロール)', s.atkFlat]], atk);
+      putSum(X, 'cr', '会心率', '%', cr, CRp, crRaw > 100 ? '(上限100%で頭打ち)' : '');
+      putSum(X, 'cd', '会心ダメージ', '%', cd, CDp);
+      putSum(X, 'elem', '元素バフ (草ダメ)', '%', elemBuff, EB);
+      putSum(X, 'buff', 'ダメージバフ合計 (スキル)', '%', buff, BF);
+      const f = what => `${what} × (1 + ${buff.toFixed(1)}%) × 会心 ${crit.toFixed(3)} × 防御 0.5 × 耐性 ${res}`;
+      H(X, null, '滅浄三業 攻撃力分 (攻撃力×185.76%)', atk * 1.8576 * K, f(`${Math.round(atk)} × 185.76%`));
+      H(X, null, '滅浄三業 熟知分 (熟知×371.52%)', em * 3.7152 * K, f(`${Math.round(em)} × 371.52%`));
+      H(X, null, '草激化の追加ダメージ (1回分)', spread * K, f(`激化 ${Math.round(spread)}`));
+    }
     return { damage, em, atk, cr, cd, buff, elemBuff, res };
   }
 });
