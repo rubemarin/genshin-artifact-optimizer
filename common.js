@@ -19,6 +19,44 @@
     s.cd = SUBV.cd * (B + (rolls.cd || 0));
   }
 
+  // ===== 内訳の記録 (タップで詳細を出すため)。X が null の通常の計算では、何もせず値をそのまま返す =====
+  function add(arr, text, v) { if (arr && v) arr.push([text, v]); return v; }                 // 内訳の1行を足して、値を返す
+  function lv(parts, unit, level) { return parts.map(p => [p[0], p[1], unit || '', level || 0]); }
+  const num = (v, d) => Number(v).toLocaleString(undefined, { maximumFractionDigits: d == null ? 2 : d });
+  // 足し算でできるステータス (熟知・会心率・元素バフなど): 内訳の合計 = value
+  function putSum(X, key, label, unit, value, parts, note) {
+    if (X) X.stats[key] = { key, label, unit, value, lines: lv(parts, unit, 0), formula: (note ? note + ' ' : '') + '合計 = ' + num(value) + unit };
+  }
+  // (基礎の合計) × (1 + %の合計) + 実数値 の形のステータス (攻撃力・最大HP)
+  function putMul(X, key, label, base, pctParts, flat, value) {
+    if (!X) return;
+    const sum = a => a.reduce((t, p) => t + p[1], 0), b = sum(base), p = sum(pctParts), f = sum(flat);
+    X.stats[key] = { key, label, unit: '', value,
+      lines: lv(base, '', 0).concat([['% の合計 (下の内訳)', p, '%', 0]], lv(pctParts, '%', 1), lv(flat, '', 0)),
+      formula: `(${num(b)}) × (1 + ${num(p)}%) + ${num(f)} = ${num(value, 0)}` };
+  }
+  function hit(X, g, n, d, f) { if (X) X.hits.push({ g, n, d, f }); }                          // コンボの1撃: グループ名 / 名前 / ダメージ / 式
+
+  // 指定した1パターンの内訳を作る (画面で行をタップしたとき)
+  function explain(ch, r, o) {
+    const w = ch.weapons[r.weaponKey], set = ch.sets.find(x => x.key === r.setKey);
+    const mains = r.mainStats.slice(); mains.c = {};
+    for (const m of mains) mains.c[m] = (mains.c[m] || 0) + 1;
+    const sub = {}; fillSub(sub, r.rolls, o.erRolls);
+    const X = { stats: {}, hits: [] };
+    const res = ch.calc({ weapon: w, set, mains, rolls: r.rolls, party: o.party, erRolls: o.erRolls, s: sub, x: X });
+    X.damage = res.damage;
+    const n = k => mains.c[k] || 0;
+    // チャージ効率: キャラが個別に出していなければ 100% + サブステ分
+    if (!X.stats.er) putSum(X, 'er', 'チャージ効率', '%', 100 + sub.er, [['初期値', 100], ['サブステ チャージ (固定2ロール + チャージロール)', sub.er]]);
+    // CV = 会心率×2 + 会心ダメ (冠のメインステ + サブステの合計のみ)
+    const cr = 31.1 * n('cr') + sub.cr, cd = 62.2 * n('cd') + sub.cd;
+    X.stats.cv = { key: 'cv', label: 'Crit Value', unit: '', value: 2 * cr + cd,
+      lines: [['冠の会心率', 31.1 * n('cr'), '%', 0], ['サブステ 会心率 (固定2ロール + 割り振り)', sub.cr, '%', 0], ['冠の会心ダメ', 62.2 * n('cd'), '%', 0], ['サブステ 会心ダメ (固定2ロール + 割り振り)', sub.cd, '%', 0]].filter(l => l[1]),
+      formula: `CV = 会心率 ${num(cr)}% × 2 + 会心ダメ ${num(cd)}% = ${num(2 * cr + cd)}  (初期値・武器・突破・共鳴・天賦は含まない)` };
+    return X;
+  }
+
   function avail(ch, partyKey) {
     const pt = (ch.parties || []).find(p => p.key === partyKey) || {};
     return {
@@ -60,11 +98,11 @@
           rec(0, budget);
           if (best) out.push(Object.assign(best, {
             weaponKey: wk, weaponName: w.name, setKey: set.key, setName: set.name,
-            mainNames: `${clock.name} / ${cup.name} / ${circlet.name}`, caps
+            mainNames: `${clock.name} / ${cup.name} / ${circlet.name}`, mainStats: mains.slice(), caps
           }));
         }
     return out.sort((a, b) => b.damage - a.damage);
   }
-  g.Engine = { version: 3, optimize, avail, SUB, SUBV, ER_ROLL, BASE_SUB };   // version: 2 = KQM基準(全サブステ2ロール / calc に s を渡す) / 3 = CV用の cvCr・cvCd を返す
+  g.Engine = { version: 4, optimize, explain, add, putSum, putMul, hit, avail, SUB, SUBV, ER_ROLL, BASE_SUB };   // version: 2 = KQM基準(全サブステ2ロール / calc に s を渡す) / 3 = CV用の cvCr・cvCd を返す / 4 = explain (タップで詳細: 内訳の記録)
   if (typeof module !== 'undefined') module.exports = g.Engine;
 })(globalThis);

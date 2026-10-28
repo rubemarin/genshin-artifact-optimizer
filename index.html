@@ -10,6 +10,10 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:va
 .card:hover{border-color:var(--pr);background:var(--hv);transform:translateY(-2px)}.card .ic{width:48px;height:48px;border-radius:50%}
 .flt{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin-bottom:16px}.fr{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}.fl{font-size:12px;color:var(--mu);width:52px}
 .chip{background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;margin-right:2px}.chip .ic{width:18px;height:18px;margin:0 4px 0 0}
+td.tp{cursor:pointer}td.tp:hover{background:var(--hv)}td.tp.sel{background:#1e3a8a55}tr.dp td{background:#16202f;white-space:normal;padding:12px 14px}
+.dt{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}.dl{width:auto;min-width:320px;max-width:100%;font-size:13px}.dl td,.dl th{border:0;padding:3px 10px;white-space:normal}
+.dl .l1 td:first-child{padding-left:28px;color:var(--mu)}.dl td.r{text-align:right;white-space:nowrap}.dl.hits th{border-bottom:1px solid var(--bd);color:var(--mu)}
+.dl tr.hg td{color:var(--ac);font-weight:bold;padding-top:12px}.dl tr.tot td{border-top:1px solid var(--bd);padding-top:6px}.fm{font-size:12px;color:var(--mu);margin-top:8px;line-height:1.6}.dh{font-size:12px;color:var(--mu);margin-bottom:4px}
 .pmem{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}.pmem .pl{color:var(--mu);font-size:14px}
 .pm{position:relative;width:38px;height:38px;border-radius:50%;background:var(--bg);border:1px solid var(--bd);display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
 .pm.self{border-color:var(--pr)}.pm .ico{display:flex;width:100%;height:100%;align-items:center;justify-content:center}.pm .ico .ic{width:100%;height:100%;margin:0;border-radius:50%;object-fit:cover}.pm .ab{margin:0;font-size:13px;color:var(--tx)}
@@ -45,21 +49,21 @@ th{color:var(--mu);font-size:12px;user-select:none}th[data-k]{cursor:pointer}th.
 </div>
 <div class="bar"><div><label>武器で絞り込み</label><select id="fw"></select></div><div><label>聖遺物セットで絞り込み</label><select id="fs"></select></div><span class="sm" id="info"></span></div>
 <div class="tw"><table><thead><tr id="head"></tr></thead><tbody id="body"></tbody></table></div>
-<div class="sm" style="margin-top:8px">※ 「会心率 : 会心ダメ」は最終の値(初期値・武器・突破・共鳴・天賦を含む)です。<b>Crit Value(cv)だけ</b>は、会心率×2 + 会心ダメ を、<b>冠のメインステとサブステの合計のみ</b>で出しています。セルにカーソルを合わせる(長押し)と、CVの計算に使った会心率・会心ダメが出ます。</div></div>
+<div class="sm" style="margin-top:8px">※ 数値(CV・元素バフ・参照・チャージ・期待値)を<b>タップ</b>すると、計算の内訳が出ます。<br>※ 「会心率 : 会心ダメ」は最終の値(初期値・武器・突破・共鳴・天賦を含む)です。<b>Crit Value(cv)だけ</b>は、会心率×2 + 会心ダメ を、<b>冠のメインステとサブステの合計のみ</b>で出しています。セルにカーソルを合わせる(長押し)と、CVの計算に使った会心率・会心ダメが出ます。</div></div>
 </div>
 <script>
 var LOADFAIL=[];function lf(e){LOADFAIL.push(e.getAttribute("src"));}
 // 読み込むファイルの一覧 (新しいキャラを追加したら、ここにファイル名を1つ足す)
 var CHARACTER_FILES=['nahida','alhaitham','tighnari','yaemiko','xingqiu','yelan','wriothesley'];
 // 更新番号: ファイルを更新したら変える (古いキャッシュを使わせない)。ローカルで開くときは付けない
-var V=location.protocol==='file:'?'':'?v=20261023x';
+var V=location.protocol==='file:'?'':'?v=20261023y';
 ['common.js'].concat(CHARACTER_FILES.map(function(c){return 'characters/'+c+'.js';})).forEach(function(f){
   document.write('<script src="'+f+V+'" onerror="lf(this)"><\/script>');
 });
 </script>
 <script>
 const $=id=>document.getElementById(id);
-const NEED_ENGINE=3,NEED_CHAR=2;   // この画面が必要とする common.js の版 / キャラのファイルの版
+const NEED_ENGINE=4,NEED_CHAR=4;   // この画面が必要とする common.js の版 / キャラのファイルの版
 // ファイルの版が食い違っているとき (一部のファイルだけ更新したときなど) に、画面に理由を出す
 (function(){
   const ver=(typeof Engine!=='undefined'&&Engine.version)||0,msgs=[];
@@ -155,10 +159,34 @@ $('go').onclick=()=>{
     $('info').innerHTML='<span class="warn">計算エラー: '+e.message+' ― common.js とキャラのファイルの版が合っていない可能性があります (全部まとめて最新版をアップロードしてください)</span>';
     return;
   }
-  calcMs=performance.now()-t0;shown=PAGE;
+  calcMs=performance.now()-t0;shown=PAGE;openK=openT=openX=null;lastOpt={party:$('party').value,erRolls:er};
   render();
 };
 $('fw').onchange=$('fs').onchange=()=>{shown=PAGE;render();};
+// ===== セルをタップすると詳細(計算の内訳)を出す =====
+let lastOpt=null,openK=null,openT=null,openX=null,curVis=[];
+const rk=x=>x.weaponKey+'|'+x.setKey+'|'+x.mainNames;
+const fv=(v,u)=>{const t=Number(v).toLocaleString(undefined,{maximumFractionDigits:2});return u==='%'?(v>0?'+':'')+t+'%':t;};
+function detailHtml(x,t){
+  let X;
+  try{X=(openX&&openX.k===rk(x))?openX.X:Engine.explain(ch,x,lastOpt);openX={k:rk(x),X};}
+  catch(e){console.error(e);return '<div class="warn">内訳を作れませんでした: '+e.message+' (common.js とキャラのファイルを最新版にしてください)</div>';}
+  const order=[ch.refs[0]&&ch.refs[0].key,ch.refs[1]&&ch.refs[1].key,'elem','er','cr','cd','cv','buff','nb','star','burst','hp','atk','em'];
+  const keys=[...new Set(order.filter(k=>k&&X.stats[k]))].concat(Object.keys(X.stats).filter(k=>!order.includes(k)));
+  const tabs=keys.map(k=>`<button class="chip${t===k?' on':''}" data-tab="${k}">${X.stats[k].label}</button>`).join('')+`<button class="chip${t==='dmg'?' on':''}" data-tab="dmg">期待値の内訳</button>`;
+  let body;
+  if(t==='dmg'||!X.stats[t]){
+    const tot=X.hits.reduce((a,h)=>a+h.d,0);let g=null;
+    const rows=X.hits.map(h=>{let r='';if(h.g&&h.g!==g)r+=`<tr class="hg"><td colspan="4">${h.g}</td></tr>`;g=h.g;
+      return r+`<tr><td>${h.n}</td><td class="r"><b>${Math.round(h.d).toLocaleString()}</b></td><td class="r sm">${(h.d/tot*100).toFixed(1)}%</td><td class="sm">${h.f}</td></tr>`;}).join('');
+    body=`<table class="dl hits"><thead><tr><th>攻撃</th><th>ダメージ</th><th>割合</th><th>式</th></tr></thead><tbody>${rows}<tr class="tot"><td>合計 (期待値)</td><td class="r"><b>${x.damage.toLocaleString()}</b></td><td></td><td></td></tr></tbody></table>`;
+  }else{
+    const S=X.stats[t];
+    body=`<div class="dh">${S.label}: <b>${Number(S.value).toLocaleString(undefined,{maximumFractionDigits:2})}${S.unit}</b></div>
+      <table class="dl">${S.lines.map(([tx,v,u,l])=>`<tr class="l${l}"><td>${tx}</td><td class="r">${fv(v,u)}</td></tr>`).join('')}</table><div class="fm">${S.formula||''}</div>`;
+  }
+  return `<div class="dh">${x.weaponName} / ${x.setName} / ${x.mainNames} / 割振: ${ch.subStats.map((q,i)=>ch.subLabels[i]+' '+x.rolls[q]).join(' ')}</div><div class="dt">${tabs}</div>${body}`;
+}
 const keyFn=k=>{const r=ch.refs;return {cv:x=>x.cv,buff:x=>x.elemBuff,r1:x=>x[r[0].key],r2:x=>r[1]?x[r[1].key]:-1,er:x=>x.er,dmg:x=>x.damage}[k];};
 function render(){
   $('head').innerHTML=COLS.map(([n,k])=>`<th ${k?`data-k="${k}"`:''} class="${k===sk?'on':''}">${n}${k===sk?(dir<0?' ▼':' ▲'):''}</th>`).join('');
@@ -169,13 +197,28 @@ function render(){
   const vis=list.slice(0,shown);
   $('info').textContent=all.length?`表示 ${vis.length} / 絞り込み ${list.length} / 全 ${all.length} パターン (計算 ${calcMs.toFixed(0)}ms)`:'';
   const f=v=>Math.round(v).toLocaleString();
-  $('body').innerHTML=all.length?vis.map((x,i)=>`<tr><td>${i+1}</td><td>${img('images/weapons/'+x.weaponKey+'.'+IMG_EXT)}${x.weaponName}</td>
+  curVis=vis;
+  const sel=(x,t)=>openK===rk(x)&&openT===t?' sel':'';
+  const rowHtml=(x,i)=>`<tr class="r" data-i="${i}"><td>${i+1}</td><td>${img('images/weapons/'+x.weaponKey+'.'+IMG_EXT)}${x.weaponName}</td>
    <td>${img('images/artifacts/'+x.setKey+'.'+IMG_EXT)}${x.setName}</td><td>${x.mainNames}</td>
    <td>${ch.subStats.map((s,q)=>ch.subLabels[q]+' <b>'+x.rolls[s]+'</b><span class="sm">['+x.caps[s]+']</span>').join(' / ')}</td>
-   <td title="CV = 会心率×2 + 会心ダメ (冠+サブステのみ): 会心率 ${x.vcr.toFixed(1)}% / 会心ダメ ${x.vcd.toFixed(1)}%"><span class="sm">${x.cr.toFixed(1)} : ${x.cd.toFixed(1)}</span> <span class="cv">${x.cv.toFixed(1)} cv</span></td><td>${iconNum(ch.element==='physical'?STATICON.phys:ELICON[ch.element],ELEM[ch.element]||'元',x.elemBuff.toFixed(1)+'%',(ELEM[ch.element]||'')+'元素ダメージバフ')}</td>
-   <td>${refCell(x,ch.refs[0],f)}</td><td>${refCell(x,ch.refs[1],f)}</td>
-   <td>${iconNum(STATICON.er,STATABBR.er,x.er.toFixed(1)+'%','元素チャージ効率')}</td><td><b>${x.damage.toLocaleString()}</b></td></tr>`).join('')+(list.length>vis.length?`<tr><td colspan="11" class="empty"><button class="chip on" id="more">さらに${Math.min(PAGE,list.length-vis.length)}件表示 (残り ${list.length-vis.length}件)</button></td></tr>`:''):`<tr><td colspan="11" class="empty">条件を決めて「計算開始」を押してください</td></tr>`;
+   <td class="tp${sel(x,'cv')}" data-t="cv" title="CV = 会心率×2 + 会心ダメ (冠+サブステのみ): 会心率 ${x.vcr.toFixed(1)}% / 会心ダメ ${x.vcd.toFixed(1)}%"><span class="sm">${x.cr.toFixed(1)} : ${x.cd.toFixed(1)}</span> <span class="cv">${x.cv.toFixed(1)} cv</span></td>
+   <td class="tp${sel(x,'elem')}" data-t="elem">${iconNum(ch.element==='physical'?STATICON.phys:ELICON[ch.element],ELEM[ch.element]||'元',x.elemBuff.toFixed(1)+'%',(ELEM[ch.element]||'')+'元素ダメージバフ')}</td>
+   <td class="tp${sel(x,ch.refs[0].key)}" data-t="${ch.refs[0].key}">${refCell(x,ch.refs[0],f)}</td>${ch.refs[1]?`<td class="tp${sel(x,ch.refs[1].key)}" data-t="${ch.refs[1].key}">${refCell(x,ch.refs[1],f)}</td>`:'<td></td>'}
+   <td class="tp${sel(x,'er')}" data-t="er">${iconNum(STATICON.er,STATABBR.er,x.er.toFixed(1)+'%','元素チャージ効率')}</td><td class="tp${sel(x,'dmg')}" data-t="dmg"><b>${x.damage.toLocaleString()}</b></td></tr>`;
+  const rows=[];
+  vis.forEach((x,i)=>{rows.push(rowHtml(x,i));if(openK===rk(x))rows.push(`<tr class="dp"><td colspan="11">${detailHtml(x,openT)}</td></tr>`);});
+  $('body').innerHTML=all.length?rows.join('')+(list.length>vis.length?`<tr><td colspan="11" class="empty"><button class="chip on" id="more">さらに${Math.min(PAGE,list.length-vis.length)}件表示 (残り ${list.length-vis.length}件)</button></td></tr>`:''):`<tr><td colspan="11" class="empty">条件を決めて「計算開始」を押してください</td></tr>`;
   if($('more'))$('more').onclick=()=>{shown+=PAGE;render();};
 }
+// 表のクリック: セル → 詳細を開く / 詳細の中のタブ → 切り替え
+$('body').addEventListener('click',e=>{
+  const tb=e.target.closest('[data-tab]');
+  if(tb){openT=tb.dataset.tab;render();return;}
+  const td=e.target.closest('td.tp'),tr=td&&td.closest('tr.r');if(!tr)return;
+  const x=curVis[+tr.dataset.i];if(!x)return;
+  if(openK===rk(x)&&openT===td.dataset.t){openK=openT=null;}else{openK=rk(x);openT=td.dataset.t;}
+  render();
+});
 addEventListener('hashchange',route);route();
 </script></body></html>
