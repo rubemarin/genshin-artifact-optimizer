@@ -54,9 +54,9 @@ th{color:var(--mu);font-size:12px;user-select:none}th[data-k]{cursor:pointer}th.
 <script>
 var LOADFAIL=[];function lf(e){LOADFAIL.push(e.getAttribute("src"));}
 // 読み込むファイルの一覧 (新しいキャラを追加したら、ここにファイル名を1つ足す)
-var CHARACTER_FILES=['nahida','alhaitham','tighnari','yaemiko','xingqiu','yelan','wriothesley'];
+var CHARACTER_FILES=['nahida','alhaitham','tighnari','yaemiko','xingqiu','yelan','wriothesley','odette'];
 // 更新番号: ファイルを更新したら変える (古いキャッシュを使わせない)。ローカルで開くときは付けない
-var V=location.protocol==='file:'?'':'?v=20261023y';
+var V=location.protocol==='file:'?'':'?v=20261023z';
 ['common.js'].concat(CHARACTER_FILES.map(function(c){return 'characters/'+c+'.js';})).forEach(function(f){
   document.write('<script src="'+f+V+'" onerror="lf(this)"><\/script>');
 });
