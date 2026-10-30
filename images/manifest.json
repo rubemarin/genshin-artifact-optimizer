@@ -112,6 +112,26 @@
     "flowing_purity": {
       "name": "純水流華",
       "file": "images/weapons/flowing_purity.webp"
+    },
+    "whitelake_frostfeather": {
+      "name": "白銀の湖を舞う翼",
+      "file": "images/weapons/whitelake_frostfeather.webp"
+    },
+    "beyond_the_chrysalis": {
+      "name": "蝶の羽化",
+      "file": "images/weapons/beyond_the_chrysalis.webp"
+    },
+    "new_bough": {
+      "name": "新たなる枝",
+      "file": "images/weapons/new_bough.webp"
+    },
+    "silver_light": {
+      "name": "銀灯",
+      "file": "images/weapons/silver_light.webp"
+    },
+    "exaiphanes_blade": {
+      "name": "星鋒の剣",
+      "file": "images/weapons/exaiphanes_blade.webp"
     }
   },
   "artifacts": {
@@ -204,6 +224,10 @@
     "wriothesley": {
       "name": "リオセスリ",
       "file": "images/characters/wriothesley.webp"
+    },
+    "odette": {
+      "name": "オデット",
+      "file": "images/characters/odette.webp"
     }
   },
   "others": {

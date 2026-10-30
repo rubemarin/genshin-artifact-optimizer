@@ -16,6 +16,11 @@ images/
 | `weapons/clash_of_kings.webp` | 諸王の対局 | リオセスリ |
 | `weapons/reliquary_of_truth.webp` | 真言の匣 | リオセスリ |
 | `weapons/flowing_purity.webp` | 純水流華 | リオセスリ |
+| `weapons/whitelake_frostfeather.webp` | 白銀の湖を舞う翼 | オデット |
+| `weapons/beyond_the_chrysalis.webp` | 蝶の羽化 | オデット |
+| `weapons/new_bough.webp` | 新たなる枝 | オデット |
+| `weapons/silver_light.webp` | 銀灯 | オデット |
+| `weapons/exaiphanes_blade.webp` | 星鋒の剣 | オデット |
 
 ## 聖遺物セットのファイル名の決め方
 武器と同じ規則で、**英語の正式名**を小文字にして、アポストロフィを除き、記号とスペースを `_` に変えたものです。
@@ -67,7 +72,7 @@ images/
 | `artifacts/marechaussee_hunter.webp` | ファントムハンター | アルハイゼン |
 | `artifacts/wanderers_troupe.webp` | 大地を流浪する楽団 | ティナリ |
 | `artifacts/disenchantment_in_deep_shadow.webp` | 影に沈む幻 | 八重神子 / リオセスリ |
-| `artifacts/heart_of_the_furnace.webp` | 炉炎溶錬の心 | 八重神子 |
+| `artifacts/heart_of_the_furnace.webp` | 炉炎溶錬の心 | 八重神子 / オデット |
 | `artifacts/em_2_2.webp` | 熟知80 + 熟知80 (2セット組) | ナヒーダ/アルハイゼン/ティナリ/八重神子 |
 | `artifacts/atk_2_2.webp` | 攻撃18% + 攻撃18% (2セット組) | 八重神子 / 行秋 |
 
@@ -90,6 +95,7 @@ images/
 | `characters/xingqiu.webp` | 行秋 |
 | `characters/yelan.webp` | 夜蘭 |
 | `characters/wriothesley.webp` | リオセスリ |
+| `characters/odette.webp` | オデット |
 
 ## その他 (`images/others/`)
 属性・武器種・ステータスのアイコンです。属性と武器種は絞り込みボタンとキャラのカードに、ステータスは表の「参照」列に表示します (ステータスの画像が無い間は、略称の文字が出ます)。
