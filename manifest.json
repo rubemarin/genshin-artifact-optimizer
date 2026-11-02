@@ -1,0 +1,343 @@
+{
+  "_note": "画像は images/weapons/<id>.webp , images/artifacts/<id>.webp , images/characters/<キャラid>.webp , images/others/<id>.webp に置く。無い場合は表示しない。",
+  "weapons": {
+    "a_thousand_floating_dreams": {
+      "name": "千夜に浮かぶ夢",
+      "file": "images/weapons/a_thousand_floating_dreams.webp"
+    },
+    "kaguras_verity": {
+      "name": "神楽の真意",
+      "file": "images/weapons/kaguras_verity.webp"
+    },
+    "the_widsith": {
+      "name": "流浪楽章",
+      "file": "images/weapons/the_widsith.webp"
+    },
+    "sacrificial_fragments": {
+      "name": "祭礼の断片",
+      "file": "images/weapons/sacrificial_fragments.webp"
+    },
+    "lost_prayer_to_the_sacred_winds": {
+      "name": "四風原典",
+      "file": "images/weapons/lost_prayer_to_the_sacred_winds.webp"
+    },
+    "light_of_foliar_incision": {
+      "name": "萃光の裁葉",
+      "file": "images/weapons/light_of_foliar_incision.webp"
+    },
+    "primordial_jade_cutter": {
+      "name": "磐岩結緑",
+      "file": "images/weapons/primordial_jade_cutter.webp"
+    },
+    "iron_sting": {
+      "name": "鉄蜂の刺し",
+      "file": "images/weapons/iron_sting.webp"
+    },
+    "harbinger_of_dawn": {
+      "name": "黎明の神剣",
+      "file": "images/weapons/harbinger_of_dawn.webp"
+    },
+    "hunters_path": {
+      "name": "狩人の道",
+      "file": "images/weapons/hunters_path.webp"
+    },
+    "aqua_simulacra": {
+      "name": "若水",
+      "file": "images/weapons/aqua_simulacra.webp"
+    },
+    "slingshot": {
+      "name": "弾弓",
+      "file": "images/weapons/slingshot.webp"
+    },
+    "echoes_of_the_heart": {
+      "name": "胸中の谺",
+      "file": "images/weapons/echoes_of_the_heart.webp"
+    },
+    "skyward_atlas": {
+      "name": "天空の巻",
+      "file": "images/weapons/skyward_atlas.webp"
+    },
+    "jade_vista": {
+      "name": "千鈞懸黎",
+      "file": "images/weapons/jade_vista.webp"
+    },
+    "sacrificial_sword": {
+      "name": "祭礼の剣",
+      "file": "images/weapons/sacrificial_sword.webp"
+    },
+    "moonweavers_dawn": {
+      "name": "月紡ぎの曙光",
+      "file": "images/weapons/moonweavers_dawn.webp"
+    },
+    "mistsplitter_reforged": {
+      "name": "霧切の廻光",
+      "file": "images/weapons/mistsplitter_reforged.webp"
+    },
+    "wolf_fang": {
+      "name": "狼牙",
+      "file": "images/weapons/wolf_fang.webp"
+    },
+    "athame_artis": {
+      "name": "黒蝕",
+      "file": "images/weapons/athame_artis.webp"
+    },
+    "favonius_warbow": {
+      "name": "西風猟弓",
+      "file": "images/weapons/favonius_warbow.webp"
+    },
+    "fading_twilight": {
+      "name": "落霞",
+      "file": "images/weapons/fading_twilight.webp"
+    },
+    "recurve_bow": {
+      "name": "リカーブボウ",
+      "file": "images/weapons/recurve_bow.webp"
+    },
+    "the_stringless": {
+      "name": "絶弦",
+      "file": "images/weapons/the_stringless.webp"
+    },
+    "cashflow_supervision": {
+      "name": "凛流の監視者",
+      "file": "images/weapons/cashflow_supervision.webp"
+    },
+    "clash_of_kings": {
+      "name": "諸王の対局",
+      "file": "images/weapons/clash_of_kings.webp"
+    },
+    "reliquary_of_truth": {
+      "name": "真言の匣",
+      "file": "images/weapons/reliquary_of_truth.webp"
+    },
+    "flowing_purity": {
+      "name": "純水流華",
+      "file": "images/weapons/flowing_purity.webp"
+    },
+    "whitelake_frostfeather": {
+      "name": "白銀の湖を舞う翼",
+      "file": "images/weapons/whitelake_frostfeather.webp"
+    },
+    "beyond_the_chrysalis": {
+      "name": "蝶の羽化",
+      "file": "images/weapons/beyond_the_chrysalis.webp"
+    },
+    "new_bough": {
+      "name": "新たなる枝",
+      "file": "images/weapons/new_bough.webp"
+    },
+    "silver_light": {
+      "name": "銀灯",
+      "file": "images/weapons/silver_light.webp"
+    },
+    "exaiphanes_blade": {
+      "name": "星鋒の剣",
+      "file": "images/weapons/exaiphanes_blade.webp"
+    },
+    "a_teaspoon_of_transcendence": {
+      "name": "超越の鍵",
+      "file": "images/weapons/a_teaspoon_of_transcendence.webp"
+    },
+    "a_thousand_blazing_suns": {
+      "name": "千烈の日輪",
+      "file": "images/weapons/a_thousand_blazing_suns.webp"
+    },
+    "mailed_flower": {
+      "name": "鉄彩の花",
+      "file": "images/weapons/mailed_flower.webp"
+    },
+    "tidal_shadow": {
+      "name": "タイダル・シャドー",
+      "file": "images/weapons/tidal_shadow.webp"
+    }
+  },
+  "artifacts": {
+    "deepwood_memories": {
+      "name": "深林の記憶",
+      "file": "images/artifacts/deepwood_memories.webp"
+    },
+    "golden_troupe": {
+      "name": "黄金の劇団",
+      "file": "images/artifacts/golden_troupe.webp"
+    },
+    "gilded_dreams": {
+      "name": "金メッキの夢",
+      "file": "images/artifacts/gilded_dreams.webp"
+    },
+    "marechaussee_hunter": {
+      "name": "ファントムハンター",
+      "file": "images/artifacts/marechaussee_hunter.webp"
+    },
+    "wanderers_troupe": {
+      "name": "大地を流浪する楽団",
+      "file": "images/artifacts/wanderers_troupe.webp"
+    },
+    "disenchantment_in_deep_shadow": {
+      "name": "影に沈む幻",
+      "file": "images/artifacts/disenchantment_in_deep_shadow.webp"
+    },
+    "heart_of_the_furnace": {
+      "name": "炉炎溶錬の心",
+      "file": "images/artifacts/heart_of_the_furnace.webp"
+    },
+    "em_2_2": {
+      "name": "熟知80 + 熟知80 (2セット組)",
+      "file": "images/artifacts/em_2_2.webp"
+    },
+    "atk_2_2": {
+      "name": "攻撃18% + 攻撃18% (2セット組)",
+      "file": "images/artifacts/atk_2_2.webp"
+    },
+    "emblem_of_severed_fate": {
+      "name": "絶縁の旗印",
+      "file": "images/artifacts/emblem_of_severed_fate.webp"
+    },
+    "noblesse_oblige": {
+      "name": "旧貴族のしつけ",
+      "file": "images/artifacts/noblesse_oblige.webp"
+    },
+    "nymphs_dream": {
+      "name": "水仙の夢",
+      "file": "images/artifacts/nymphs_dream.webp"
+    },
+    "hp_2_2": {
+      "name": "HP20% + HP20% (2種の組み合わせ)",
+      "file": "images/artifacts/hp_2_2.webp"
+    },
+    "shimenawas_reminiscence": {
+      "name": "追憶のしめ縄",
+      "file": "images/artifacts/shimenawas_reminiscence.webp"
+    },
+    "blizzard_strayer": {
+      "name": "氷風を彷徨う勇士",
+      "file": "images/artifacts/blizzard_strayer.webp"
+    }
+  },
+  "characters": {
+    "nahida": {
+      "name": "ナヒーダ",
+      "file": "images/characters/nahida.webp"
+    },
+    "alhaitham": {
+      "name": "アルハイゼン",
+      "file": "images/characters/alhaitham.webp"
+    },
+    "tighnari": {
+      "name": "ティナリ",
+      "file": "images/characters/tighnari.webp"
+    },
+    "yaemiko": {
+      "name": "八重神子",
+      "file": "images/characters/yaemiko.webp"
+    },
+    "xingqiu": {
+      "name": "行秋",
+      "file": "images/characters/xingqiu.webp"
+    },
+    "yelan": {
+      "name": "夜蘭",
+      "file": "images/characters/yelan.webp"
+    },
+    "wriothesley": {
+      "name": "リオセスリ",
+      "file": "images/characters/wriothesley.webp"
+    },
+    "odette": {
+      "name": "オデット",
+      "file": "images/characters/odette.webp"
+    },
+    "sandrone": {
+      "name": "サンドローネ",
+      "file": "images/characters/sandrone.webp"
+    }
+  },
+  "others": {
+    "pyro": {
+      "name": "炎元素",
+      "file": "images/others/pyro.webp"
+    },
+    "hydro": {
+      "name": "水元素",
+      "file": "images/others/hydro.webp"
+    },
+    "electro": {
+      "name": "雷元素",
+      "file": "images/others/electro.webp"
+    },
+    "dendro": {
+      "name": "草元素",
+      "file": "images/others/dendro.webp"
+    },
+    "anemo": {
+      "name": "風元素",
+      "file": "images/others/anemo.webp"
+    },
+    "geo": {
+      "name": "岩元素",
+      "file": "images/others/geo.webp"
+    },
+    "cryo": {
+      "name": "氷元素",
+      "file": "images/others/cryo.webp"
+    },
+    "sword_one_hand": {
+      "name": "片手剣",
+      "file": "images/others/sword_one_hand.webp"
+    },
+    "claymore": {
+      "name": "両手剣",
+      "file": "images/others/claymore.webp"
+    },
+    "lance": {
+      "name": "長柄武器",
+      "file": "images/others/lance.webp"
+    },
+    "bow": {
+      "name": "弓",
+      "file": "images/others/bow.webp"
+    },
+    "catalyst": {
+      "name": "法器",
+      "file": "images/others/catalyst.webp"
+    },
+    "stat_atk": {
+      "name": "攻撃力",
+      "file": "images/others/stat_atk.webp"
+    },
+    "stat_hp": {
+      "name": "最大HP",
+      "file": "images/others/stat_hp.webp"
+    },
+    "stat_em": {
+      "name": "元素熟知",
+      "file": "images/others/stat_em.webp"
+    },
+    "stat_def": {
+      "name": "防御力",
+      "file": "images/others/stat_def.webp"
+    },
+    "stat_er": {
+      "name": "元素チャージ効率",
+      "file": "images/others/stat_er.webp"
+    },
+    "stat_cr": {
+      "name": "会心率",
+      "file": "images/others/stat_cr.webp"
+    },
+    "stat_cd": {
+      "name": "会心ダメージ",
+      "file": "images/others/stat_cd.webp"
+    },
+    "stat_physical": {
+      "name": "物理ダメージバフ",
+      "file": "images/others/stat_physical.webp"
+    },
+    "stat_healing": {
+      "name": "与える治療効果バフ",
+      "file": "images/others/stat_healing.webp"
+    },
+    "other_element": {
+      "name": "元素が決まっていない味方 (その他の元素)",
+      "file": "images/others/other_element.webp"
+    }
+  }
+}
