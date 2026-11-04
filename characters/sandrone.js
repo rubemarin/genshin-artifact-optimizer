@@ -22,7 +22,7 @@ const WEAPONS4 = ['a_teaspoon_of_transcendence', 'a_thousand_blazing_suns', 'mai
   parties: [
     { key: 'conduct', members: ['cryo', 'electro', 'electro'], name: '星電導 (サンドローネ+氷1+雷2 / 氷共鳴 会心率+15%)', same: 1, diff: 2, resCr: 15, coef: 1.8,
       weaponKeys: WEAPONS4, setKeys: ['disenchantment_in_deep_shadow'], clocks: CLK, cups: CUP, circlets: CIR },
-    { key: 'conduct_team', members: [{ el: 'cryo', char: 'odette' }, { el: 'electro', char: 'yaemiko' }, 'any'],
+    { key: 'conduct_team', members: [{ el: 'cryo', char: 'odette' }, { el: 'electro', char: 'yaemiko' }, { el: 'electro', char: 'alyosha' }],   // アリョーシャ (雷) の画像: images/characters/alyosha.webp
       name: '星電導 (サンドローネ+オデット+八重神子1凸+アリョーシャ6凸 / 氷共鳴 会心率+15% / 味方のバフ込み)', same: 1, diff: 2, resCr: 15, coef: 1.8,
       team: { atkPct: 70, em: 100, star: 200, base: 14 },
       teamText: {
