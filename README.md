@@ -12,3 +12,4 @@ https://rubemarin.github.io/genshin-artifact-optimizer/
 - リオセスリ: 1凸
 - オデット: 無凸
 - サンドローネ: 無凸
+- ヴェスナ: 無凸
