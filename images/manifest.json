@@ -132,6 +132,50 @@
     "exaiphanes_blade": {
       "name": "星鋒の剣",
       "file": "images/weapons/exaiphanes_blade.webp"
+    },
+    "a_teaspoon_of_transcendence": {
+      "name": "超越の鍵",
+      "file": "images/weapons/a_teaspoon_of_transcendence.webp"
+    },
+    "a_thousand_blazing_suns": {
+      "name": "千烈の日輪",
+      "file": "images/weapons/a_thousand_blazing_suns.webp"
+    },
+    "mailed_flower": {
+      "name": "鉄彩の花",
+      "file": "images/weapons/mailed_flower.webp"
+    },
+    "tidal_shadow": {
+      "name": "タイダル・シャドー",
+      "file": "images/weapons/tidal_shadow.webp"
+    },
+    "starsealed_edict": {
+      "name": "秘星の聖典",
+      "file": "images/weapons/starsealed_edict.webp"
+    },
+    "winters_heavy_heart": {
+      "name": "雪に沈む心",
+      "file": "images/weapons/winters_heavy_heart.webp"
+    },
+    "etherlight_spindlelute": {
+      "name": "天光のリュート",
+      "file": "images/weapons/etherlight_spindlelute.webp"
+    },
+    "dawning_frost": {
+      "name": "霜辰",
+      "file": "images/weapons/dawning_frost.webp"
+    },
+    "wandering_evenstar": {
+      "name": "彷徨える星",
+      "file": "images/weapons/wandering_evenstar.webp"
+    },
+    "emberwell": {
+      "name": "導炎の源",
+      "file": "images/weapons/emberwell.webp"
+    },
+    "heretics_molten_blade": {
+      "name": "異端を狩る熔刃",
+      "file": "images/weapons/heretics_molten_blade.webp"
     }
   },
   "artifacts": {
@@ -194,6 +238,10 @@
     "blizzard_strayer": {
       "name": "氷風を彷徨う勇士",
       "file": "images/artifacts/blizzard_strayer.webp"
+    },
+    "scarlet_proof": {
+      "name": "紅血の証",
+      "file": "images/artifacts/scarlet_proof.webp"
     }
   },
   "characters": {
@@ -228,6 +276,34 @@
     "odette": {
       "name": "オデット",
       "file": "images/characters/odette.webp"
+    },
+    "sandrone": {
+      "name": "サンドローネ",
+      "file": "images/characters/sandrone.webp"
+    },
+    "alyosha": {
+      "name": "アリョーシャ (サンドローネのパーティ表示用)",
+      "file": "images/characters/alyosha.webp"
+    },
+    "mitya": {
+      "name": "ミティヤ",
+      "file": "images/characters/mitya.webp"
+    },
+    "vesna": {
+      "name": "ヴェスナ",
+      "file": "images/characters/vesna.webp"
+    },
+    "valeriy": {
+      "name": "バレリー",
+      "file": "images/characters/valeriy.webp"
+    },
+    "faruzan": {
+      "name": "ファルザン",
+      "file": "images/characters/faruzan.webp"
+    },
+    "vodyanitsa": {
+      "name": "ヴォジャニーツァ",
+      "file": "images/characters/vodyanitsa.webp"
     }
   },
   "others": {
