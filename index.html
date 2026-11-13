@@ -54,9 +54,9 @@ th{color:var(--mu);font-size:12px;user-select:none}th[data-k]{cursor:pointer}th.
 <script>
 var LOADFAIL=[];function lf(e){LOADFAIL.push(e.getAttribute("src"));}
 // 読み込むファイルの一覧 (新しいキャラを追加したら、ここにファイル名を1つ足す)
-var CHARACTER_FILES=['nahida','alhaitham','tighnari','yaemiko','xingqiu','yelan','wriothesley','odette','sandrone','vesna'];
+var CHARACTER_FILES=['nahida','alhaitham','tighnari','yaemiko','xingqiu','yelan','wriothesley','odette','sandrone','vesna','mitya'];
 // 更新番号: ファイルを更新したら変える (古いキャッシュを使わせない)。ローカルで開くときは付けない
-var V=location.protocol==='file:'?'':'?v=20261024b';
+var V=location.protocol==='file:'?'':'?v=20261112d';
 ['common.js'].concat(CHARACTER_FILES.map(function(c){return 'characters/'+c+'.js';})).forEach(function(f){
   document.write('<script src="'+f+V+'" onerror="lf(this)"><\/script>');
 });
@@ -145,6 +145,7 @@ function fillFilters(first){
   if(A.weapons.some(([k])=>k===pw))$('fw').value=pw;
   if(A.sets.some(x=>x.key===ps))$('fs').value=ps;
   if(!first&&s!==sig)all=[];
+  {const pe=(ch.parties.find(x=>x.key===$('party').value)||{}).erRolls;if(pe!=null)$('er').value=pe;}   // パーティごとの既定のチャージロール数
   sig=s;renderMembers();render();
 }
 $('party').onchange=()=>fillFilters(false);
