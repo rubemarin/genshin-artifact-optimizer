@@ -1,6 +1,10 @@
 // リオセスリ専用データ + ダメージ計算 (通常攻撃N3C×7 / 氷)  前提: 1凸 (鍛錬の道で交換できるため) / 天賦Lv10
 // コンボ
 //  パーティ2(凍結): N5C×4 + N3。5段目まで出すので 1凸で重撃は常に強化重撃。逆溶解なし / しめ縄4は最初のN5C×3まで / 氷共鳴 会心率+15% / 水共鳴 HP+25%
+//  パーティ4(星電導・味方バフ込み): パーティ3と同じコンボ。味方 = オデット(炉炎装備) + 八重神子1凸 + ニコ (炎) / 氷共鳴 会心率+15%
+//     オデット+八重神子1凸: 星電導ダメ+% 合計160% (オデット110 + 八重神子50) / オデット: 星電導の基礎ダメ+14% → (1 + 基礎ダメ) として星電導扱いの攻撃にだけ乗る
+//     ニコ: 虚己の恵み 攻撃力+600 (1回目のN5Cから) / 3秒留まって聖祝の導きに昇格 +300 → 計+900 (2回目のN5C以降 = 2〜4回目のN5Cと最後のN3)。実数でサブステ%の外に足す
+//        武器「塵と光の七つの誓約」: 表キャラの元素ダメ+26% (全体を通して有効。通常の氷ダメ N1・N2・N4 にだけ乗る / 星電導扱いには乗らない)
 //  パーティ3(星電導): N5C×4 + N3。N3・N5・重撃は「星電導ダメージ扱い」: 反応係数1.6 × 攻撃力 × 天賦倍率(N3/N5はスキルの通常強化×1.7031込み) × 特殊乗算(N3 0.6 / N5 0.8 / 重撃 1.0)
 //     × (1 + 6×熟知/(熟知+2000) + 星電導ダメ+% の合計) × 会心 × 耐性0.9。与ダメ(氷ダメ・通常/重撃ダメ+%・強化重撃+200%)と防御はかからない
 //     星電導ダメ+% = 固有天賦+30% + 影に沈む幻4の+40% + 凛流+42% + 胸中の谺+32% + 1凸「輝映」+50%(最初のN5を除くN5と、すべての重撃) ※+50%は足し算の中
@@ -31,6 +35,16 @@ const WEAPONS6 = WEAPONS5.concat(['echoes_of_the_heart']);   // 胸中の谺は�
     { key: 'freeze', combo: 'n5c4n3', members: ['cryo', 'hydro', 'hydro'], name: '凍結 (リオセスリ+氷1+水2 / 氷共鳴 会心率+15% / 水共鳴 HP+25%)', same: 1, diff: 2, resCr: 15, resHp: 25,
       weaponKeys: WEAPONS5, setKeys: ['marechaussee_hunter', 'shimenawas_reminiscence', 'blizzard_strayer'], clocks: CLK_NOEM, cups: CUP_NOEM, circlets: CIR },
     { key: 'star', combo: 'n5c4n3_star', members: ['cryo', 'electro', 'any'], name: '星電導 (リオセスリ+氷1+雷1+その他 / 氷共鳴 会心率+15%)', same: 1, diff: 2, resCr: 15,
+      weaponKeys: WEAPONS6, setKeys: ['marechaussee_hunter', 'disenchantment_in_deep_shadow'], clocks: CLK, cups: CUP, circlets: CIR },
+    { key: 'star_team', combo: 'n5c4n3_star', members: [{ el: 'cryo', char: 'odette' }, { el: 'electro', char: 'yaemiko' }, { el: 'pyro', char: 'nicole' }],
+      name: '星電導 (リオセスリ+オデット+八重神子1凸+ニコ / 氷共鳴 会心率+15% / 味方のバフ込み)', same: 1, diff: 2, resCr: 15,
+      team: { star: 160, base: 14, atkFlat: 600, atkUp: 300, elem: 26 },   // atkFlat=虚己の恵み(1回目から) / atkUp=聖祝の導きの昇格分(2回目のN5C以降)
+      teamText: {
+        star: 'オデット (炉炎込み) 星+50% +15%×4 = 110% / 八重神子1凸 星+50%',
+        base: 'オデット: 星基礎ダメ+14%',
+        atkFlat: 'ニコ: 虚己の恵み +600 (1回目のN5Cから) → 聖祝の導き(3秒後に昇格) +300 = +900 (2回目のN5C以降)',
+        elem: 'ニコの武器 塵と光の七つの誓約: 表キャラの元素ダメ+26% (全体 / 通常の氷ダメにだけ乗る)'
+      },
       weaponKeys: WEAPONS6, setKeys: ['marechaussee_hunter', 'disenchantment_in_deep_shadow'], clocks: CLK, cups: CUP, circlets: CIR }
   ],
   refs: [{ key: 'atk', label: '攻撃力' }, { key: 'em', label: '熟知' }],
@@ -52,15 +66,17 @@ const WEAPONS6 = WEAPONS5.concat(['echoes_of_the_heart']);   // 胸中の谺は�
   ],
   clocks: [], cups: [], circlets: [],   // パーティ側で指定
   calc({ weapon: w, set, mains, party, s, x: X }) {
-    const pt = this.parties.find(x => x.key === party);
+    const pt = this.parties.find(x => x.key === party), T = pt.team || null;   // T = 味方から受けるバフ (パーティ4のみ)
+    const nA = T ? (T.atkFlat || 0) : 0, nU = T ? (T.atkUp || 0) : 0, nE = T ? (T.elem || 0) : 0;   // ニコ: 攻撃力+実数 (1回目から) / 昇格分 (2回目のN5C以降) / 元素ダメ+%
     const n = k => (mains.c[k] || 0), k = set.key;
-    const E = X ? [] : null, AP = X ? [] : null, CRp = X ? [] : null, CDp = X ? [] : null, EB = X ? [] : null;
+    const E = X ? [] : null, AP = X ? [] : null, AF = X ? [] : null, SB = X ? [] : null, BB = X ? [] : null, CRp = X ? [] : null, CDp = X ? [] : null, EB = X ? [] : null;
     // 熟知
     const em = A(E, 'キャラ基礎熟知', this.base.em) + A(E, '武器の熟知', w.em) + A(E, 'メインステ 熟知', 187 * n('em')) + A(E, 'サブステ 熟知 (固定2ロール+割り振り)', s.em);
     // 攻撃力: 抵罪の赦免5層(+30%) + 炎共鳴(+25%) + しめ縄/影に沈む幻の2セット(+18%)
     let atkPct = A(AP, 'サブステ 攻撃力% (固定2ロール+割り振り)', s.atkPct) + A(AP, 'メインステ 攻撃%', 46.6 * n('atk')) + A(AP, '武器: 攻撃力%', w.atkPct) + A(AP, '固有天賦 抵罪の赦免 (5層×6%)', 30) + A(AP, '炎共鳴', pt.resAtk || 0);
     if (k === 'shimenawas_reminiscence' || k === 'disenchantment_in_deep_shadow') atkPct += A(AP, '2セット 攻撃力+18%', 18);   // しめ縄 / 影に沈む幻 の2セット
-    const atk = (this.base.atk + w.atk) * (1 + atkPct / 100) + 311 + s.atkFlat;
+    const atk = (this.base.atk + w.atk) * (1 + atkPct / 100) + 311 + s.atkFlat;   // ニコのバフを含まない攻撃力
+    const atkN = atk + A(AF, 'ニコ: 虚己の恵み (1回目のN5Cから)', nA) + A(AF, 'ニコ: 聖祝の導きへの昇格 (2回目のN5C以降)', nU);   // 表示用: 昇格後 (2回目のN5C以降)の攻撃力
     // 会心 (ファントムハンター4: 会心率+12%×3層 / 氷共鳴 +15% / 勇士4: +40% / 影に沈む幻4: +16%)
     let cr = A(CRp, '初期値', 5) + A(CRp, '武器の会心率', w.cr) + A(CRp, '冠 会心率', 31.1 * n('cr')) + A(CRp, 'サブステ 会心率 (固定2ロール+割り振り)', s.cr) + A(CRp, '氷共鳴', pt.resCr || 0);
     if (k === 'marechaussee_hunter') cr += A(CRp, 'ファントムハンター4 (会心率+12%×3層)', 36);
@@ -78,6 +94,7 @@ const WEAPONS6 = WEAPONS5.concat(['echoes_of_the_heart']);   // 胸中の谺は�
       fpExtra = Math.min(w.fp.cap, Math.floor((w.fp.ratio * maxHp) / 1000) * w.fp.per);
       cryo += A(EB, '純水流華: スキル発動時 全元素ダメ', w.fp.first) + A(EB, '純水流華: 命の契約 (最大HP基準)', fpExtra);
     }
+    const cryoN = cryo + A(EB, 'ニコの武器 塵と光の七つの誓約', nE);   // ニコの武器込み (全ヒットに乗る)
     // 通常攻撃・重撃のダメージアップ (ファントムハンター2セット15% + 武器)
     const common = k === 'marechaussee_hunter' ? 15 : 0;
     const nb = common + (w.nBonus || 0), cb = common + (w.cBonus || 0);
@@ -87,7 +104,7 @@ const WEAPONS6 = WEAPONS5.concat(['echoes_of_the_heart']);   // 胸中の谺は�
     const K0 = crit * 0.5 * 0.90;                                    // 会心・防御・耐性 (通常の氷ダメ用)
     const pc = v => (v * 100).toFixed(2) + '%';
     const nf = (mult, bonus, melt) => `${Math.round(atk)} × ${pc(mult)}${melt ? ' × 逆溶解 ' + melt.toFixed(3) : ''} × (1 + ${bonus.toFixed(1)}%) × 会心 ${crit.toFixed(3)} × 防御 0.5 × 耐性 0.9`;
-    let total, starPart = 0, starBase = 0;   // total=防御がかかる分(通常の氷ダメ) / starPart=星電導ダメージ扱い(防御なし)
+    let total, starPart = 0, starBase = 0, baseB = 0;   // total=防御がかかる分(通常の氷ダメ) / starPart=星電導ダメージ扱い(防御なし)
     if (pt.combo === 'n3c7') {
       // 逆溶解 ×1.5 × (1 + 2.78×熟知/(熟知+1400)) は 通常1段目と重撃にかかる
       const melt = 1.5 * (1 + (2.78 * em) / (em + 1400));
@@ -113,36 +130,41 @@ const WEAPONS6 = WEAPONS5.concat(['echoes_of_the_heart']);   // 胸中の谺は�
       }
     } else if (pt.combo === 'n5c4n3_star') {
       // N5C×4 + N3 (星電導): N1・N2・N4=通常の氷ダメージ / N3・N5・重撃=星電導ダメージ扱い
-      const nBr = 1 + (cryo + nb) / 100;
+      // ニコ: 攻撃力+600 は1回目のN5Cから / +300 (昇格) は2回目のN5C以降 (i>=1 と 最後のN3=i=4) / 武器の元素ダメ+26% は全体
+      const aAt = i => atk + nA + (i >= 1 ? nU : 0), eAt = () => nE;
+      const nBrAt = i => 1 + (cryo + nb + eAt(i)) / 100;
       const emBonus = (6 * em) / (em + 2000);
-      starBase = 30 + (w.star || 0) + (k === 'disenchantment_in_deep_shadow' ? 40 : 0);   // 星電導ダメ+% (固有天賦30 + 武器 + 影に沈む幻40)
+      starBase = A(SB, '固有天賦', 30) + A(SB, '武器', w.star || 0) + A(SB, '影に沈む幻4', k === 'disenchantment_in_deep_shadow' ? 40 : 0) + A(SB, '味方のバフ (オデット・八重神子)', T ? T.star : 0);   // 星電導ダメ+% (固有天賦30 + 武器 + 影に沈む幻40 + 味方)
+      baseB = A(BB, '味方のバフ (オデット: 星基礎ダメ+14%)', T ? T.base : 0);        // 基礎ダメ+% (味方のみ)
       const COEF = 1.6, SP = { N3: 0.6, N5: 0.8, C: 1.0 };
-      const star = (talent, sp, c1) => COEF * atk * talent * sp * (1 + emBonus + (starBase + (c1 ? 50 : 0)) / 100);   // 1凸の+50%は星電導ダメ+%の足し算の中
-      const normalHits = atk * (NH[0] + NH[1] + NH[3]) * nBr;      // N1・N2・N4
+      const star = (a, talent, sp, c1) => COEF * a * talent * sp * (1 + baseB / 100) * (1 + emBonus + (starBase + (c1 ? 50 : 0)) / 100);   // 1凸の+50%は星電導ダメ+%の足し算の中
       let t = 0, st = 0;
       for (let i = 0; i < 4; i++) {
-        t += normalHits;
-        st += star(NH[2], SP.N3, 0) + star(NH[4], SP.N5, i > 0) + star(C, SP.C, 1);   // 最初のN5だけ+50%なし / 重撃は常に+50%
+        t += aAt(i) * (NH[0] + NH[1] + NH[3]) * nBrAt(i);                                        // N1・N2・N4
+        st += star(aAt(i), NH[2], SP.N3, 0) + star(aAt(i), NH[4], SP.N5, i > 0) + star(aAt(i), C, SP.C, 1);   // 最初のN5だけ+50%なし / 重撃は常に+50%
       }
-      t += atk * (NH[0] + NH[1]) * nBr;   // 最後のN3 (N1・N2)
-      st += star(NH[2], SP.N3, 0);        // 最後のN3 (星電導扱い)
+      t += aAt(4) * (NH[0] + NH[1]) * nBrAt(4);   // 最後のN3 (N1・N2)
+      st += star(aAt(4), NH[2], SP.N3, 0);        // 最後のN3 (星電導扱い)
       total = t; starPart = st;
       if (X) {
-        const sf = (talent, sp, c1) => `1.6 × ${Math.round(atk)} × ${pc(talent)} × 特殊乗算 ${sp} × (1 + 熟知 ${(emBonus * 100).toFixed(1)}% + 星電導 ${starBase + (c1 ? 50 : 0)}%) × 会心 ${crit.toFixed(3)} × 耐性 0.9 (防御・ダメバフなし)`;
-        const bn = cryo + nb, sd = v => v * crit * 0.90;
+        const nfa = (a, mult, bonus) => `${Math.round(a)} × ${pc(mult)} × (1 + ${bonus.toFixed(1)}%) × 会心 ${crit.toFixed(3)} × 防御 0.5 × 耐性 0.9`;
+        const sf = (a, talent, sp, c1) => `1.6 × ${Math.round(a)} × ${pc(talent)} × 特殊乗算 ${sp}${baseB ? ' × (1 + 基礎ダメ ' + baseB + '%)' : ''} × (1 + 熟知 ${(emBonus * 100).toFixed(1)}% + 星電導 ${starBase + (c1 ? 50 : 0)}%) × 会心 ${crit.toFixed(3)} × 耐性 0.9 (防御・ダメバフなし)`;
+        const sd = v => v * crit * 0.90;
+        const grp = (i, nm) => nm + (T && nA ? ` (ニコ 攻撃力+${nA + (i >= 1 ? nU : 0)})` : '');
         for (let i = 0; i < 4; i++) {
-          const g = `N5C ${i + 1}回目`;
-          H(X, g, 'N1', atk * NH[0] * nBr * K0, nf(NH[0], bn));
-          H(X, g, 'N2', atk * NH[1] * nBr * K0, nf(NH[1], bn));
-          H(X, g, 'sN3 (星電導扱い)', sd(star(NH[2], SP.N3, 0)), sf(NH[2], SP.N3, 0));
-          H(X, g, 'N4-1', atk * (NH[3] / 2) * nBr * K0, nf(NH[3] / 2, bn));
-          H(X, g, 'N4-2', atk * (NH[3] / 2) * nBr * K0, nf(NH[3] / 2, bn));
-          H(X, g, 'sN5 (星電導扱い)' + (i > 0 ? ' +50%' : ''), sd(star(NH[4], SP.N5, i > 0)), sf(NH[4], SP.N5, i > 0));
-          H(X, g, 'sC (星電導扱い) +50%', sd(star(C, SP.C, 1)), sf(C, SP.C, 1));
+          const g = grp(i, `N5C ${i + 1}回目`), a = aAt(i), bn = cryo + nb + eAt(i);
+          H(X, g, 'N1', a * NH[0] * (1 + bn / 100) * K0, nfa(a, NH[0], bn));
+          H(X, g, 'N2', a * NH[1] * (1 + bn / 100) * K0, nfa(a, NH[1], bn));
+          H(X, g, 'sN3 (星電導扱い)', sd(star(a, NH[2], SP.N3, 0)), sf(a, NH[2], SP.N3, 0));
+          H(X, g, 'N4-1', a * (NH[3] / 2) * (1 + bn / 100) * K0, nfa(a, NH[3] / 2, bn));
+          H(X, g, 'N4-2', a * (NH[3] / 2) * (1 + bn / 100) * K0, nfa(a, NH[3] / 2, bn));
+          H(X, g, 'sN5 (星電導扱い)' + (i > 0 ? ' +50%' : ''), sd(star(a, NH[4], SP.N5, i > 0)), sf(a, NH[4], SP.N5, i > 0));
+          H(X, g, 'sC (星電導扱い) +50%', sd(star(a, C, SP.C, 1)), sf(a, C, SP.C, 1));
         }
-        H(X, 'N3 (締め)', 'N1', atk * NH[0] * nBr * K0, nf(NH[0], bn));
-        H(X, 'N3 (締め)', 'N2', atk * NH[1] * nBr * K0, nf(NH[1], bn));
-        H(X, 'N3 (締め)', 'sN3 (星電導扱い)', sd(star(NH[2], SP.N3, 0)), sf(NH[2], SP.N3, 0));
+        const g4 = grp(4, 'N3 (締め)'), a4 = aAt(4), bn4 = cryo + nb + eAt(4);
+        H(X, g4, 'N1', a4 * NH[0] * (1 + bn4 / 100) * K0, nfa(a4, NH[0], bn4));
+        H(X, g4, 'N2', a4 * NH[1] * (1 + bn4 / 100) * K0, nfa(a4, NH[1], bn4));
+        H(X, g4, 'sN3 (星電導扱い)', sd(star(a4, NH[2], SP.N3, 0)), sf(a4, NH[2], SP.N3, 0));
       }
     } else {
       // N5C×4 + N3 (凍結): 重撃は常に強化重撃(+200%) / しめ縄4は最初のN5C×3まで (4回目のN5Cと最後のN3には乗らない)
@@ -172,14 +194,17 @@ const WEAPONS6 = WEAPONS5.concat(['echoes_of_the_heart']);   // 胸中の谺は�
     const damage = Math.round((total * 0.5 + starPart) * crit * 0.90);   // 防御0.5は通常の氷ダメのみ(星電導扱いは防御なし) / 氷耐性10%
     if (X) {
       putSum(X, 'em', '元素熟知', '', em, E);
-      putMul(X, 'atk', '攻撃力', [['キャラ基礎攻撃力', this.base.atk], ['武器の基礎攻撃力', w.atk]], AP, [['羽の攻撃力 (固定)', 311], ['サブステ 攻撃実数値 (固定2ロール)', s.atkFlat]], atk);
+      putMul(X, 'atk', '攻撃力', [['キャラ基礎攻撃力', this.base.atk], ['武器の基礎攻撃力', w.atk]], AP, [['羽の攻撃力 (固定)', 311], ['サブステ 攻撃実数値 (固定2ロール)', s.atkFlat]].concat(AF), atkN);
       putSum(X, 'cr', '会心率', '%', cr, CRp, crRaw > 100 ? '(上限100%で頭打ち)' : '');
       putSum(X, 'cd', '会心ダメージ', '%', cd, CDp);
-      putSum(X, 'elem', '元素バフ (氷ダメ)', '%', cryo, EB, w.fp ? `(命の契約: 最大HP ${Math.round(maxHp)} × ${w.fp.ratio * 100}% = ${Math.round(w.fp.ratio * maxHp)} → ${Math.floor((w.fp.ratio * maxHp) / 1000)}区切り × ${w.fp.per}% 、上限${w.fp.cap}%)` : '');
+      putSum(X, 'elem', '元素バフ (氷ダメ)', '%', cryoN, EB, w.fp ? `(命の契約: 最大HP ${Math.round(maxHp)} × ${w.fp.ratio * 100}% = ${Math.round(w.fp.ratio * maxHp)} → ${Math.floor((w.fp.ratio * maxHp) / 1000)}区切り × ${w.fp.per}% 、上限${w.fp.cap}%)` : '');
       putSum(X, 'nb', '通常・重撃ダメ+%', '%', nb, [['ファントムハンター2セット (通常・重撃)', common], ['武器: 通常攻撃', w.nBonus || 0]].filter(l => l[1]), `(通常の氷ダメージ N1・N2・N4 などにだけ乗る。重撃は ${cb.toFixed(1)}% = ファントムハンター ${common}% + 武器の重撃 ${w.cBonus || 0}%)`);
-      if (pt.combo === 'n5c4n3_star') putSum(X, 'star', '星電導ダメ+%', '%', starBase, [['固有天賦', 30], ['武器', w.star || 0], ['影に沈む幻4', k === 'disenchantment_in_deep_shadow' ? 40 : 0]].filter(l => l[1]), '(星電導扱いの攻撃 sN3・sN5・sC にだけ乗る。1凸「輝映」+50% は 2回目以降のN5と、すべての重撃に加算)');
+      if (pt.combo === 'n5c4n3_star') {
+        putSum(X, 'star', '星電導ダメ+%', '%', starBase, SB, '(星電導扱いの攻撃 sN3・sN5・sC にだけ乗る。1凸「輝映」+50% は 2回目以降のN5と、すべての重撃に加算)' + (T ? ' 味方: ' + pt.teamText.star : ''));
+        if (T) putSum(X, 'base', '星電導 基礎ダメ+%', '%', baseB, BB, '(1 + 基礎ダメ) = ' + (1 + baseB / 100).toFixed(4) + ' / 味方: ' + pt.teamText.base);
+      }
     }
-    return { damage, em, atk, cr, cd, buff: cryo + nb, elemBuff: cryo };
+    return { damage, em, atk: atkN, cr, cd, buff: cryoN + nb, elemBuff: cryoN };
   }
 });
 })();
