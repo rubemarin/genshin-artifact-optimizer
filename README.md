@@ -14,3 +14,4 @@ https://rubemarin.github.io/genshin-artifact-optimizer/
 - サンドローネ: 無凸
 - ヴェスナ: 無凸
 - ミティヤ: 無凸
+- セノ: 1凸

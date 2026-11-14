@@ -5,12 +5,13 @@
 - 英語名が確認できていないものは「未確認」と書く (推測で入れない)
 - 英語名の大文字・アポストロフィは、キーと公式名の対応から復元したもの。公式の表記と違っていたら直す
 - 「使うキャラ」は、キャラのファイルの weapons / sets に入れているキャラ
-- 最終更新: リオセスリ 星電導(ニコ入り・味方バフ込み)追加時 (登録 11キャラ)
+- 最終更新: セノ 星電導 (味方バフ込み) 追加時 (登録 12キャラ)
 
 ## キャラ (`images/characters/`)
 | 日本語 | 英語 | ID | 備考 |
 |---|---|---|---|
 | アルハイゼン | Alhaitham | alhaitham | 登録済み |
+| セノ | Cyno | cyno | 登録済み (雷・長柄武器) |
 | ミティヤ | Mitya | mitya | 登録済み |
 | ナヒーダ | Nahida | nahida | 登録済み |
 | オデット | Odette | odette | 登録済み |
@@ -22,7 +23,7 @@
 | 八重神子 | Yae Miko | yaemiko | 登録済み |
 | 夜蘭 | Yelan | yelan | 登録済み |
 | バレリー | Valeriy | valeriy | パーティの味方としてだけ使用 (ミティヤ) |
-| アリョーシャ | Alyosha | alyosha | パーティの味方としてだけ使用 (ミティヤ、サンドローネ) |
+| アリョーシャ | Alyosha | alyosha | パーティの味方としてだけ使用 (ミティヤ、サンドローネ、セノ) |
 | ニコ | Nicole | nicole | パーティの味方としてだけ使用 (リオセスリ)。炎・法器 |
 | ファルザン | Faruzan | faruzan | パーティの味方としてだけ使用 (ヴェスナ) |
 | ヴォジャニーツァ | Vodyanitsa | vodyanitsa | パーティの味方としてだけ使用 (ヴェスナ) |
@@ -74,13 +75,17 @@
 | 落霞 | Fading Twilight | fading_twilight | 夜蘭 |
 | リカーブボウ | Recurve Bow | recurve_bow | 夜蘭 |
 | 絶弦 | The Stringless | the_stringless | 夜蘭 |
+| 赤砂の杖 | Staff of the Scarlet Sands | staff_of_the_scarlet_sands | セノ |
+| 和璞鳶 | Primordial Jade Winged-Spear | primordial_jade_winged_spear | セノ |
+| 死闘の槍 | Deathmatch | deathmatch | セノ |
+| 遠望の歌 | Song of the Vigil | song_of_the_vigil | セノ |
 
 ## 聖遺物セット (`images/artifacts/`)
 | 日本語 | 英語 | キー | 使うキャラ |
 |---|---|---|---|
-| 金メッキの夢 | Gilded Dreams | gilded_dreams | アルハイゼン、ナヒーダ、ティナリ、八重神子 |
+| 金メッキの夢 | Gilded Dreams | gilded_dreams | アルハイゼン、ナヒーダ、ティナリ、八重神子、セノ |
 | ファントムハンター | Marechaussee Hunter | marechaussee_hunter | アルハイゼン、リオセスリ |
-| 影に沈む幻 | Disenchantment in Deep Shadow | disenchantment_in_deep_shadow | ミティヤ、サンドローネ、リオセスリ、八重神子 |
+| 影に沈む幻 | Disenchantment in Deep Shadow | disenchantment_in_deep_shadow | ミティヤ、サンドローネ、リオセスリ、八重神子、セノ |
 | 千岩牢固 | Tenacity of the Millelith | tenacity_of_the_millelith | ミティヤ |
 | 深林の記憶 | Deepwood Memories | deepwood_memories | ナヒーダ |
 | 黄金の劇団 | Golden Troupe | golden_troupe | ナヒーダ、八重神子 |
@@ -92,7 +97,7 @@
 | 絶縁の旗印 | Emblem of Severed Fate | emblem_of_severed_fate | 行秋、夜蘭 |
 | 旧貴族のしつけ | Noblesse Oblige | noblesse_oblige | 行秋 |
 | 水仙の夢 | Nymph's Dream | nymphs_dream | 行秋 |
-| 熟知 2セット+2セット | (組み合わせ用) | em_2_2 | アルハイゼン、ミティヤ、ナヒーダ、ティナリ、八重神子 |
+| 熟知 2セット+2セット | (組み合わせ用) | em_2_2 | アルハイゼン、ミティヤ、ナヒーダ、ティナリ、八重神子、セノ |
 | 攻撃力 2セット+2セット | (組み合わせ用) | atk_2_2 | 行秋、八重神子 |
 | HP 2セット+2セット | (組み合わせ用) | hp_2_2 | 夜蘭 |
 
