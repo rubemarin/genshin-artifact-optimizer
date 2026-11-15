@@ -15,3 +15,4 @@ https://rubemarin.github.io/genshin-artifact-optimizer/
 - ヴェスナ: 無凸
 - ミティヤ: 無凸
 - セノ: 1凸
+- ローエン: 無凸

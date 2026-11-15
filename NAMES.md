@@ -5,13 +5,14 @@
 - 英語名が確認できていないものは「未確認」と書く (推測で入れない)
 - 英語名の大文字・アポストロフィは、キーと公式名の対応から復元したもの。公式の表記と違っていたら直す
 - 「使うキャラ」は、キャラのファイルの weapons / sets に入れているキャラ
-- 最終更新: セノ 星電導 (味方バフ込み) 追加時 (登録 12キャラ)
+- 最終更新: ローエン追加時 (登録 13キャラ)
 
 ## キャラ (`images/characters/`)
 | 日本語 | 英語 | ID | 備考 |
 |---|---|---|---|
 | アルハイゼン | Alhaitham | alhaitham | 登録済み |
 | セノ | Cyno | cyno | 登録済み (雷・長柄武器) |
+| ローエン | Lohen | lohen | 登録済み (氷・長柄武器) |
 | ミティヤ | Mitya | mitya | 登録済み |
 | ナヒーダ | Nahida | nahida | 登録済み |
 | オデット | Odette | odette | 登録済み |
@@ -24,7 +25,9 @@
 | 夜蘭 | Yelan | yelan | 登録済み |
 | バレリー | Valeriy | valeriy | パーティの味方としてだけ使用 (ミティヤ) |
 | アリョーシャ | Alyosha | alyosha | パーティの味方としてだけ使用 (ミティヤ、サンドローネ、セノ) |
-| ニコ | Nicole | nicole | パーティの味方としてだけ使用 (リオセスリ)。炎・法器 |
+| ニコ | Nicole | nicole | パーティの味方としてだけ使用 (リオセスリ、ローエン)。炎・法器 |
+| ドゥリン | Durin | durin | パーティの味方としてだけ使用 (ローエン) |
+| シロネン | Xilonen | xilonen | パーティの味方としてだけ使用 (ローエン)。岩 |
 | ファルザン | Faruzan | faruzan | パーティの味方としてだけ使用 (ヴェスナ) |
 | ヴォジャニーツァ | Vodyanitsa | vodyanitsa | パーティの味方としてだけ使用 (ヴェスナ) |
 
@@ -76,9 +79,11 @@
 | リカーブボウ | Recurve Bow | recurve_bow | 夜蘭 |
 | 絶弦 | The Stringless | the_stringless | 夜蘭 |
 | 赤砂の杖 | Staff of the Scarlet Sands | staff_of_the_scarlet_sands | セノ |
-| 和璞鳶 | Primordial Jade Winged-Spear | primordial_jade_winged_spear | セノ |
-| 死闘の槍 | Deathmatch | deathmatch | セノ |
+| 和璞鳶 | Primordial Jade Winged-Spear | primordial_jade_winged_spear | セノ、ローエン |
+| 死闘の槍 | Deathmatch | deathmatch | セノ、ローエン |
 | 遠望の歌 | Song of the Vigil | song_of_the_vigil | セノ |
+| 災憾 | Disaster and Remorse | disaster_and_remorse | ローエン |
+| 聖祭者の輝杖 | Sacrificer's Staff | sacrificers_staff | ローエン |
 
 ## 聖遺物セット (`images/artifacts/`)
 | 日本語 | 英語 | キー | 使うキャラ |
@@ -93,10 +98,11 @@
 | 大地を流浪する楽団 | Wanderer's Troupe | wanderers_troupe | ティナリ |
 | 紅血の証 | Scarlet Proof | scarlet_proof | ヴェスナ |
 | 追憶のしめ縄 | Shimenawa's Reminiscence | shimenawas_reminiscence | リオセスリ |
-| 氷風を彷徨う勇士 | Blizzard Strayer | blizzard_strayer | リオセスリ |
+| 氷風を彷徨う勇士 | Blizzard Strayer | blizzard_strayer | リオセスリ、ローエン |
 | 絶縁の旗印 | Emblem of Severed Fate | emblem_of_severed_fate | 行秋、夜蘭 |
 | 旧貴族のしつけ | Noblesse Oblige | noblesse_oblige | 行秋 |
 | 水仙の夢 | Nymph's Dream | nymphs_dream | 行秋 |
+| 風立ちの日 | A Day Carved From Rising Winds | a_day_carved_from_rising_winds | ローエン |
 | 熟知 2セット+2セット | (組み合わせ用) | em_2_2 | アルハイゼン、ミティヤ、ナヒーダ、ティナリ、八重神子、セノ |
 | 攻撃力 2セット+2セット | (組み合わせ用) | atk_2_2 | 行秋、八重神子 |
 | HP 2セット+2セット | (組み合わせ用) | hp_2_2 | 夜蘭 |
