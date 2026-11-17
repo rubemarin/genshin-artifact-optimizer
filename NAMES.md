@@ -5,14 +5,14 @@
 - 英語名が確認できていないものは「未確認」と書く (推測で入れない)
 - 英語名の大文字・アポストロフィは、キーと公式名の対応から復元したもの。公式の表記と違っていたら直す
 - 「使うキャラ」は、キャラのファイルの weapons / sets に入れているキャラ
-- 最終更新: ローエン追加時 (登録 13キャラ)
+- 最終更新: ファルカ追加時 (登録 15キャラ)
 
 ## キャラ (`images/characters/`)
 | 日本語 | 英語 | ID | 備考 |
 |---|---|---|---|
 | アルハイゼン | Alhaitham | alhaitham | 登録済み |
 | セノ | Cyno | cyno | 登録済み (雷・長柄武器) |
-| ローエン | Lohen | lohen | 登録済み (氷・長柄武器) |
+| ローエン | Lohen | lohen | 登録済み (氷・長柄武器)。ドゥリンのパーティの味方としても使用 |
 | ミティヤ | Mitya | mitya | 登録済み |
 | ナヒーダ | Nahida | nahida | 登録済み |
 | オデット | Odette | odette | 登録済み |
@@ -25,17 +25,19 @@
 | 夜蘭 | Yelan | yelan | 登録済み |
 | バレリー | Valeriy | valeriy | パーティの味方としてだけ使用 (ミティヤ) |
 | アリョーシャ | Alyosha | alyosha | パーティの味方としてだけ使用 (ミティヤ、サンドローネ、セノ) |
-| ニコ | Nicole | nicole | パーティの味方としてだけ使用 (リオセスリ、ローエン)。炎・法器 |
-| ドゥリン | Durin | durin | パーティの味方としてだけ使用 (ローエン) |
-| シロネン | Xilonen | xilonen | パーティの味方としてだけ使用 (ローエン)。岩 |
+| ニコ | Nicole | nicole | パーティの味方としてだけ使用 (リオセスリ、ローエン、ドゥリン、ファルカ)。炎・法器 |
+| ドゥリン | Durin | durin | 登録済み (炎・片手剣)。ローエン、ファルカのパーティの味方としても使用 |
+| シロネン | Xilonen | xilonen | パーティの味方としてだけ使用 (ローエン、ドゥリン)。岩 |
 | ファルザン | Faruzan | faruzan | パーティの味方としてだけ使用 (ヴェスナ) |
 | ヴォジャニーツァ | Vodyanitsa | vodyanitsa | パーティの味方としてだけ使用 (ヴェスナ) |
+| ファルカ | Varka | varka | 登録済み (風・両手剣)。ドゥリンのパーティの味方としても使用。画像なし (無くても表示は元素の文字) |
+| プルーネ | Prune | prune | パーティの味方としてだけ使用 (ドゥリン、ファルカ)。風。画像なし (無くても表示は元素の文字) |
 
 ## 武器 (`images/weapons/`)
 | 日本語 | 英語 | キー | 使うキャラ |
 |---|---|---|---|
 | 萃光の裁葉 | Light of Foliar Incision | light_of_foliar_incision | アルハイゼン |
-| 磐岩結緑 | Primordial Jade Cutter | primordial_jade_cutter | アルハイゼン、行秋 |
+| 磐岩結緑 | Primordial Jade Cutter | primordial_jade_cutter | アルハイゼン、ドゥリン、行秋 |
 | 鉄蜂の刺し | Iron Sting | iron_sting | アルハイゼン |
 | 黎明の神剣 | Harbinger of Dawn | harbinger_of_dawn | アルハイゼン |
 | 秘星の聖典 | Starsealed Edict | starsealed_edict | ミティヤ |
@@ -69,10 +71,10 @@
 | 胸中の谺 | Echoes of the Heart | echoes_of_the_heart | リオセスリ、八重神子 |
 | 純水流華 | Flowing Purity | flowing_purity | リオセスリ |
 | 祭礼の剣 | Sacrificial Sword | sacrificial_sword | 行秋 |
-| 月紡ぎの曙光 | Moonweaver's Dawn | moonweavers_dawn | 行秋 |
+| 月紡ぎの曙光 | Moonweaver's Dawn | moonweavers_dawn | ドゥリン、行秋 |
 | 霧切の廻光 | Mistsplitter Reforged | mistsplitter_reforged | 行秋 |
-| 狼牙 | Wolf-Fang | wolf_fang | 行秋 |
-| 黒蝕 | Athame Artis | athame_artis | 行秋 |
+| 狼牙 | Wolf-Fang | wolf_fang | ドゥリン、行秋 |
+| 黒蝕 | Athame Artis | athame_artis | ドゥリン、行秋 |
 | 天空の巻 | Skyward Atlas | skyward_atlas | 八重神子 |
 | 西風猟弓 | Favonius Warbow | favonius_warbow | 夜蘭 |
 | 落霞 | Fading Twilight | fading_twilight | 夜蘭 |
@@ -84,6 +86,12 @@
 | 遠望の歌 | Song of the Vigil | song_of_the_vigil | セノ |
 | 災憾 | Disaster and Remorse | disaster_and_remorse | ローエン |
 | 聖祭者の輝杖 | Sacrificer's Staff | sacrificers_staff | ローエン |
+| 匣中龍吟 | Lion's Roar | lions_roar | ドゥリン |
+| 狼の武勲詩 | Gest of the Mighty Wolf | gest_of_the_mighty_wolf | ファルカ |
+| 狼の末路 | Wolf's Gravestone | wolfs_gravestone | ファルカ |
+| 螭龍の剣 | Serpent Spine | serpent_spine | ファルカ |
+| アースシェイカー | Earth Shaker | earth_shaker | ファルカ |
+| 「スーパーアルティメット覇王魔剣」 | Ultimate Overlord's Mega Magic Sword | ultimate_overlords_mega_magic_sword | ファルカ |
 
 ## 聖遺物セット (`images/artifacts/`)
 | 日本語 | 英語 | キー | 使うキャラ |
@@ -97,14 +105,15 @@
 | 炉炎溶錬の心 | Heart of the Furnace | heart_of_the_furnace | オデット、八重神子 |
 | 大地を流浪する楽団 | Wanderer's Troupe | wanderers_troupe | ティナリ |
 | 紅血の証 | Scarlet Proof | scarlet_proof | ヴェスナ |
-| 追憶のしめ縄 | Shimenawa's Reminiscence | shimenawas_reminiscence | リオセスリ |
+| 追憶のしめ縄 | Shimenawa's Reminiscence | shimenawas_reminiscence | ファルカ、リオセスリ |
+| 砂上の楼閣の史話 | Desert Pavilion Chronicle | desert_pavilion_chronicle | ファルカ |
 | 氷風を彷徨う勇士 | Blizzard Strayer | blizzard_strayer | リオセスリ、ローエン |
-| 絶縁の旗印 | Emblem of Severed Fate | emblem_of_severed_fate | 行秋、夜蘭 |
-| 旧貴族のしつけ | Noblesse Oblige | noblesse_oblige | 行秋 |
+| 絶縁の旗印 | Emblem of Severed Fate | emblem_of_severed_fate | ドゥリン、行秋、夜蘭 |
+| 旧貴族のしつけ | Noblesse Oblige | noblesse_oblige | ドゥリン、行秋 |
 | 水仙の夢 | Nymph's Dream | nymphs_dream | 行秋 |
-| 風立ちの日 | A Day Carved From Rising Winds | a_day_carved_from_rising_winds | ローエン |
+| 風立ちの日 | A Day Carved From Rising Winds | a_day_carved_from_rising_winds | ドゥリン、ファルカ、ローエン |
 | 熟知 2セット+2セット | (組み合わせ用) | em_2_2 | アルハイゼン、ミティヤ、ナヒーダ、ティナリ、八重神子、セノ |
-| 攻撃力 2セット+2セット | (組み合わせ用) | atk_2_2 | 行秋、八重神子 |
+| 攻撃力 2セット+2セット | (組み合わせ用) | atk_2_2 | ドゥリン、ファルカ、行秋、八重神子 |
 | HP 2セット+2セット | (組み合わせ用) | hp_2_2 | 夜蘭 |
 
 ## others (`images/others/`)

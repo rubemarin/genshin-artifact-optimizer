@@ -16,3 +16,5 @@ https://rubemarin.github.io/genshin-artifact-optimizer/
 - ミティヤ: 無凸
 - セノ: 1凸
 - ローエン: 無凸
+- ドゥリン: 無凸
+- ファルカ: 無凸
